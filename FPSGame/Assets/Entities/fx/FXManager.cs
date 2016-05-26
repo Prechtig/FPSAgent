@@ -16,7 +16,7 @@ public class FXManager : Photon.MonoBehaviour {
 		_instance = this;
 	}
 	
-	[RPC]
+	[PunRPC]
 	void DoDeathAnimation( Vector3 pos) {
 		//Debug.Log ("Shrapnel!");
 		Instantiate(deathAnimPrefab, pos, Quaternion.identity);

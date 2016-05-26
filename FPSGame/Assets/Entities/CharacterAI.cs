@@ -141,7 +141,7 @@ public class CharacterAI : Photon.MonoBehaviour {
 		}
 		//Debug.Log (gameObject.name + " is shooting.");
 		Vector3 orig = _transform.position + _characterMotor.gunOffset;
-		Vector3 dir = _targetEnemy.collider.bounds.center - orig;
+		Vector3 dir = _targetEnemy.GetComponent<Collider>().bounds.center - orig;
 		
 		dir = Quaternion.Euler(0, Random.Range (-shootInnacuracy, shootInnacuracy), 0) * dir;
 		

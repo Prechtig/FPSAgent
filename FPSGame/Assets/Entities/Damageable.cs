@@ -1,5 +1,6 @@
 using UnityEngine;
-using System.Collections;
+//using System.Collections;
+using ExitGames.Client.Photon;
 
 public class Damageable : Photon.MonoBehaviour {
 	float _health = 100f;
@@ -64,7 +65,7 @@ public class Damageable : Photon.MonoBehaviour {
 		_armorMesh.material = mat;
 	}
 	
-	[RPC]
+	[PunRPC]
 	void TakeDamage(float d, int shooterPlayerID, string shooterName) {
 		//Debug.Log ("ReceiveDamage(): " + d);
 		float armorDamage = d * _armor/100f;

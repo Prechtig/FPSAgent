@@ -9,7 +9,7 @@ public class BeamLock : MonoBehaviour {
 	
 	void Start() {
 		_transform = transform;
-		AudioSource.PlayClipAtPoint(audio.clip, _transform.position, .1f);
+		AudioSource.PlayClipAtPoint(GetComponent<AudioSource>().clip, _transform.position, .1f);
 	}
 
 	// Update is called once per frame

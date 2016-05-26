@@ -194,7 +194,7 @@ public class NetworkManager : Photon.MonoBehaviour {
 		}
 	}
 	
-	[RPC]
+	[PunRPC]
 	void AddChatMessage(string s) {
 		_chatMessages.Add(s);
 		_chatMessageDisplayRemaining = _chatMessageDisplayTime;
@@ -209,7 +209,7 @@ public class NetworkManager : Photon.MonoBehaviour {
 		_connecting = true;
 		RoundManager.Instance.roundCountdown = 10f;
 	}
-	
+
 	void ConnectSingle() {
 		PhotonNetwork.offlineMode = true;
 		PhotonNetwork.CreateRoom(null);
@@ -223,7 +223,11 @@ public class NetworkManager : Photon.MonoBehaviour {
 	
 	void OnPhotonRandomJoinFailed() {
 		Debug.Log ("OnPhotonRandomJoinFailed()");
-		PhotonNetwork.CreateRoom(null, true, true, numPlayersAllowed);
+		RoomOptions roomOptions = new RoomOptions ();
+		roomOptions.maxPlayers = System.Convert.ToByte (numPlayersAllowed);
+		//TODO: roomOptions might need some options set
+		TypedLobby lobbyType = new TypedLobby("Lobby", LobbyType.Default);
+		PhotonNetwork.CreateRoom (null, roomOptions, lobbyType);
 	}
 	
 	void OnJoinedRoom() {
@@ -247,7 +251,7 @@ public class NetworkManager : Photon.MonoBehaviour {
 	}
 	
 	void ResetScores() {
-		Hashtable props = new Hashtable();
+		ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable();
 		props.Add("Kills", 0);
 		props.Add("Deaths", 0);
 		props.Add("Assists", 0);
@@ -337,8 +341,8 @@ public class NetworkManager : Photon.MonoBehaviour {
 			SpawnBots();
 		}
 		else {
-			Hashtable old_props = PhotonNetwork.player.customProperties;
-			Hashtable props = new Hashtable();
+			ExitGames.Client.Photon.Hashtable old_props = PhotonNetwork.player.customProperties;
+			ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable();
 			props["Deaths"] = (int)old_props["Deaths"] + 1;
 			PhotonNetwork.player.SetCustomProperties( props );
 
@@ -364,7 +368,7 @@ public class NetworkManager : Photon.MonoBehaviour {
 		SpawnPlayer();
 	}
 	
-	[RPC]	// All Clients
+	[PunRPC]	// All Clients
 	public void StartOfRound() {
 		_checkRoundInProgress = false;
 		
@@ -376,7 +380,7 @@ public class NetworkManager : Photon.MonoBehaviour {
 		SpawnCharacters();
 	}
 	
-	[RPC]	// All Clients
+	[PunRPC]	// All Clients
 	public void EndOfRound() {
 		PhotonNetwork.DestroyPlayerObjects( PhotonNetwork.player );
 		CleanUpRound();	
@@ -405,7 +409,7 @@ public class NetworkManager : Photon.MonoBehaviour {
 		numBots = 0;
 	}
 	
-	[RPC]
+	[PunRPC]
 	public void SpawnCharacters() {
 		SpawnPlayer();
 		SpawnBots();

@@ -28,7 +28,7 @@ public class RoundManager : Photon.MonoBehaviour {
 		HideTimer();
 	}
 	
-	//[RPC]
+	//[PunRPC]
 	public void NewRound() {
 		// Run directly by master
 		roundDurationLeft = roundDuration;
@@ -92,7 +92,7 @@ public class RoundManager : Photon.MonoBehaviour {
 	float last_timer_time = 999;
 	public void ShowTimer(string title, float amt) {
 		if(last_timer_time > 3.1 && amt <= 3.1) {
-			audio.Play();
+			GetComponent<AudioSource>().Play();
 		}
 		
 		last_timer_time = amt;

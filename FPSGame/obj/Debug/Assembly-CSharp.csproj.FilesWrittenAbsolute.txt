@@ -17,3 +17,7 @@
 /Users/andreas/Repository/FPSAgent/FPSGame/Temp/bin/Debug/Unity.CecilTools.dll
 /Users/andreas/Repository/FPSAgent/FPSGame/Temp/bin/Debug/Mono.Cecil.Pdb.dll
 /Users/andreas/Repository/FPSAgent/FPSGame/Temp/bin/Debug/Mono.Cecil.Mdb.dll
+/Users/andreas/Repository/FPSAgent/FPSGame/Temp/bin/Debug/Assembly-CSharp.dll.mdb
+/Users/andreas/Repository/FPSAgent/FPSGame/Temp/bin/Debug/Assembly-CSharp.dll
+/Users/andreas/Repository/FPSAgent/FPSGame/obj/Debug/Assembly-CSharp.dll
+/Users/andreas/Repository/FPSAgent/FPSGame/obj/Debug/Assembly-CSharp.dll.mdb

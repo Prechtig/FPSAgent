@@ -68,13 +68,13 @@ public class CharacterMotor : Photon.MonoBehaviour {
 		}
 		
 		if( Mathf.Abs(velocity.y) > .5f ) {
-			_meshTransform.animation.CrossFade("_jump");
+			_meshTransform.GetComponent<Animation>().CrossFade("_jump");
 		}
 		else if(velocity.magnitude > 1f) {
-			_meshTransform.animation.CrossFade("_run");
+			_meshTransform.GetComponent<Animation>().CrossFade("_run");
 		}
 		else {
-			_meshTransform.animation.CrossFade("_idle");
+			_meshTransform.GetComponent<Animation>().CrossFade("_idle");
 		}
 	}
 	
@@ -130,7 +130,7 @@ public class CharacterMotor : Photon.MonoBehaviour {
 		}
 	}
 	
-	[RPC]
+	[PunRPC]
 	public void SetNameTag(string n) {
 		GetComponent<CharacterNametag>().name = n;
 		gameObject.name = n;

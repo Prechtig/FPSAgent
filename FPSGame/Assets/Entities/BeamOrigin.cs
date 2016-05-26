@@ -5,7 +5,7 @@ public class BeamOrigin : MonoBehaviour {
 	public GameObject beamPrefab;
 	public GameObject shrapnelPrefab;
 	
-	[RPC]
+	[PunRPC]
 	void Beam(Vector3 dest, Vector3 normal ) {
 		GameObject goBeam = (GameObject)Instantiate(beamPrefab, transform.position, Quaternion.FromToRotation(Vector3.forward, dest-transform.position) );
 		Vector3 s = new Vector3(1, 1, Vector3.Distance(transform.position, dest) );

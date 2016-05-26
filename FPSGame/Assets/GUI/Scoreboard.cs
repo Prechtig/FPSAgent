@@ -36,7 +36,7 @@ public class Scoreboard : MonoBehaviour {
 		List<Line> lines = new List<Line>();
 		
 		foreach (PhotonPlayer player in PhotonNetwork.playerList) {
-			Hashtable props = player.customProperties;
+			ExitGames.Client.Photon.Hashtable props = player.customProperties;
 			Line l = new Line(player.name, (int)props["Kills"], (int)props["Assists"], (int)props["Deaths"]);
 			lines.Add(l);
 		}
