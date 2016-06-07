@@ -78,16 +78,16 @@ public class PlayerVitals : MonoBehaviour
         {
             coll.isTrigger = false;
         }
-        wep.useGravity = true;
-        wep.isKinematic = false;
-        wep.GetComponent<Collider>().isTrigger = false;
-        wep.transform.parent = null;
+//        wep.useGravity = true;
+//        wep.isKinematic = false;
+//        wep.GetComponent<Collider>().isTrigger = false;
+//        wep.transform.parent = null;
         if (GetComponent<NetworkView>().isMine)
         {
             spawn.Die();
         }
         obj.transform.parent = null;
-        Destroy(wep, 10);
+//        Destroy(wep, 10);
         Destroy(obj, 10);
         Destroy(this.gameObject);
     }
