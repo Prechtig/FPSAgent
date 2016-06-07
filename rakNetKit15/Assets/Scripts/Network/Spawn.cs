@@ -131,6 +131,7 @@ public class Spawn : MonoBehaviour
 //		GameObject newPlayer = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Player.prefab");
 //		random = Random.Range(0, spawnPoints.Length);
 //		Instantiate(newPlayer, spawnPoints[random].position, spawnPoints[random].rotation);
+		GameObject[] objs = GameObject.FindGameObjectsWithTag("Player");
 
         spawned = true;
         spawnCam.enabled = false;
