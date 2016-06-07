@@ -1,0 +1,156 @@
+fileFormatVersion: 2
+guid: 5aaf869cfa696014987f94c6e9eef9df
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: AK
+    100002: //RootNode
+    100004: bolt
+    100006: bullets
+    100008: Dummy01
+    100010: Dummy02
+    100012: fire selector
+    100014: Left1
+    100016: Left10
+    100018: Left11
+    100020: Left12
+    100022: Left13
+    100024: Left14
+    100026: Left15
+    100028: Left2
+    100030: Left3
+    100032: Left4
+    100034: Left5
+    100036: Left6
+    100038: Left7
+    100040: Left8
+    100042: Left9
+    100044: Left_Hand
+    100046: Left_L_Arm
+    100048: Left_U_Arm
+    100050: mag
+    100052: mag release
+    100054: Right1
+    100056: Right10
+    100058: Right11
+    100060: Right12
+    100062: Right13
+    100064: Right14
+    100066: Right15
+    100068: Right2
+    100070: Right3
+    100072: Right4
+    100074: Right5
+    100076: Right6
+    100078: Right7
+    100080: Right8
+    100082: Right9
+    100084: Right_Hand
+    100086: Right_L_Arm
+    100088: Right_U_Arm
+    100090: stock
+    100092: trigger
+    400000: AK
+    400002: //RootNode
+    400004: bolt
+    400006: bullets
+    400008: Dummy01
+    400010: Dummy02
+    400012: fire selector
+    400014: Left1
+    400016: Left10
+    400018: Left11
+    400020: Left12
+    400022: Left13
+    400024: Left14
+    400026: Left15
+    400028: Left2
+    400030: Left3
+    400032: Left4
+    400034: Left5
+    400036: Left6
+    400038: Left7
+    400040: Left8
+    400042: Left9
+    400044: Left_Hand
+    400046: Left_L_Arm
+    400048: Left_U_Arm
+    400050: mag
+    400052: mag release
+    400054: Right1
+    400056: Right10
+    400058: Right11
+    400060: Right12
+    400062: Right13
+    400064: Right14
+    400066: Right15
+    400068: Right2
+    400070: Right3
+    400072: Right4
+    400074: Right5
+    400076: Right6
+    400078: Right7
+    400080: Right8
+    400082: Right9
+    400084: Right_Hand
+    400086: Right_L_Arm
+    400088: Right_U_Arm
+    400090: stock
+    400092: trigger
+    7400000: Take 001
+    9500000: //RootNode
+    11100000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 0
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  additionalBone: 0
+  userData: 

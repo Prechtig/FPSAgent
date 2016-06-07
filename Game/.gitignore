@@ -16,5 +16,4 @@ obj/
 *.csproj
 *.pidb
 *.sln
-*.meta
 *.log
