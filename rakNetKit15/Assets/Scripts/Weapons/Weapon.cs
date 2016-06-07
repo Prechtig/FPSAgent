@@ -260,7 +260,7 @@ public class Weapon : MonoBehaviour
         {
             hit.rigidbody.AddForceAtPosition(2000 * bulletGo.forward, hit.point);
         }
-        if (hit.transform.tag == "Player")
+		if (hit.transform.tag == "Player" || hit.transform.tag == "Bot")
         {
             Instantiate(blood, hit.point, Quaternion.identity);
             DoHitMark();
