@@ -1,5 +1,8 @@
 Temp/
-game.app
 game.app/
 obj/
+<<<<<<< HEAD
 Library/ShaderCache/
+=======
+*.meta
+>>>>>>> 57787fcab06c5af27a88360ef6289901a1cd0b58
