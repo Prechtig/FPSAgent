@@ -56,7 +56,7 @@ public class CharacterValues : MonoBehaviour
 
     void Update()
     {
-        if (networkView.isMine)
+        if (GetComponent<NetworkView>().isMine)
         {
             mouseX = ml.mouseX;
             mouseY = ml.mouseY;

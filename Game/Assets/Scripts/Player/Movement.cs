@@ -34,7 +34,7 @@ public class Movement : MonoBehaviour
 
     void Update()
     {
-        if (networkView.isMine)
+        if (GetComponent<NetworkView>().isMine)
         {
             CheckState();
             CheckInput();

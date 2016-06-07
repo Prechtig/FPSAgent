@@ -125,7 +125,7 @@ public class Weapon : MonoBehaviour
     void Start()
     {
         muzzle.SetActive(false);
-        if (networkView.isMine)
+        if (GetComponent<NetworkView>().isMine)
         {
             spreadTemp = basicSpread;
             spread = basicSpread;
@@ -140,7 +140,7 @@ public class Weapon : MonoBehaviour
 
     void Update()
     {
-        if (networkView.isMine)
+        if (GetComponent<NetworkView>().isMine)
         {
             if (hitAlpha > 0) hitAlpha -= Time.deltaTime;
             spread = Mathf.Clamp(spread, 0, maximumSpread);
@@ -188,7 +188,7 @@ public class Weapon : MonoBehaviour
 
     void OnGUI()
     {
-        if (networkView.isMine)
+        if (GetComponent<NetworkView>().isMine)
         {
 
             float w = crosshairFirstModeHorizontal.width;
@@ -251,7 +251,7 @@ public class Weapon : MonoBehaviour
     void DoHitMark()
     {
         hitAlpha = 2;
-        audio.PlayOneShot(hitMarkerSound, 1f);
+        GetComponent<AudioSource>().PlayOneShot(hitMarkerSound, 1f);
     }
 
     void OnHit(RaycastHit hit)
@@ -264,8 +264,8 @@ public class Weapon : MonoBehaviour
         {
             Instantiate(blood, hit.point, Quaternion.identity);
             DoHitMark();
-            if (hit.transform.root.networkView)
-                hit.transform.root.networkView.RPC("ApplyDamage", RPCMode.AllBuffered, Random.Range(damageMin, damageMax), 1);
+            if (hit.transform.root.GetComponent<NetworkView>())
+                hit.transform.root.GetComponent<NetworkView>().RPC("ApplyDamage", RPCMode.AllBuffered, Random.Range(damageMin, damageMax), 1);
         }
         else
         {

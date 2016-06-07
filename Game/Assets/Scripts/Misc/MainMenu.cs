@@ -180,7 +180,7 @@ public class MainMenu : MonoBehaviour
 
     void OnServerInitialized()
     {
-        networkView.RPC("LoadLevel", RPCMode.AllBuffered, maps[curMapIndex].levelName);
+        GetComponent<NetworkView>().RPC("LoadLevel", RPCMode.AllBuffered, maps[curMapIndex].levelName);
         Debug.Log("Server initialized and ready");
     }
 

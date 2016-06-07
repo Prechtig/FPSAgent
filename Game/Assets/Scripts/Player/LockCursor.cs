@@ -5,7 +5,7 @@ public class LockCursor : MonoBehaviour
 {
     void Start()
     {
-        if (!networkView.isMine)
+        if (!GetComponent<NetworkView>().isMine)
         {
             this.enabled = false;
         }
@@ -13,7 +13,7 @@ public class LockCursor : MonoBehaviour
 
     void Update()
     {
-        if (networkView.isMine)
+        if (GetComponent<NetworkView>().isMine)
         {
             if (Input.GetKeyDown(KeyCode.B) || Input.GetKeyDown(KeyCode.Escape))
             {

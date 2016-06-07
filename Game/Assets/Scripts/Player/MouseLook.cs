@@ -24,7 +24,7 @@ public class MouseLook : MonoBehaviour
 
     void Update()
     {
-        if (networkView.isMine)
+        if (GetComponent<NetworkView>().isMine)
         {
             if (Screen.lockCursor)
             {
@@ -67,8 +67,8 @@ public class MouseLook : MonoBehaviour
     void Start()
     {
         // Make the rigid body not change rotation
-        if (rigidbody)
-            rigidbody.freezeRotation = true;
-        if (!networkView.isMine) this.enabled = false;
+        if (GetComponent<Rigidbody>())
+            GetComponent<Rigidbody>().freezeRotation = true;
+        if (!GetComponent<NetworkView>().isMine) this.enabled = false;
     }
 }

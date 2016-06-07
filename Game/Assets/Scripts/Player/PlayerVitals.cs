@@ -17,7 +17,7 @@ public class PlayerVitals : MonoBehaviour
         Collider[] collies = obj.GetComponentsInChildren<Collider>();
         wep.useGravity = false;
         wep.isKinematic = true;
-        wep.collider.isTrigger = true;
+        wep.GetComponent<Collider>().isTrigger = true;
         foreach (Rigidbody body in bodies)
         {
             body.useGravity = false;
@@ -44,7 +44,7 @@ public class PlayerVitals : MonoBehaviour
         StartCoroutine(Kick3(hitCam, new Vector3(-5f * dmg / 10, Random.Range(-5, 5) * dmg / 10, 0), 0.1f));
         if (hitPoints <= 0)
         {
-            networkView.RPC("Die", RPCMode.AllBuffered);
+            GetComponent<NetworkView>().RPC("Die", RPCMode.AllBuffered);
         }
     }
 
@@ -80,9 +80,9 @@ public class PlayerVitals : MonoBehaviour
         }
         wep.useGravity = true;
         wep.isKinematic = false;
-        wep.collider.isTrigger = false;
+        wep.GetComponent<Collider>().isTrigger = false;
         wep.transform.parent = null;
-        if (networkView.isMine)
+        if (GetComponent<NetworkView>().isMine)
         {
             spawn.Die();
         }
