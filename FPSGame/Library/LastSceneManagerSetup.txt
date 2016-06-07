@@ -1,4 +1,0 @@
-sceneSetups:
-- path: Assets/Photon Unity Networking/Demos/DemoHub/DemoHub-Scene.unity
-  isLoaded: 1
-  isActive: 1
