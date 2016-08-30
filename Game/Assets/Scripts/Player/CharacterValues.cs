@@ -22,7 +22,7 @@ public class CharacterValues : MonoBehaviour
     public Movement m;
     public Weapon wep;
 
-    void OnSerializeNetworkView(BitStream stream, NetworkMessageInfo info)
+    /*void OnSerializeNetworkView(BitStream stream, NetworkMessageInfo info)
     {
 
         // Send data to server
@@ -52,12 +52,12 @@ public class CharacterValues : MonoBehaviour
             stream.Serialize(ref aiming);
             stream.Serialize(ref speed);
         }
-    }
+    }*/
 
     void Update()
     {
-        if (GetComponent<NetworkView>().isMine)
-        {
+        //if (GetComponent<NetworkView>().isMine)
+        //{
             mouseX = ml.mouseX;
             mouseY = ml.mouseY;
             hor = m.hor;
@@ -69,7 +69,7 @@ public class CharacterValues : MonoBehaviour
             aiming = wep.aiming;
             speed = m.speed;
             velPercent = velMag / speed;
-        }
+        /*}
         else
         {
             ml.mouseX = mouseX;
@@ -80,6 +80,6 @@ public class CharacterValues : MonoBehaviour
             m.running = running;
             wep.aiming = aiming;
             velPercent = velMag / speed;
-        }
+        }*/
     }
 }

@@ -34,28 +34,28 @@ public class Movement : MonoBehaviour
 
     void Update()
     {
-        if (GetComponent<NetworkView>().isMine)
-        {
+        // (GetComponent<NetworkView>().isMine)
+        //{
             CheckState();
             CheckInput();
             if (controller.isGrounded)
             {
-                if (Screen.lockCursor)
-                {
+                //if (Screen.lockCursor)
+                //{
                     ver = Input.GetAxis("Vertical");
                     hor = Input.GetAxis("Horizontal");
-                }
+                /*}
                 else
                 {
                     ver = 0;
                     hor = 0;
-                }
+                }*/
                 if (Mathf.Abs(ver) > 0.1f && Mathf.Abs(hor) > 0.1f) adjvar = 0.701f;
                 else adjvar = 1f;
                 moveDirection = new Vector3(hor * adjvar, -2f, ver * adjvar);
                 moveDirection = transform.TransformDirection(moveDirection);
                 moveDirection *= speed;
-                if (Input.GetButtonDown("Jump") && Screen.lockCursor)
+			if (Input.GetButtonDown("Jump"))// && Screen.lockCursor)
                 {
                     if (state == 0)
                         moveDirection.y = jumpSpeed;
@@ -68,22 +68,22 @@ public class Movement : MonoBehaviour
             }
             moveDirection.y -= gravity * Time.deltaTime;
             controller.Move(moveDirection * Time.deltaTime);
-        }
+        /*}
         else
         {
             this.enabled = false;
-        }
+        }*/
     }
 
     void CheckInput()
     {
-        if (Input.GetKeyDown(KeyCode.C) && controller.isGrounded && Screen.lockCursor)
+		if (Input.GetKeyDown(KeyCode.C) && controller.isGrounded)// && Screen.lockCursor)
         {
             if (state == 0) state = 1;
             else if (state == 1) state = 0;
             //else if (state == 2) state = 1;
         }
-        running = (controller.isGrounded && controller.velocity.magnitude > 1 && state == 0 && Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && Screen.lockCursor);
+		running = (controller.isGrounded && controller.velocity.magnitude > 1 && state == 0 && Input.GetKey (KeyCode.LeftShift) && Input.GetKey (KeyCode.W) && !Input.GetKey (KeyCode.S));// && Screen.lockCursor);
     }
 
     void CheckState()

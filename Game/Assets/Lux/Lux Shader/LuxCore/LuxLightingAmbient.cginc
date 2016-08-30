@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
+
 #ifndef LuxIBL_CG_INCLUDED
 #define LuxIBL_CG_INCLUDED
 
@@ -47,8 +49,8 @@
 				float3 DirectionWS = normalize(IN.worldPos - _WorldSpaceCameraPos);
 				float3 ReflDirectionWS = reflect(DirectionWS, worldNormal);
 
-				float3 RayLS = mul( _World2Object, float4(ReflDirectionWS, 0.0f));
-				float3 PositionLS = mul( _World2Object, float4(IN.worldPos, 1.0f));
+				float3 RayLS = mul( unity_WorldToObject, float4(ReflDirectionWS, 0.0f));
+				float3 PositionLS = mul( unity_WorldToObject, float4(IN.worldPos, 1.0f));
 
 				float3 FirstPlaneIntersect  = (_CubemapSize - PositionLS) / RayLS;
 				float3 SecondPlaneIntersect = (-_CubemapSize - PositionLS) / RayLS;

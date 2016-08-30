@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/CloseQuarters.unity
+- path: Assets/Scenes/SimpleArena.unity
   isLoaded: 1
   isActive: 1
