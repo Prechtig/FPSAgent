@@ -217,7 +217,6 @@ public class Weapon : MonoBehaviour
         aiming = (canAim && Input.GetKey(KeyCode.Mouse1));
 		if (!reloading && Time.time > timer && canFire && Input.GetKey(KeyCode.Mouse0) && bulletsLeft > 0)// && Screen.lockCursor)
         {
-			Debug.Log ("bang bang");
             FireOneShot();
         }
 		if (!reloading && canReload && magsLeft > 0 && Input.GetKeyDown(KeyCode.R))// && Screen.lockCursor)
@@ -236,13 +235,20 @@ public class Weapon : MonoBehaviour
         localSource.clip = fireSound;
         localSource.PlayOneShot(fireSound);
         StartCoroutine(MuzzleFlash());
-        StartCoroutine(Kick3(camKB, new Vector3(-Random.Range(minKB, maxKB), Random.Range(minKBSide, maxKBSide), 0), 0.1f));
-        StartCoroutine(Kick3(wepKB, new Vector3(-Random.Range(minKB, maxKB), Random.Range(minKBSide, maxKBSide), 0), 0.1f));
+
+		//Weapon kick
+        //StartCoroutine(Kick3(camKB, new Vector3(-Random.Range(minKB, maxKB), Random.Range(minKBSide, maxKBSide), 0), 0.1f));
+        //StartCoroutine(Kick3(wepKB, new Vector3(-Random.Range(minKB, maxKB), Random.Range(minKBSide, maxKBSide), 0), 0.1f));
 
         float actualSpread = Random.Range(-spread, spread);
-        //Vector3 position = new Vector3(bulletGo.position.x - actualSpread, bulletGo.position.y - actualSpread, bulletGo.position.z);
-        Vector3 direction = gameObject.transform.TransformDirection(new Vector3(Random.Range(-0.01f, 0.01f) * spread, Random.Range(-0.01f, 0.01f) * spread, 1));
-        RaycastHit hit2;
+        Vector3 position = new Vector3(bulletGo.position.x - actualSpread, bulletGo.position.y - actualSpread, bulletGo.position.z);
+
+		//Bullet spread
+        //Vector3 direction = gameObject.transform.TransformDirection(new Vector3(Random.Range(-0.01f, 0.01f) * spread, Random.Range(-0.01f, 0.01f) * spread, 1));
+		Vector3 direction = gameObject.transform.TransformDirection(0,0,1);
+
+
+		RaycastHit hit2;
         if (Physics.Raycast(bulletGo.position, direction, out hit2, range, hitLayers))
         {
             OnHit(hit2);
