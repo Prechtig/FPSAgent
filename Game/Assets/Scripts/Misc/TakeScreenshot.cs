@@ -8,6 +8,4 @@ public class TakeScreenshot : MonoBehaviour
     {
         Application.CaptureScreenshot("Minimap.png", 10);
     }
-
-
 }

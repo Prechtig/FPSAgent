@@ -3,7 +3,6 @@ using System.Collections;
 
 public class PlayerVitals : MonoBehaviour
 {
-    public Spawn spawn;
     public GameObject obj;
     public float hitPoints;
     public Rigidbody wep;
