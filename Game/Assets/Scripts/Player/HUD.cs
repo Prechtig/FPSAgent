@@ -5,6 +5,7 @@ public class HUD : MonoBehaviour
 {
     public PlayerVitals pv;
     public Weapon wep;
+	public GameObject player;
 
 
     // Use this for initialization
