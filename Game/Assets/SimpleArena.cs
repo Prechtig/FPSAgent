@@ -4,15 +4,17 @@ using System.Collections;
 public class SimpleArena : MonoBehaviour {
 
 	private const float defaultWallThickness = 0.2f;
+	public Transform playerSpawnPoint;
+	public Transform[] botSpawnPoints;
 
 	// Use this for initialization
 	void Start () {
-//		GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-//		cube.AddComponent<Rigidbody>();
-//		cube.transform.position = new Vector3 (1, 1, 1);
-//		cube.transform.localScale = new Vector3 (10, 3, defaultWallThickness);
-
-		CreateArena (25, 25, 5, 0.1f);
+		float x = 25;
+		float z = 25;
+		float wallHeight = 5;
+		float wallThickness = 0.1f;
+		CreateArena (x, z, wallHeight, wallThickness);
+		SetSpawnPoints (x, z);
 	}
 	
 	// Update is called once per frame
@@ -48,9 +50,22 @@ public class SimpleArena : MonoBehaviour {
 
 	private void CreateCube(Vector3 position, Vector3 scale) {
 		GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-//		cube.AddComponent<Rigidbody>();
 		cube.transform.position = position;
 		cube.transform.localScale = scale;
 		cube.AddComponent<MeshCollider> ();
+	}
+
+	private void SetSpawnPoints(float x, float z){
+		Debug.Log (-(z / 2) + 1);
+		Vector3 v = new Vector3 (0, 1, -(z / 2) + 1);
+		playerSpawnPoint.Translate(v);
+
+		Vector3 vBot0 = new Vector3 (x / 2 - 2, 1, z / 2 - 2);
+		botSpawnPoints [0].Translate (vBot0);
+		Vector3 vBot1 = new Vector3 (-(x / 2) + 2, 1, z / 2 - 2);
+		botSpawnPoints [1].Translate (vBot1);
+
+		botSpawnPoints [0].LookAt (vBot1);
+		botSpawnPoints [1].LookAt (vBot0);
 	}
 }

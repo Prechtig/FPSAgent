@@ -22,20 +22,21 @@ public class MouseLook : MonoBehaviour
     public float mouseX;
     public float mouseY;
 
+
     void Update()
     {
-        if (GetComponent<NetworkView>().isMine)
-        {
-            if (Screen.lockCursor)
-            {
+        //if (GetComponent<NetworkView>().isMine)
+        //{
+        //    if (Screen.lockCursor)
+        //    {
                 mouseX = Input.GetAxis("Mouse X");
                 mouseY = Input.GetAxis("Mouse Y");
-            }
-            else
-            {
-                mouseX = 0;
-                mouseY = 0;
-            }
+        //    }
+        //    else
+        //    {
+        //        mouseX = 0;
+        //        mouseY = 0;
+        //    }
             if (axes == RotationAxes.MouseXAndY)
             {
                 float rotationX = transform.localEulerAngles.y + mouseX * sensitivityX;
@@ -57,11 +58,11 @@ public class MouseLook : MonoBehaviour
                 transform.localEulerAngles = new Vector3(-rotationY, transform.localEulerAngles.y, 0);
 
             }
-        }
-        else
-        {
-            this.enabled = false;
-        }
+        //}
+        //else
+        //{
+        //    this.enabled = false;
+        //}
     }
 
     void Start()
@@ -69,6 +70,9 @@ public class MouseLook : MonoBehaviour
         // Make the rigid body not change rotation
         if (GetComponent<Rigidbody>())
             GetComponent<Rigidbody>().freezeRotation = true;
-        if (!GetComponent<NetworkView>().isMine) this.enabled = false;
+        //if (!GetComponent<NetworkView>().isMine) this.enabled = false;
+
+		Cursor.lockState = CursorLockMode.Locked;
+
     }
 }
