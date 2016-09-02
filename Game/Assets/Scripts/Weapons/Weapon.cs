@@ -123,94 +123,62 @@ public class Weapon : MonoBehaviour
 
 
     void Start()
-    {
-        muzzle.SetActive(false);
-        //if (GetComponent<NetworkView>().isMine)
-        //{
-            spreadTemp = basicSpread;
-            spread = basicSpread;
-            StartCoroutine(CheckBools());
-            StartCoroutine(Draw());
-        /*}
-        else
-        {
-            this.enabled = false;
-        }*/
-    }
+	{
+		muzzle.SetActive (false);
+		spreadTemp = basicSpread;
+		spread = basicSpread;
+		StartCoroutine (CheckBools ());
+		StartCoroutine (Draw ());
+	}
 
     void Update()
-    {
-        //if (GetComponent<NetworkView>().isMine)
-        //{
-            if (hitAlpha > 0) hitAlpha -= Time.deltaTime;
-            spread = Mathf.Clamp(spread, 0, maximumSpread);
-            if (aiming) spread = aimSpread;
-            else spread = Mathf.Lerp(spread, spreadTemp + cv.velMag * 2, Time.deltaTime * 8);
-            if (spreadTemp > basicSpread) spreadTemp -= Time.deltaTime * spreadReturnTime;
-            pivot = new Vector2(Screen.width / 2, Screen.height / 2);
-            bulletsLeftRead = bulletsLeft;
-            bulletsPerMagRead = bulletsPerMag;
-            magsLeftRead = magsLeft;
-            camKB.localRotation = Quaternion.Lerp(camKB.localRotation, Quaternion.identity, Time.deltaTime * returnSpeed);
-            wepKB.localRotation = Quaternion.Lerp(wepKB.localRotation, Quaternion.identity, Time.deltaTime * returnSpeed);
-            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, curFov, Time.deltaTime * 10);
-            transform.localPosition = Vector3.Lerp(transform.localPosition, curPos, Time.deltaTime * 10);
-            //if (Screen.lockCursor)
-                CheckInput();
-            canReloads[1] = true;
-            canAims[1] = !cv.running;
-            canFires[1] = !cv.running;
-            if (aiming)
-            {
-                curFov = aimFov;
-                curPos = aimPos;
-            }
-            else
-            {
-                curFov = hipFov;
-                if (cv.state == 0)
-                {
-                    curPos = hipPos;
-                }
-                else if (cv.state == 1)
-                {
-                    curPos = crouchPos;
-                }
-            }
+	{
+		if (hitAlpha > 0)
+			hitAlpha -= Time.deltaTime;
+		spread = Mathf.Clamp (spread, 0, maximumSpread);
+		if (aiming)
+			spread = aimSpread;
+		else
+			spread = Mathf.Lerp (spread, spreadTemp + cv.velMag * 2, Time.deltaTime * 8);
+		if (spreadTemp > basicSpread)
+			spreadTemp -= Time.deltaTime * spreadReturnTime;
+		pivot = new Vector2 (Screen.width / 2, Screen.height / 2);
+		bulletsLeftRead = bulletsLeft;
+		bulletsPerMagRead = bulletsPerMag;
+		magsLeftRead = magsLeft;
+		camKB.localRotation = Quaternion.Lerp (camKB.localRotation, Quaternion.identity, Time.deltaTime * returnSpeed);
+		wepKB.localRotation = Quaternion.Lerp (wepKB.localRotation, Quaternion.identity, Time.deltaTime * returnSpeed);
+		cam.fieldOfView = Mathf.Lerp (cam.fieldOfView, curFov, Time.deltaTime * 10);
+		transform.localPosition = Vector3.Lerp (transform.localPosition, curPos, Time.deltaTime * 10);
+		CheckInput ();
+		canReloads [1] = true;
+		canAims [1] = !cv.running;
+		canFires [1] = !cv.running;
+		if (aiming) {
+			curFov = aimFov;
+			curPos = aimPos;
+		} else {
+			curFov = hipFov;
+			if (cv.state == 0) {
+				curPos = hipPos;
+			} else if (cv.state == 1) {
+				curPos = crouchPos;
+			}
+		}
 
-            if (!canAim) aiming = false;
-        /*}
-        else
-        {
-            this.enabled = false;
-        }'7
-    }
+		if (!canAim)
+			aiming = false;
+	}
 
     void OnGUI()
-    {
-        /*if (GetComponent<NetworkView>().isMine)
-        {*/
-
-            float w = crosshairFirstModeHorizontal.width;
-            float h = crosshairFirstModeHorizontal.height;
-            Rect position1 = new Rect((Screen.width + w) / 2 + (spread * sizeMultiplier), (Screen.height - h) / 2, w, h);
-            Rect position2 = new Rect((Screen.width - w) / 2, (Screen.height + h) / 2 + (spread * sizeMultiplier), w, h);
-            Rect position3 = new Rect((Screen.width - w) / 2 - (spread * sizeMultiplier) - w, (Screen.height - h) / 2, w, h);
-            Rect position4 = new Rect((Screen.width - w) / 2, (Screen.height - h) / 2 - (spread * sizeMultiplier) - h, w, h);
-            /*if (!aiming)
-            {
-                GUI.DrawTexture(position1, crosshairFirstModeHorizontal); 	//Right
-                GUI.DrawTexture(position2, crosshairFirstModeVertical); 	//Up
-                GUI.DrawTexture(position3, crosshairFirstModeHorizontal); 	//Left
-                GUI.DrawTexture(position4, crosshairFirstModeVertical);		//Down
-            }
-
-            GUI.color = new Color(1, 1, 1, hitAlpha);
-            GUI.DrawTexture(new Rect((Screen.width - size) / 2, (Screen.height - size) / 2, size, size), tex);
-
-        //}*/
-
-    }
+	{
+		float w = crosshairFirstModeHorizontal.width;
+		float h = crosshairFirstModeHorizontal.height;
+		Rect position1 = new Rect ((Screen.width + w) / 2 + (spread * sizeMultiplier), (Screen.height - h) / 2, w, h);
+		Rect position2 = new Rect ((Screen.width - w) / 2, (Screen.height + h) / 2 + (spread * sizeMultiplier), w, h);
+		Rect position3 = new Rect ((Screen.width - w) / 2 - (spread * sizeMultiplier) - w, (Screen.height - h) / 2, w, h);
+		Rect position4 = new Rect ((Screen.width - w) / 2, (Screen.height - h) / 2 - (spread * sizeMultiplier) - h, w, h);
+	}
 
     void CheckInput()
     {
@@ -266,24 +234,19 @@ public class Weapon : MonoBehaviour
     {
         if (hit.rigidbody)
         {
+			//Add force to shot
             //hit.rigidbody.AddForceAtPosition(2000 * bulletGo.forward, hit.point);
         }
-        if (hit.transform.tag == "Player")
-        {
+		if (hit.transform.tag == "Player") {
 			Debug.Log ("plll");
-            Instantiate(blood, hit.point, Quaternion.identity);
-            DoHitMark();
+			Instantiate (blood, hit.point, Quaternion.identity);
+			DoHitMark ();
 			Debug.Log (hit.transform.name);
 			if (hit.transform.GetComponent<PlayerVitals> ()) {
 				Debug.Log ("fgesgseguse");
 				hit.transform.GetComponent<PlayerVitals> ().ApplyDamage (Random.Range (damageMin, damageMax), 1);
-			
-			
 			}
-			
-            //if (hit.transform.root.GetComponent<NetworkView>())
-              //  hit.transform.root.GetComponent<NetworkView>().RPC("ApplyDamage", RPCMode.AllBuffered, Random.Range(damageMin, damageMax), 1);
-        }
+		}
         else
         {
             if (hit.transform.tag == "Wood")

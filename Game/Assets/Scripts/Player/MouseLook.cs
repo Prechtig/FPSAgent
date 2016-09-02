@@ -24,53 +24,33 @@ public class MouseLook : MonoBehaviour
 
 
     void Update()
-    {
-        //if (GetComponent<NetworkView>().isMine)
-        //{
-        //    if (Screen.lockCursor)
-        //    {
-                mouseX = Input.GetAxis("Mouse X");
-                mouseY = Input.GetAxis("Mouse Y");
-        //    }
-        //    else
-        //    {
-        //        mouseX = 0;
-        //        mouseY = 0;
-        //    }
-            if (axes == RotationAxes.MouseXAndY)
-            {
-                float rotationX = transform.localEulerAngles.y + mouseX * sensitivityX;
+	{
+		mouseX = Input.GetAxis ("Mouse X");
+		mouseY = Input.GetAxis ("Mouse Y");
 
-                rotationY += mouseY * sensitivityY;
-                rotationY = Mathf.Clamp(rotationY, minimumY, maximumY);
+		if (axes == RotationAxes.MouseXAndY) {
+			float rotationX = transform.localEulerAngles.y + mouseX * sensitivityX;
 
-                transform.localEulerAngles = new Vector3(-rotationY, rotationX, 0);
-            }
-            else if (axes == RotationAxes.MouseX)
-            {
-                transform.Rotate(0, mouseX * sensitivityX, 0);
-            }
-            else
-            {
-                rotationY += mouseY * sensitivityY;
-                rotationY = Mathf.Clamp(rotationY, minimumY, maximumY);
+			rotationY += mouseY * sensitivityY;
+			rotationY = Mathf.Clamp (rotationY, minimumY, maximumY);
 
-                transform.localEulerAngles = new Vector3(-rotationY, transform.localEulerAngles.y, 0);
+			transform.localEulerAngles = new Vector3 (-rotationY, rotationX, 0);
+		} else if (axes == RotationAxes.MouseX) {
+			transform.Rotate (0, mouseX * sensitivityX, 0);
+		} else {
+			rotationY += mouseY * sensitivityY;
+			rotationY = Mathf.Clamp (rotationY, minimumY, maximumY);
 
-            }
-        //}
-        //else
-        //{
-        //    this.enabled = false;
-        //}
-    }
+			transform.localEulerAngles = new Vector3 (-rotationY, transform.localEulerAngles.y, 0);
+
+		}
+	}
 
     void Start()
     {
         // Make the rigid body not change rotation
         if (GetComponent<Rigidbody>())
             GetComponent<Rigidbody>().freezeRotation = true;
-        //if (!GetComponent<NetworkView>().isMine) this.enabled = false;
 
 		Cursor.lockState = CursorLockMode.Locked;
 

@@ -26,31 +26,24 @@ public class PlayerAnimations : MonoBehaviour
 
     //PRO ONLY
     void OnAnimatorIK()
-    {
-        if (anim)
-        {
+	{
+		if (anim) {
+			//if the IK is active, set the position and rotation directly to the goal. 
+			if (!cv.reloading) {
 
-            //if the IK is active, set the position and rotation directly to the goal. 
-            if (!cv.reloading)
-            {
-
-                //weight = 1.0 for the right hand means position and rotation will be at the IK goal (the place the character wants to grab)
-                anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1.0f);
-                anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1.0f);
+				//weight = 1.0 for the right hand means position and rotation will be at the IK goal (the place the character wants to grab)
+				anim.SetIKPositionWeight (AvatarIKGoal.LeftHand, 1.0f);
+				anim.SetIKRotationWeight (AvatarIKGoal.LeftHand, 1.0f);
 
 
-                    anim.SetIKPosition(AvatarIKGoal.LeftHand, leftHandIK.position);
-                    anim.SetIKRotation(AvatarIKGoal.LeftHand, leftHandIK.rotation);
-                
-
-            }
-
-                        //if the IK is not active, set the position and rotation of the hand back to the original position
-            else
-            {
-                anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 0);
-                anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, 0);
-            }
-        }
-    }    
+				anim.SetIKPosition (AvatarIKGoal.LeftHand, leftHandIK.position);
+				anim.SetIKRotation (AvatarIKGoal.LeftHand, leftHandIK.rotation);
+			}
+            //if the IK is not active, set the position and rotation of the hand back to the original position
+            else {
+				anim.SetIKPositionWeight (AvatarIKGoal.LeftHand, 0);
+				anim.SetIKRotationWeight (AvatarIKGoal.LeftHand, 0);
+			}
+		}
+	}  
 }

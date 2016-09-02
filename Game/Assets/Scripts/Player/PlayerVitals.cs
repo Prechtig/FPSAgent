@@ -12,12 +12,10 @@ public class PlayerVitals : MonoBehaviour
 
     void Start()
     {
-        //spawn = GameObject.FindWithTag("GameController").GetComponent<Spawn>();
         Rigidbody[] bodies = obj.GetComponentsInChildren<Rigidbody>();
         Collider[] collies = obj.GetComponentsInChildren<Collider>();
         wep.useGravity = false;
         wep.isKinematic = true;
-        //wep.GetComponent<Collider>().isTrigger = true;
         foreach (Rigidbody body in bodies)
         {
             body.useGravity = false;
@@ -35,8 +33,7 @@ public class PlayerVitals : MonoBehaviour
         //hitCam.localRotation = Quaternion.Lerp(hitCam.localRotation, Quaternion.identity, Time.deltaTime * 5);
         //hitWep.localRotation = Quaternion.Lerp(hitWep.localRotation, Quaternion.identity, Time.deltaTime * 5);
     }
-
-    //[RPC]
+		
     public void ApplyDamage(float dmg, int isBullet)
     {
 		Debug.Log ("uff");
@@ -45,7 +42,7 @@ public class PlayerVitals : MonoBehaviour
         //StartCoroutine(Kick3(hitCam, new Vector3(-5f * dmg / 10, Random.Range(-5, 5) * dmg / 10, 0), 0.1f));
         if (hitPoints <= 0)
         {
-			Die ();//GetComponent<NetworkView>().RPC("Die", RPCMode.AllBuffered);
+			Die ();
         }
     }
 
@@ -63,7 +60,6 @@ public class PlayerVitals : MonoBehaviour
         }
     }
 
-    //[RPC]
     protected void Die()
     {
         Destroy(obj.GetComponent<PlayerAnimations>());
@@ -81,12 +77,7 @@ public class PlayerVitals : MonoBehaviour
         }
         wep.useGravity = true;
         wep.isKinematic = false;
-        //wep.GetComponent<Collider>().isTrigger = false;
         wep.transform.parent = null;
-        /*if (GetComponent<NetworkView>().isMine)
-        {
-            spawn.Die();
-        }*/
         obj.transform.parent = null;
         Destroy(wep, 10);
         Destroy(obj, 10);
