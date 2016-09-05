@@ -21,21 +21,26 @@ public class GroundTruths : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-	
+//		playerCam = player.GetComponent<Camera> ();
+//		playerCam = GameObject.FindGameObjectWithTag ("Main Camera");
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
-		frameCounter = ++frameCounter % saveInterval;
+		if (playerCam != null) {
+			frameCounter = ++frameCounter % saveInterval;
 
-		if (frameCounter == 0) {
-			float[] botInfo = GetBotInfo ();
+			if (frameCounter == 0) {
+				float[] botInfo = GetBotInfo ();
 
-			string fileName = GenerateFileName ();
+				string fileName = GenerateFileName ();
 
-			System.IO.File.WriteAllLines (fileName + ".dat", botInfo.Select( f => f.ToString()).ToArray(), System.Text.Encoding.UTF8);
-			Application.CaptureScreenshot (fileName + ".png");
+				System.IO.File.WriteAllLines (fileName + ".dat", botInfo.Select( f => f.ToString()).ToArray(), System.Text.Encoding.UTF8);
+				Application.CaptureScreenshot (fileName + ".png");
+			}
+		} else {
+			playerCam = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera> ();
 		}
 	}
 
