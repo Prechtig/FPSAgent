@@ -46,3 +46,6 @@ LastSceneManagerSetup.txt
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Ground Truths data folder
+groundtruths
