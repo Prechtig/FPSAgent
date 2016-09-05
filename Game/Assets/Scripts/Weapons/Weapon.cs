@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 [System.Serializable]
@@ -38,7 +39,7 @@ public class Weapon : MonoBehaviour
 	[SerializeField]
 	protected int bulletsPerMag = 30;
 	[SerializeField]
-	protected int magsLeft = 10;
+	protected int magsLeft = 4;
 	public float range = 2000;
 	public float damageMin = 10;
 	public float damageMax = 20;
@@ -142,6 +143,7 @@ public class Weapon : MonoBehaviour
 
 	#endregion
 
+	private Text shotsLeftText;
 
 	void Start ()
 	{
@@ -150,6 +152,7 @@ public class Weapon : MonoBehaviour
 		spread = basicSpread;
 		StartCoroutine (CheckBools ());
 		StartCoroutine (Draw ());
+		shotsLeftText = GameObject.FindWithTag("UIText").GetComponent<Text>() as Text;
 	}
 
 	void Update ()
@@ -189,6 +192,8 @@ public class Weapon : MonoBehaviour
 
 		if (!canAim)
 			aiming = false;
+		 
+		shotsLeftText.text = bulletsLeft + " / " + magsLeft;
 	}
 
 	void OnGUI ()
@@ -240,6 +245,7 @@ public class Weapon : MonoBehaviour
 			OnHit (hit2);
 		}
 		bulletsLeft--;
+
 	}
 
 	void DoHitMark ()
