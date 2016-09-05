@@ -56,7 +56,6 @@ public class SimpleArena : MonoBehaviour {
 	}
 
 	private void SetSpawnPoints(float x, float z){
-		Debug.Log (-(z / 2) + 1);
 		Vector3 v = new Vector3 (0, 1, -(z / 2) + 1);
 		playerSpawnPoint.Translate(v);
 

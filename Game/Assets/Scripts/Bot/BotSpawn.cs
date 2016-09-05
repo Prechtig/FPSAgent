@@ -5,18 +5,22 @@ public class BotSpawn : MonoBehaviour
 {
 	public GameObject bot;
 	public Transform[] spawnPoints;
+	public float spawnTime = 3f;
+	public int botsToSpawn;
 
 	// Use this for initialization
 	void Start ()
 	{
-		SpawnBot (); 
-
+		InvokeRepeating ("Spawn", 0, spawnTime);
 	}
 
-	public void SpawnBot()
+
+	void Spawn ()
 	{
-		int random = Random.Range(0, spawnPoints.Length);
-		Instantiate (bot, spawnPoints [random].position, spawnPoints [random].rotation);
+		if(BotVitals.botsAlive < botsToSpawn){
+			int spawnPoint = Random.Range (0, spawnPoints.Length);
+			Instantiate (bot, spawnPoints[spawnPoint].position, spawnPoints[spawnPoint].rotation);
+		}
 	}
 }
 

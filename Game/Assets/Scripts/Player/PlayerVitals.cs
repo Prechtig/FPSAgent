@@ -35,7 +35,6 @@ public class PlayerVitals : MonoBehaviour
 		
     public void ApplyDamage(float dmg, int isBullet)
     {
-		Debug.Log ("uff");
         hitPoints -= dmg;
         //StartCoroutine(Kick3(hitWep, new Vector3(-3f * dmg / 10, Random.Range(-3, 3) * dmg / 10, 0), 0.1f));
         //StartCoroutine(Kick3(hitCam, new Vector3(-5f * dmg / 10, Random.Range(-5, 5) * dmg / 10, 0), 0.1f));

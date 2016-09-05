@@ -263,8 +263,8 @@ public class Weapon : MonoBehaviour
 		if (hit.transform.tag == "Bot") {
 			Instantiate (blood, hit.point, Quaternion.identity);
 			DoHitMark ();
-			if (hit.transform.GetComponent<PlayerVitals> ()) {
-				hit.transform.GetComponent<PlayerVitals> ().ApplyDamage (Random.Range (damageMin, damageMax), 1);
+			if (hit.transform.GetComponent<BotVitals> ()) {
+				hit.transform.GetComponent<BotVitals> ().ApplyDamage (Random.Range (damageMin, damageMax), 1);
 			}
 		} else {
 			if (hit.transform.tag == "Wood") {

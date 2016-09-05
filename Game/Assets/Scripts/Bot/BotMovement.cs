@@ -22,7 +22,6 @@ public class BotMovement : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		float step =  moveSpeed * Time.deltaTime;
-		Debug.Log (Vector3.Distance (transform.position, waypoints [currentWaypoint].position));
 		if (Vector3.Distance(transform.position, waypoints[currentWaypoint].position) < 0.5) {
 			// At waypoint so stop moving
 			GetComponent<Rigidbody> ().velocity = new Vector3 (0, 0, 0);
