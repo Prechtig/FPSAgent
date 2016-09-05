@@ -3,16 +3,16 @@ using System.Collections;
 
 public class SimpleArena : MonoBehaviour {
 
-	private const float defaultWallThickness = 0.2f;
+	public float x;
+	public float z;
+	public float wallHeight;
+	public float wallThickness;
+
 	public Transform playerSpawnPoint;
 	public Transform[] botSpawnPoints;
 
 	// Use this for initialization
 	void Start () {
-		float x = 25;
-		float z = 25;
-		float wallHeight = 5;
-		float wallThickness = 0.1f;
 		CreateArena (x, z, wallHeight, wallThickness);
 		SetSpawnPoints (x, z);
 	}
