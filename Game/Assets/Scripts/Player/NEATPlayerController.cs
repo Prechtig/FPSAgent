@@ -56,7 +56,7 @@ public class NEATPlayerController : MonoBehaviour
 
 	public float shootThreshold;
 	public float reloadThreshold;
-	public Weapon weapon;
+	public NEATWeapon weapon;
 
 	private float[] simulatedInputs;
 	void Start(){
@@ -93,8 +93,8 @@ public class NEATPlayerController : MonoBehaviour
 		if (simulatedInputs [3] > reloadThreshold) {
 			weapon.Reload ();
 		}
-		simulatedInputs [3] += 0.1f;
-		simulatedInputs [3] = simulatedInputs [3] % 2;
+		simulatedInputs [3] += 0.01f;
+		simulatedInputs [3] = simulatedInputs [3] % 0.71f;
 
 
 		/*CheckState ();
