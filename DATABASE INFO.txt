@@ -1,0 +1,4 @@
+DATABASE INFO:
+Name:		TrainingDB
+Username:	tadmin
+Passwprd:	proword
