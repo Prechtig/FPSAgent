@@ -12,17 +12,13 @@ public class GroundTruths : MonoBehaviour
 	public string botTag;
 	public string fileNamePrefix;
 
-	public GameObject player;
 	public Camera playerCam;
-
 
 	private int frameCounter = 0;
 
 	// Use this for initialization
 	void Start ()
 	{
-//		playerCam = player.GetComponent<Camera> ();
-//		playerCam = GameObject.FindGameObjectWithTag ("Main Camera");
 	}
 	
 	// Update is called once per frame
@@ -52,10 +48,11 @@ public class GroundTruths : MonoBehaviour
 
 		int counter = 0;
 		foreach (GameObject bot in closestBots) {
-			inputs[counter++] = HorizontalAngleTo (bot);
-			inputs[counter++] = VerticalAngleTo (bot);
-			inputs[counter++] = DistanceTo (bot);
-			inputs[counter++] = IsBotWithinSight (bot) ? 1 : 0;
+			bool isWithinSight = IsBotWithinSight (bot);
+			inputs[counter++] = !isWithinSight ? 0 : HorizontalAngleTo (bot);
+			inputs[counter++] = !isWithinSight ? 0 : VerticalAngleTo (bot);
+			inputs[counter++] = !isWithinSight ? 0 : DistanceTo (bot);
+			inputs[counter++] = !isWithinSight ? 0 : 1;
 		}
 		return inputs;
 	}
@@ -77,29 +74,60 @@ public class GroundTruths : MonoBehaviour
 	}
 
 	private float AngleTo (GameObject bot) {
-		return Vector3.Angle (player.transform.rotation.eulerAngles, DirectionTo (bot));
+		return Vector3.Angle (playerCam.transform.forward, DirectionTo (bot));
 	}
 
 	private float VerticalAngleTo (GameObject bot) {
-		return Vector3.Angle (player.transform.forward, Vector3.up);
+		float botY = DirectionTo (bot).normalized.y;
+		float playerY = playerCam.transform.forward.normalized.y;
+
+		return RadiansToDegree(Math.Asin (botY) - Math.Asin (playerY));
 	}
 
 	private float HorizontalAngleTo (GameObject bot) {
-		float playerY = player.transform.rotation.eulerAngles.y;
-		float botY = DirectionTo (bot).y;
-		return playerY - botY;
+		float angle = Vector3.Angle (playerCam.transform.forward, DirectionTo (bot));
+
+		switch (AngleDir (playerCam.transform.forward, DirectionTo (bot), Vector3.up)) {
+		case Direction.Left:
+			return -angle;
+		case Direction.Right:
+			return angle;
+		case Direction.Forward:
+			return 0;
+		}
+		throw new InvalidOperationException ();
 	}
 
 	private float DistanceTo(GameObject bot) {
-		return Vector3.Distance (player.transform.position, bot.transform.position);
+		return Vector3.Distance (playerCam.transform.position, bot.transform.position);
 	}
 
 	private Vector3 DirectionTo(GameObject bot) {
 		// Gets a vector that points from the player's position to the bot's.
-		return bot.transform.position - player.transform.position;
+		return bot.transform.position - playerCam.transform.position;
 	}
 
 	private string GenerateFileName() {
 		return "groundtruths/" + fileNamePrefix + "_" + DateTime.Now.ToString ("yyyy-MM-dd_hh-mm-ss-fff");
 	}
+
+	private Direction AngleDir(Vector3 fwd, Vector3 targetDir, Vector3 up)
+	{
+		Vector3 perp = Vector3.Cross(fwd, targetDir);
+		float dir = Vector3.Dot(perp, up);
+
+		if (dir > 0.0f) {
+			return Direction.Right;
+		} else if (dir < 0.0f) {
+			return Direction.Left;
+		} else {
+			return Direction.Forward;
+		}
+	}
+
+	private float RadiansToDegree(double radians) {
+		return (float) (radians * 180 / Math.PI);
+	}
 }
+
+enum Direction { Left, Right, Forward };
