@@ -12,13 +12,13 @@ public class TrainingDataCapturer : MonoBehaviour
 	public string cameraTag;
 	private Camera playerCam;
 
-	private GroundTruths groundTruthsScript;
+	private GroundTruth groundTruthScript;
 
 
 	// Use this for initialization
 	void Start ()
 	{
-		groundTruthsScript = GetComponent<GroundTruths> ();
+		groundTruthScript = GetComponent<GroundTruth> ();
 	}
 	
 	// Update is called once per frame
@@ -37,7 +37,7 @@ public class TrainingDataCapturer : MonoBehaviour
 	}
 
 	public TrainingData CaptureTrainingData() {
-		float[] groundTruths = groundTruthsScript.CalculateGroundTruths (playerCam, botsToSave);
+		float[] groundTruths = groundTruthScript.CalculateGroundTruths (playerCam, botsToSave);
 		Screenshot screenshot = ScreenSnapper.SnapScreenshot (playerCam);
 		return new TrainingData (groundTruths, screenshot);
 	}

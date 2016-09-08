@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
-public class GroundTruths : MonoBehaviour
+public class GroundTruth : MonoBehaviour
 {
 	public float[] CalculateGroundTruths (Camera playerCam, int botsToSave) {
 		IEnumerable<GameObject> closestBots = FindClosestBots (playerCam, botsToSave);
