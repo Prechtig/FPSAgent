@@ -2,15 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 
-[System.Serializable]
-public class ReloadSound
-{
-	public string name = "Mag out";
-	public AudioClip clip;
-	public float length;
-}
-
-public class Weapon : MonoBehaviour
+public class NEATWeapon : MonoBehaviour
 {
 	public Animation anim;
 	public AnimationClip fireAnim;
@@ -21,11 +13,11 @@ public class Weapon : MonoBehaviour
 	#region bools
 
 	public bool reloading;
-	public bool[] canAims;
-	private bool canAim;
-	public bool[] canReloads;
-	private bool canReload;
-	public bool[] canFires;
+	//public bool[] canAims;
+	//private bool canAim;
+	//public bool[] canReloads;
+	//private bool canReload;
+	//public bool[] canFires;
 	private bool canFire;
 
 	#endregion
@@ -143,21 +135,22 @@ public class Weapon : MonoBehaviour
 
 	#endregion
 
+
 	private Text shotsLeftText;
 
 	void Start ()
 	{
 		muzzle.SetActive (false);
-		spreadTemp = basicSpread;
-		spread = basicSpread;
-		StartCoroutine (CheckBools ());
+		//spreadTemp = basicSpread;
+		//spread = basicSpread;
+		//StartCoroutine (CheckBools ());
 		StartCoroutine (Draw ());
 		shotsLeftText = GameObject.FindWithTag("UIText").GetComponent<Text>() as Text;
 	}
 
 	void Update ()
 	{
-		if (hitAlpha > 0)
+		/*if (hitAlpha > 0)
 			hitAlpha -= Time.deltaTime;
 		spread = Mathf.Clamp (spread, 0, maximumSpread);
 		if (aiming)
@@ -174,7 +167,7 @@ public class Weapon : MonoBehaviour
 		wepKB.localRotation = Quaternion.Lerp (wepKB.localRotation, Quaternion.identity, Time.deltaTime * returnSpeed);
 		cam.fieldOfView = Mathf.Lerp (cam.fieldOfView, curFov, Time.deltaTime * 10);
 		transform.localPosition = Vector3.Lerp (transform.localPosition, curPos, Time.deltaTime * 10);
-		CheckInput ();
+		//CheckInput ();
 		canReloads [1] = true;
 		canAims [1] = !cv.running;
 		canFires [1] = !cv.running;
@@ -192,10 +185,11 @@ public class Weapon : MonoBehaviour
 
 		if (!canAim)
 			aiming = false;
-
+		 */
 		shotsLeftText.text = bulletsLeft + " / " + magsLeft;
 	}
 
+	/*
 	void OnGUI ()
 	{
 		float w = crosshairFirstModeHorizontal.width;
@@ -205,9 +199,12 @@ public class Weapon : MonoBehaviour
 		Rect position3 = new Rect ((Screen.width - w) / 2 - (spread * sizeMultiplier) - w, (Screen.height - h) / 2, w, h);
 		Rect position4 = new Rect ((Screen.width - w) / 2, (Screen.height - h) / 2 - (spread * sizeMultiplier) - h, w, h);
 	}
+	*/
 
+	/*
 	void CheckInput ()
 	{
+
 		aiming = (canAim && Input.GetKey (KeyCode.Mouse1));
 		if (!reloading && Time.time > timer && canFire && Input.GetKey (KeyCode.Mouse0) && bulletsLeft > 0) {// && Screen.lockCursor)
 			FireOneShot ();
@@ -216,36 +213,39 @@ public class Weapon : MonoBehaviour
 			reloading = true;
 			StartCoroutine (Reload ());
 		}
+
 	}
+	*/
 
-	void FireOneShot ()
+	public void FireOneShot ()
 	{
-		spreadTemp += spreadAddPerShot;
-		timer = Time.time + fireRate;
-		anim.Rewind (fireAnim.name);
-		anim.Play (fireAnim.name);
-		localSource.clip = fireSound;
-		localSource.PlayOneShot (fireSound);
-		StartCoroutine (MuzzleFlash ());
+		if (!reloading && Time.time > timer && canFire && bulletsLeft > 0) {// && Screen.lockCursor)
+			//spreadTemp += spreadAddPerShot;
+			timer = Time.time + fireRate;
+			anim.Rewind (fireAnim.name);
+			anim.Play (fireAnim.name);
+			//localSource.clip = fireSound;
+			//localSource.PlayOneShot (fireSound);
+			StartCoroutine (MuzzleFlash ());
 
-		//Weapon kick
-		//StartCoroutine(Kick3(camKB, new Vector3(-Random.Range(minKB, maxKB), Random.Range(minKBSide, maxKBSide), 0), 0.1f));
-		//StartCoroutine(Kick3(wepKB, new Vector3(-Random.Range(minKB, maxKB), Random.Range(minKBSide, maxKBSide), 0), 0.1f));
+			//Weapon kick
+			//StartCoroutine(Kick3(camKB, new Vector3(-Random.Range(minKB, maxKB), Random.Range(minKBSide, maxKBSide), 0), 0.1f));
+			//StartCoroutine(Kick3(wepKB, new Vector3(-Random.Range(minKB, maxKB), Random.Range(minKBSide, maxKBSide), 0), 0.1f));
 
-		float actualSpread = Random.Range (-spread, spread);
-		Vector3 position = new Vector3 (bulletGo.position.x - actualSpread, bulletGo.position.y - actualSpread, bulletGo.position.z);
+			//float actualSpread = Random.Range (-spread, spread);
+			//Vector3 position = new Vector3 (bulletGo.position.x - actualSpread, bulletGo.position.y - actualSpread, bulletGo.position.z);
 
-		//Bullet spread
-		//Vector3 direction = gameObject.transform.TransformDirection(new Vector3(Random.Range(-0.01f, 0.01f) * spread, Random.Range(-0.01f, 0.01f) * spread, 1));
-		Vector3 direction = gameObject.transform.TransformDirection (0, 0, 1);
+			//Bullet spread
+			//Vector3 direction = gameObject.transform.TransformDirection(new Vector3(Random.Range(-0.01f, 0.01f) * spread, Random.Range(-0.01f, 0.01f) * spread, 1));
+			Vector3 direction = gameObject.transform.TransformDirection (0, 0, 1);
 
 
-		RaycastHit hit2;
-		if (Physics.Raycast (bulletGo.position, direction, out hit2, range, hitLayers)) {
-			OnHit (hit2);
+			RaycastHit hit2;
+			if (Physics.Raycast (bulletGo.position, direction, out hit2, range, hitLayers)) {
+				OnHit (hit2);
+			}
+			bulletsLeft--;
 		}
-		bulletsLeft--;
-
 	}
 
 	void DoHitMark ()
@@ -296,31 +296,41 @@ public class Weapon : MonoBehaviour
 		}
 	}
 
-	IEnumerator Reload ()
+	public void Reload ()
 	{
+		if (!reloading && magsLeft > 0) {// && Screen.lockCursor)
+			reloading = true;
+			StartCoroutine (RunReload ());
+		}
+	}
+
+	private IEnumerator RunReload(){
 		reloading = true;
-		canAims [0] = false;
-		canFires [0] = false;
-		canReloads [0] = false;
+		//canAims [0] = false;
+		//canFires [0] = false;
+		//canReloads [0] = false;
+		anim [reloadAnim.name].speed = 3;
+		anim [reloadEmptyAnim.name].speed = 3;
 		if (bulletsLeft > 0) {
-			StartCoroutine (ReloadingSound (reloadSounds));
+			//StartCoroutine (ReloadingSound (reloadSounds));
 			anim.Play (reloadAnim.name);
-			yield return new WaitForSeconds (reloadAnim.length);
+			yield return new WaitForSeconds (reloadAnim.length / 3);
 			bulletsLeft = bulletsPerMag + 1;
 			magsLeft--;
 		} else {
-			StartCoroutine (ReloadingSound (reloadSoundsEmpty));
+			//StartCoroutine (ReloadingSound (reloadSoundsEmpty));
 			anim.Play (reloadEmptyAnim.name);
-			yield return new WaitForSeconds (reloadEmptyAnim.length);
+			yield return new WaitForSeconds (reloadEmptyAnim.length / 3);
 			bulletsLeft = bulletsPerMag;
 			magsLeft--;
 		}
-		canAims [0] = true;
-		canFires [0] = true;
-		canReloads [0] = true;
+		//canAims [0] = true;
+		//canFires [0] = true;
+		//canReloads [0] = true;
 		reloading = false;
 	}
 
+	/*
 	IEnumerator ReloadingSound (ReloadSound[] theSound)
 	{
 		foreach (ReloadSound lol in theSound) {
@@ -329,7 +339,9 @@ public class Weapon : MonoBehaviour
 			localSource.Play ();
 		}
 	}
+	*/
 
+	/*
 	IEnumerator CheckBools ()
 	{
 		CheckAim ();
@@ -338,6 +350,7 @@ public class Weapon : MonoBehaviour
 		yield return new WaitForSeconds (0.1f);
 		StartCoroutine (CheckBools ());
 	}
+	*/
 
 	IEnumerator MuzzleFlash ()
 	{
@@ -346,6 +359,7 @@ public class Weapon : MonoBehaviour
 		muzzle.SetActive (false);
 	}
 
+	/*
 	void CheckAim ()
 	{
 		canAim = false;
@@ -355,7 +369,9 @@ public class Weapon : MonoBehaviour
 		}
 		canAim = true;
 	}
+	*/
 
+	/*
 	void CheckReload ()
 	{
 		canReload = false;
@@ -365,29 +381,37 @@ public class Weapon : MonoBehaviour
 		}
 		canReload = true;
 	}
+	*/
 
+	/*
 	void CheckFire ()
 	{
+
 		canFire = false;
 		foreach (bool lol in canFires) {
 			if (!lol)
 				return;
 		}
 		canFire = true;
+
 	}
+	*/
 
 	IEnumerator Draw ()
 	{
-		canAims [0] = false;
-		canFires [0] = false;
-		canReloads [0] = false;
+		//canAims [0] = false;
+		//canFires [0] = false;
+		//canReloads [0] = false;
 		//localSource.clip = drawSound;
 		//localSource.Play();
-		StartCoroutine (ReloadingSound (drawSound));
+		//StartCoroutine (ReloadingSound (drawSound));
+		anim [drawAnim.name].speed = 3;
 		anim.Play (drawAnim.name);
-		yield return new WaitForSeconds (drawAnim.length);
-		canAims [0] = true;
-		canFires [0] = true;
-		canReloads [0] = true;
+		yield return new WaitForSeconds (drawAnim.length / 3);
+		//canAims [0] = true;
+		//canFires [0] = true;
+		canFire = true;
+		//canReload = true;
+		//canReloads [0] = true;
 	}
 }

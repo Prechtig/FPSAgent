@@ -56,8 +56,8 @@ public class SimpleArena : MonoBehaviour {
 	}
 
 	private void SetSpawnPoints(float x, float z){
-		Vector3 v = new Vector3 (0, 1, -(z / 2) + 1);
-		playerSpawnPoint.Translate(v);
+//		Vector3 v = new Vector3 (0, 1, -(z / 2) + 1);
+//		playerSpawnPoint.Translate(v);
 
 		Vector3 vBot0 = new Vector3 (x / 2 - 2, 1, z / 2 - 2);
 		botSpawnPoints [0].Translate (vBot0);
