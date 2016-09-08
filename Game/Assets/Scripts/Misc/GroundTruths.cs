@@ -14,9 +14,9 @@ public class GroundTruths : MonoBehaviour
 		int counter = 0;
 		foreach (GameObject bot in closestBots) {
 			bool isWithinSight = GameObjectHelper.IsObjectWithinSight (playerCam, bot);
-			inputs[counter++] = !isWithinSight ? 0 : GameObjectHelper.HorizontalAngleTo (playerCam, bot);
-			inputs[counter++] = !isWithinSight ? 0 : GameObjectHelper.VerticalAngleTo (playerCam, bot);
-			inputs[counter++] = !isWithinSight ? 0 : GameObjectHelper.DistanceTo (playerCam, bot);
+			inputs[counter++] = !isWithinSight ? 0 : GameObjectHelper.HorizontalAngleTo (playerCam.transform, bot.transform);
+			inputs[counter++] = !isWithinSight ? 0 : GameObjectHelper.VerticalAngleTo (playerCam.transform, bot.transform);
+			inputs[counter++] = !isWithinSight ? 0 : GameObjectHelper.DistanceTo (playerCam.transform, bot.transform);
 			inputs[counter++] = !isWithinSight ? 0 : 1;
 		}
 		return inputs;
@@ -24,7 +24,7 @@ public class GroundTruths : MonoBehaviour
 
 	private IEnumerable<GameObject> FindClosestBots (Camera playerCam, int amountOfBotsToFind) {
 		GameObject[] allBots = GameObject.FindGameObjectsWithTag ("Bot");
-		return allBots.OrderBy (bot => GameObjectHelper.AngleTo (playerCam, bot))
+		return allBots.OrderBy (bot => GameObjectHelper.AngleTo (playerCam.transform, bot.transform))
 					.Take (amountOfBotsToFind);
 
 	}
