@@ -23,6 +23,13 @@ public class GameObjectHelper
 		return RadiansToDegree(Math.Asin (botY) - Math.Asin (playerY));
 	}
 
+	public static float VerticalAngleTo (Transform viewer, Transform obj) {
+		float botY = DirectionTo (viewer, obj).normalized.y;
+		float playerY = viewer.forward.normalized.y;
+
+		return RadiansToDegree(Math.Asin (botY) - Math.Asin (playerY));
+	}
+
 	public static float HorizontalAngleTo (Camera viewer, GameObject obj) {
 		float angle = Vector3.Angle (viewer.transform.forward, DirectionTo (viewer, obj));
 
