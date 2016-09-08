@@ -7,9 +7,9 @@ public class ScreenSnapper {
 	/// Snaps a screenshot from a given camera.
 	/// Uses the cameras target texture as the screen.
 	/// </summary>
-	/// <returns>The screenshot as a flattened array</returns>
+	/// <returns>The screenshot as a flattened array with width and height info</returns>
 	/// <param name="camera">The camera that should be used when capturing the screenshot</param>
-	public static Color32[] SnapScreenshot(Camera camera) {
+	public static Screenshot SnapScreenshot(Camera camera) {
 		RenderTexture cameraRenderTexture = camera.targetTexture;
 		if (cameraRenderTexture == null) {
 			throw new InvalidOperationException ("The camera did not have any target texture. Please assign one to the camera");
@@ -21,7 +21,7 @@ public class ScreenSnapper {
 		int width = cameraRenderTexture.width;
 		int height = cameraRenderTexture.height;
 
-		Texture2D tex = new Texture2D (width, height, TextureFormat.RGB24, false);
+		Texture2D tex = new Texture2D (width, height, TextureFormat.ARGB32, false);
 
 		// Read screen contents into the texture
 		tex.ReadPixels (new Rect (0, 0, width, height), 0, 0);
@@ -29,6 +29,6 @@ public class ScreenSnapper {
 
 		RenderTexture.active = currentRT;
 
-		return tex.GetPixels32 ();
+		return new Screenshot (tex.GetPixels32 (), width, height);
 	}
 }
