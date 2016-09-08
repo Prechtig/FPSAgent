@@ -6,7 +6,6 @@ public class ArrayHelper {
 
 	public static byte[] ToRGB(Color32[] flattened, int width) {
 		return flattened.Select (color => ColorToRGB (color)).SelectMany(color => color).ToArray();
-
 	}
 
 	public static byte[] ColorToRGB(Color32 color) {
@@ -16,6 +15,4 @@ public class ArrayHelper {
 		rgba [2] = color.b;
 		return rgba;
 	}
-
 }
-
