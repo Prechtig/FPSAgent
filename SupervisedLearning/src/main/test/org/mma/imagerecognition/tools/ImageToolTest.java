@@ -1,11 +1,12 @@
 package org.mma.imagerecognition.tools;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-import static org.junit.Assert.*;
+import java.io.File;
 
 import org.junit.Test;
-
-import org.mma.imagerecognition.tools.ImageTool;
 
 public class ImageToolTest {
 	
@@ -35,7 +36,7 @@ public class ImageToolTest {
 										31, 32, 33,
 										41, 42, 43 };
 		
-		float[][][] imageData3D = ImageTool.ConvertFlattenedTo3D(flattened, 2, 3);
+		float[][][] imageData3D = ImageTool.convertFlattenedTo3D(flattened, 2, 3);
 		
 		assertEquals(11f, imageData3D[0][0][0], DELTA);
 		assertEquals(12f, imageData3D[0][0][1], DELTA);
@@ -53,5 +54,41 @@ public class ImageToolTest {
 		assertEquals(42f, imageData3D[1][1][1], DELTA);
 		assertEquals(43f, imageData3D[1][1][2], DELTA);
 	}
+	
+	@Test
+	public void testFlipFlattenedImage() {
+		byte[] flattened = new byte[] { 11, 12, 13,
+										21, 22, 23,
+										31, 32, 33,
+										41, 42, 43 };
+		
+		byte[] expected = new byte[] { 	31, 32, 33,
+										41, 42, 43,
+										11, 12, 13,
+										21, 22, 23 };
+		
+		byte[] flipped = ImageTool.flipImageBytes(flattened, 2, 3);
+		assertArrayEquals(expected, flipped);
+	}
+	
+	@Test
+	public void testPrintPngImage() {
+		byte[] flattened = new byte[] { 0, 0, 0,
+										(byte)0xFF, 0, 0,
+										0, (byte)0xFF, 0,
+										0, 0, (byte)0xFF };
+		try {
+		ImageTool.printPngImage(flattened, 2, new File("test.png"));
+		} catch (Exception e) {
+			fail("Should not happen");
+		}
+	}
+	
+//	@Test
+//	public void testPrintImageFromDatabase() {
+//		TrainingDbDao.initializeConnection("uid", "pwd");
+//		TrainingData trainingData = TrainingDbDao.getImages(1).get(0);
+//		ImageTool.printPngImage(trainingData.getPixelData(), trainingData.getWidth());
+//	}
 
 }
