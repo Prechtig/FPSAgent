@@ -19,7 +19,7 @@ public class TrainingDataCapturer : MonoBehaviour
 	void Start ()
 	{
 		DatabaseWriter.Initialize ();
-		groundTruthsScript = GetComponent<GroundTruths> ();
+		groundTruthScript = GetComponent<GroundTruth> ();
 	}
 	
 	// Update is called once per frame
