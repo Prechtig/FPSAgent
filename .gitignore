@@ -49,3 +49,6 @@ Thumbs.db
 
 # Ground Truths data folder
 groundtruths
+
+#Properties
+user_credentials.properties
