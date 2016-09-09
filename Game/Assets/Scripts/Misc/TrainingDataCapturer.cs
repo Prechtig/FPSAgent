@@ -18,7 +18,8 @@ public class TrainingDataCapturer : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		groundTruthScript = GetComponent<GroundTruth> ();
+		DatabaseWriter.Initialize ();
+		groundTruthsScript = GetComponent<GroundTruths> ();
 	}
 	
 	// Update is called once per frame
@@ -31,7 +32,7 @@ public class TrainingDataCapturer : MonoBehaviour
 
 			if (frameCounter == 0) {
 				TrainingData trainingData = CaptureTrainingData ();
-				Debug.Log ("Width " + trainingData.GetScreenshot ().GetWidth ());
+				DatabaseWriter.InsertTrainingData (trainingData);
 			}
 		}
 	}

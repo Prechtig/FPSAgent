@@ -14,7 +14,7 @@ public class TrainingData {
 	public static String horizontalAngleKey = "horizontalAngle";
 	public static String verticalAngleKey = "verticalAngle";
 	public static String distanceKey = "distance";
-	public static String withinSightKey = "withinSight";
+	public static String withinSightKey = "withinsight";
 	
 	public static int numberOfBots = 5;
 	
