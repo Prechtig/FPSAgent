@@ -1,5 +1,7 @@
 package org.deeplearning4j.examples.recurrent.seq2seq;
 
+import java.util.ArrayList;
+
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.ComputationGraphConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
@@ -18,9 +20,6 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.api.MultiDataSet;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
-import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
-
-import java.util.ArrayList;
 
 
 /**
