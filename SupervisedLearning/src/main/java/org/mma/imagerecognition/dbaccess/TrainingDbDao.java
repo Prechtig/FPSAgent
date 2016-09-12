@@ -9,14 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mma.imagerecognition.dataobjects.TrainingData;
+import org.mma.imagerecognition.tools.PropertiesReader;
 
 public class TrainingDbDao {
 	private static String databaseURL = "jdbc:mysql://mydb.itu.dk/TrainingDB";
 	private static Connection conn = null;
 	
-	public static void initializeConnection(String username, String password) {
+	public static void initializeConnection() {
 		try {
-			conn = DriverManager.getConnection(databaseURL, username, password);
+			conn = DriverManager.getConnection(databaseURL, PropertiesReader.getUserId(), PropertiesReader.getPassword());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
