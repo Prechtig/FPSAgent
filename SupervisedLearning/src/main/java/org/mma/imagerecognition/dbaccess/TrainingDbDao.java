@@ -15,6 +15,11 @@ public class TrainingDbDao {
 	private static String databaseURL = "jdbc:mysql://mydb.itu.dk/TrainingDB";
 	private static Connection conn = null;
 	
+	private static PreparedStatement getWidthHeightPS;
+	private static PreparedStatement getRandomTrainingDataPS;
+	private static String GET_WIDTH_HEIGHT = "SELECT width, height FROM trainingData LIMIT 1";
+	
+	
 	public static void initializeConnection() {
 		try {
 			conn = DriverManager.getConnection(databaseURL, PropertiesReader.getUserId(), PropertiesReader.getPassword());
@@ -52,5 +57,36 @@ public class TrainingDbDao {
 		}
 		
 		return trainingSet;
+	}
+	
+	public static int getWidthHeightProduct() {
+		if(conn==null) {
+			throw new IllegalStateException("Cannot execute queries before connection has been initialized.");
+		}
+		
+		if(getWidthHeightPS == null) {
+			try {
+				getWidthHeightPS = conn.prepareStatement(GET_WIDTH_HEIGHT);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		int result = 0;
+		try {
+			ResultSet rs = getWidthHeightPS.executeQuery();
+			rs.next();
+			result = rs.getInt(1) * rs.getInt(2);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(result == 0) {
+			throw new IllegalStateException();
+		}
+		
+		return result;
 	}
 }
