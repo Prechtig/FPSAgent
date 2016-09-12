@@ -97,4 +97,12 @@ public class ImageTool {
 		}
 		return result;
 	}
+	
+	public static float scale(byte b) {
+		return toFloat(b) / 0xFF;
+	}
+	
+	public static float toFloat(byte b) {
+		return (float) (b & 0xFF);
+	}
 }

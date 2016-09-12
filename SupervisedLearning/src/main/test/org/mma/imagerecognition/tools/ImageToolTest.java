@@ -84,6 +84,26 @@ public class ImageToolTest {
 		}
 	}
 	
+	@Test
+	public void testByteToFloatConversion() {
+		assertEquals(0f,	ImageTool.toFloat((byte) 0),	DELTA);
+		assertEquals(0f,	ImageTool.toFloat((byte) 0x00),	DELTA);
+		assertEquals(17f,	ImageTool.toFloat((byte) 17),	DELTA);
+		assertEquals(255f,	ImageTool.toFloat((byte) 255),	DELTA);
+		assertEquals(255f,	ImageTool.toFloat((byte) 0xFF),	DELTA);
+	}
+	
+	@Test
+	public void testByteScaling() {
+		assertEquals(0f,			ImageTool.scale((byte) 0),		DELTA);
+		assertEquals(0f,			ImageTool.scale((byte) 0x00),	DELTA);
+		assertEquals((17f/255f),	ImageTool.scale((byte) 17),		DELTA);
+		assertEquals((52f/255f),	ImageTool.scale((byte) 52),		DELTA);
+		assertEquals((128/255f),	ImageTool.scale((byte) 128),	DELTA);
+		assertEquals(1f,			ImageTool.scale((byte) 255),	DELTA);
+		assertEquals(1f,			ImageTool.scale((byte) 0xFF),	DELTA);
+	}
+	
 //	@Test
 //	public void testPrintImageFromDatabase() {
 //		TrainingDbDao.initializeConnection("uid", "pwd");
