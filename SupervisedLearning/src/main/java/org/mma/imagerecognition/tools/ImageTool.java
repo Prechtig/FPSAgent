@@ -124,6 +124,23 @@ public class ImageTool {
 		int height = calculateHeight(array.length, width);
 		return Nd4j.create(array, new int[] {width, height, 3}, 'c');
 	}
+	
+	public static INDArray convertToINDArray(double[][] values) {
+		return Nd4j.create(values);
+	}
+	
+	public static INDArray convertToINDArray(int width, int height, double[][] values) {
+		return Nd4j.create(flatten(values), new int[] {width, height, 3, values.length}, 'c');
+	}
+	
+	public static double[] flatten(double[][] values) {
+		int arrLength = values[0].length;
+		double[] result = new double[values.length * arrLength];
+		for(int i = 0; i < values.length; i++) {
+			System.arraycopy(values[i], 0, result, i * arrLength, arrLength);
+		}
+		return result;
+	}
 
 	public static Float[] mapToFloats(byte[] bs, Function<? super Byte, ? extends Float> mapper) {
 		IntStream.range(0, bs.length).mapToDouble(i -> scale(bs[i])).toArray();
@@ -157,4 +174,20 @@ public class ImageTool {
 	public static double toDouble(byte b) {
 		return (b & 0xFF);
 	}
+	
+//	public static void asdads(int width, byte[]... bs) {
+//		int arrLength = bs[0].length;
+//		
+//		double[] result = new double[arrLength * bs.length];
+//		
+//		for(int i = 0; i < bs.length; i++) {
+//			byte[] cur = bs[i];
+//			System.arraycopy(cur, 0, result, i * arrLength, arrLength);
+//		}
+//		
+//		int height = calculateHeight(bs[0].length, width);
+//		
+//		
+//		
+//	}
 }

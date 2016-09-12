@@ -9,13 +9,14 @@ public class TrainingData {
 	private int height, width;
 	private byte[] pixelData;
 	private Map<String, Double> features = new HashMap<String, Double>();
+	private double[] featureDoubles;
 	
-	public static String horizontalAngleKey = "horizontalAngle";
-	public static String verticalAngleKey = "verticalAngle";
-	public static String distanceKey = "distance";
-	public static String withinSightKey = "withinsight";
+	public static final String horizontalAngleKey = "horizontalAngle";
+	public static final String verticalAngleKey = "verticalAngle";
+	public static final String distanceKey = "distance";
+	public static final String withinSightKey = "withinsight";
 	
-	public static int numberOfBots = 5;
+	public static final int numberOfBots = 5;
 	
 	
 	public TrainingData(ResultSet rs) throws SQLException {
@@ -23,7 +24,14 @@ public class TrainingData {
 		height = rs.getInt("height");
 		width = rs.getInt("width");
 		
+		featureDoubles = new double[numberOfBots * 4];
+		int featureCounter = 0;
 		for(int i = 1; i <= numberOfBots; i++) {
+			featureDoubles[featureCounter++] = rs.getDouble(getNumeratedKey(horizontalAngleKey, i));
+			featureDoubles[featureCounter++] = rs.getDouble(getNumeratedKey(verticalAngleKey, i));
+			featureDoubles[featureCounter++] = rs.getDouble(getNumeratedKey(distanceKey, i));
+			featureDoubles[featureCounter++] = rs.getDouble(getNumeratedKey(withinSightKey, i));
+			
 			addFeature(rs, horizontalAngleKey, i);
 			addFeature(rs, verticalAngleKey, i);
 			addFeature(rs, distanceKey, i);
@@ -31,9 +39,25 @@ public class TrainingData {
 		}
 	}
 	
+	public double[] getFeatureDoubles() {
+		return featureDoubles;
+	}
+	
+	public double[] getFeatureForAllBots(String key) {
+		double[] values = new double[numberOfBots];
+		for(int i = 1; i <= numberOfBots; i++) {
+			values[i] = features.get(key + i);
+		}
+		return values;
+	}
+	
 	private void addFeature(ResultSet rs, String key, int suffix) throws SQLException {
-		String keyNumerated = key + suffix;
+		String keyNumerated = getNumeratedKey(key, suffix);
 		features.put(keyNumerated, rs.getDouble(keyNumerated));
+	}
+	
+	private String getNumeratedKey(String key, int suffix) {
+		return key + suffix;
 	}
 	
 	public TrainingData() {

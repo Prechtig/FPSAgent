@@ -13,7 +13,11 @@ public class Screenshot {
 	}
 
 	public byte[] GetRGB() {
-		return ArrayHelper.ToRGB (pixels, width);
+		return ArrayHelper.ToRGB (pixels);
+	}
+
+	public byte[] GetScaledRGB() {
+		return ArrayHelper.ToScaledDoublesAsByteArray (pixels);
 	}
 
 	public Color32[] GetPixels() {
