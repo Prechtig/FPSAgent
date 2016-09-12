@@ -2,11 +2,11 @@ package org.mma.imagerecognition.tools;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import java.io.File;
+import static org.mma.imagerecognition.tools.ImageTool.scale;
 
 import org.junit.Test;
+import org.mma.imagerecognition.dbaccess.TrainingDbDao;
+import org.nd4j.linalg.api.ndarray.INDArray;
 
 public class ImageToolTest {
 	
@@ -72,25 +72,12 @@ public class ImageToolTest {
 	}
 	
 	@Test
-	public void testPrintPngImage() {
-		byte[] flattened = new byte[] { 0, 0, 0,
-										(byte)0xFF, 0, 0,
-										0, (byte)0xFF, 0,
-										0, 0, (byte)0xFF };
-		try {
-		ImageTool.printPngImage(flattened, 2, new File("test.png"));
-		} catch (Exception e) {
-			fail("Should not happen");
-		}
-	}
-	
-	@Test
-	public void testByteToFloatConversion() {
-		assertEquals(0f,	ImageTool.toFloat((byte) 0),	DELTA);
-		assertEquals(0f,	ImageTool.toFloat((byte) 0x00),	DELTA);
-		assertEquals(17f,	ImageTool.toFloat((byte) 17),	DELTA);
-		assertEquals(255f,	ImageTool.toFloat((byte) 255),	DELTA);
-		assertEquals(255f,	ImageTool.toFloat((byte) 0xFF),	DELTA);
+	public void testByteToDoubleConversion() {
+		assertEquals(0d,	ImageTool.toDouble((byte) 0),		DELTA);
+		assertEquals(0d,	ImageTool.toDouble((byte) 0x00),	DELTA);
+		assertEquals(17d,	ImageTool.toDouble((byte) 17),		DELTA);
+		assertEquals(255d,	ImageTool.toDouble((byte) 255),		DELTA);
+		assertEquals(255d,	ImageTool.toDouble((byte) 0xFF),	DELTA);
 	}
 	
 	@Test
@@ -103,6 +90,57 @@ public class ImageToolTest {
 		assertEquals(1f,			ImageTool.scale((byte) 255),	DELTA);
 		assertEquals(1f,			ImageTool.scale((byte) 0xFF),	DELTA);
 	}
+	
+	@Test
+	public void testByteArrayToScaledDoubleArray() {
+		byte[] bytes = new byte[] {(byte) 0, (byte) 17, (byte) 128, (byte) 255};
+		double[] expectedFloats = new double[] {0d, (17d/255d), (128d/255d), 1d};
+		
+		assertArrayEquals(expectedFloats, ImageTool.toScaledDoubleStream(bytes).toArray(), DELTA);
+	}
+	
+	@Test
+	public void testToINDArryConversion() {
+		byte[] flattened = new byte[] { (byte) 000, (byte) 128, (byte) 255,
+										(byte) 010, (byte) 020, (byte) 030,
+										(byte) 110, (byte) 120, (byte) 130,
+										(byte) 210, (byte) 220, (byte) 230 };
+		INDArray arr = ImageTool.convertToINDArray(flattened, 2);
+		
+		assertEquals(scale((byte)000), arr.getDouble(0, 0, 0), DELTA);
+		assertEquals(scale((byte)128), arr.getDouble(0, 0, 1), DELTA);
+		assertEquals(scale((byte)255), arr.getDouble(0, 0, 2), DELTA);
+		
+		assertEquals(scale((byte)010), arr.getDouble(0, 1, 0), DELTA);
+		assertEquals(scale((byte)020), arr.getDouble(0, 1, 1), DELTA);
+		assertEquals(scale((byte)030), arr.getDouble(0, 1, 2), DELTA);
+		
+		assertEquals(scale((byte)110), arr.getDouble(1, 0, 0), DELTA);
+		assertEquals(scale((byte)120), arr.getDouble(1, 0, 1), DELTA);
+		assertEquals(scale((byte)130), arr.getDouble(1, 0, 2), DELTA);
+		
+		assertEquals(scale((byte)210), arr.getDouble(1, 1, 0), DELTA);
+		assertEquals(scale((byte)220), arr.getDouble(1, 1, 1), DELTA);
+		assertEquals(scale((byte)230), arr.getDouble(1, 1, 2), DELTA);
+	}
+	
+	@Test
+	public void asdasd() {
+		TrainingDbDao.getImages(1).get(0);
+	}
+	
+//	@Test
+//	public void testPrintPngImage() {
+//		byte[] flattened = new byte[] { 0, 0, 0,
+//										(byte)0xFF, 0, 0,
+//										0, (byte)0xFF, 0,
+//										0, 0, (byte)0xFF };
+//		try {
+//		ImageTool.printPngImage(flattened, 2, new File("test.png"));
+//		} catch (Exception e) {
+//			fail("Should not happen");
+//		}
+//	}
 	
 //	@Test
 //	public void testPrintImageFromDatabase() {
