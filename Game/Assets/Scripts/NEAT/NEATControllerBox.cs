@@ -2,7 +2,7 @@
 using System.Collections;
 using SharpNeat.Phenomes;
 
-public class Controller : UnitController {
+public class NEATControllerBox : UnitController {
 
 	IBlackBox box;
 	bool IsRunning;

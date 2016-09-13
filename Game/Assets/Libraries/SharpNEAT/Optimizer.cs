@@ -11,7 +11,7 @@ using System.IO;
 public class Optimizer : MonoBehaviour {
 
     const int NUM_INPUTS = 5;
-    const int NUM_OUTPUTS = 2;
+    const int NUM_OUTPUTS = 6;
 
     public int Trials;
     public float TrialDuration;
@@ -23,8 +23,11 @@ public class Optimizer : MonoBehaviour {
     static NeatEvolutionAlgorithm<NeatGenome> _ea;
 
     public GameObject Unit;
+	//public NEATArena arena;
 
     Dictionary<IBlackBox, UnitController> ControllerMap = new Dictionary<IBlackBox, UnitController>();
+	Dictionary<IBlackBox, NEATArena> ArenaMap = new Dictionary<IBlackBox, NEATArena>();
+
     private DateTime startTime;
     private float timeLeft;
     private float accum;
@@ -43,7 +46,7 @@ public class Optimizer : MonoBehaviour {
         xmlConfig.LoadXml(textAsset.text);
         experiment.SetOptimizer(this);
 
-        experiment.Initialize("Car Experiment", xmlConfig.DocumentElement, NUM_INPUTS, NUM_OUTPUTS);
+        experiment.Initialize("FPS Experiment", xmlConfig.DocumentElement, NUM_INPUTS, NUM_OUTPUTS);
 
         champFileSavePath = Application.persistentDataPath + string.Format("/{0}.champ.xml", "car");
         popFileSavePath = Application.persistentDataPath + string.Format("/{0}.pop.xml", "car");
@@ -153,10 +156,17 @@ public class Optimizer : MonoBehaviour {
 
     public void Evaluate(IBlackBox box)
     {
-        GameObject obj = Instantiate(Unit, Unit.transform.position, Unit.transform.rotation) as GameObject;
-        UnitController controller = obj.GetComponent<UnitController>();
+		//NEATArena arena = new NEATArena ();
+		//NEATArena arena = NEATArena.CreateInstance<NEATArena>();
+		NEATArena arena = gameObject.AddComponent<NEATArena>();
+		//Instantiate (arena, arena.transform.position, arena.transform.rotation);
 
-        ControllerMap.Add(box, controller);
+		GameObject obj = arena.GetPlayer ();
+        //GameObject obj = Instantiate(Unit, Unit.transform.position, Unit.transform.rotation) as GameObject;
+		UnitController controller = obj.GetComponent<UnitController>();
+
+		ControllerMap.Add (box, controller);
+		ArenaMap.Add (box, arena);
 
         controller.Activate(box);
     }
@@ -164,8 +174,12 @@ public class Optimizer : MonoBehaviour {
     public void StopEvaluation(IBlackBox box)
     {
         UnitController ct = ControllerMap[box];
+		NEATArena nt = ArenaMap [box];
+		ControllerMap.Remove (box);
+		ArenaMap.Remove (box);
 
-        Destroy(ct.gameObject);
+		Destroy (ct.gameObject);
+		Destroy (nt);
     }
 
     public void RunBest()
