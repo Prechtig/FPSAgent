@@ -20,6 +20,10 @@ public class TrainingDbDao {
 	private static PreparedStatement getWidthHeightPS;
 	private static PreparedStatement getRandomTrainingDataPS;
 	private static PreparedStatement getColumnCountPS;
+	private static PreparedStatement getRowCountPS;
+	private static PreparedStatement getColumnNames;
+	
+	private static int numberOfNonGroundTruthColumns = 4;
 	
 	private static String ERROR_MESSAGE = "Cannot execute queries before connection has been initialized.";
 	
@@ -36,7 +40,7 @@ public class TrainingDbDao {
 			throw new IllegalStateException(ERROR_MESSAGE);
 		}
 		
-		final String GET_RANDOM_IMAGES = "SELECT * FROM trainingData ORDER BY RAND() LIMIT ?";
+		final String GET_RANDOM_IMAGES = "SELECT * FROM" + tableName + "ORDER BY RAND() LIMIT ?";
 		
 		if(getRandomTrainingDataPS == null) {
 			try {
@@ -69,7 +73,7 @@ public class TrainingDbDao {
 			throw new IllegalStateException(ERROR_MESSAGE);
 		}
 		
-		final String GET_WIDTH_HEIGHT = "SELECT width, height FROM trainingData LIMIT 1";
+		final String GET_WIDTH_HEIGHT = "SELECT width, height FROM" + tableName + "LIMIT 1";
 		
 		if(getWidthHeightPS == null) {
 			try {
@@ -117,12 +121,77 @@ public class TrainingDbDao {
 		try {
 			ResultSet rs = getColumnCountPS.executeQuery();
 			rs.next();
-			columnCount = rs.getInt(1) - 4;
+			columnCount = rs.getInt(1) - numberOfNonGroundTruthColumns;
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
 		return columnCount;
+	}
+	
+	public static int getTotalNumberOfImages() {
+		if(conn==null) {
+			throw new IllegalStateException(ERROR_MESSAGE);
+		}
+		
+		final String GET_ROW_COUNT = "SELECT COUNT(*) FROM " + tableName;
+		
+		if(getRowCountPS == null) {
+			try {
+				getRowCountPS = conn.prepareStatement(GET_ROW_COUNT);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			ResultSet rs = getRowCountPS.executeQuery();
+			rs.next();
+			return rs.getInt(1);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		throw new IllegalStateException();
+	}
+	
+	public static List<String> getLabelNames() {
+		if(conn==null) {
+			throw new IllegalStateException(ERROR_MESSAGE);
+		}
+		
+		final String GET_COLUMN_NAMES = "SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME =  '" + tableName + "'";
+		
+		if(getColumnCountPS == null) {
+			try {
+				getColumnCountPS = conn.prepareStatement(GET_COLUMN_NAMES);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		List<String> result = new ArrayList<String>();
+		
+		try {
+			ResultSet rs = getColumnCountPS.executeQuery();
+			for(int i = 0; i < numberOfNonGroundTruthColumns; i++) {
+				rs.next();
+			}
+			
+			while(rs.next()) {
+				result.add(rs.getString(1));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		if(result.isEmpty()) {
+			throw new IllegalStateException("Result was empty");
+		}
+		
+		return result;
 	}
 }
