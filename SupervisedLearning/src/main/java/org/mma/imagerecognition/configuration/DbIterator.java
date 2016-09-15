@@ -43,6 +43,7 @@ public class DbIterator implements DataSetIterator {
 
 	@Override
 	public DataSet next(int num) {
+		cursor++;
 		return toDataSet(TrainingDbDao.getImages(num));
 	}
 	

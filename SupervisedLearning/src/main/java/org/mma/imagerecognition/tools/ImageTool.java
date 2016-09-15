@@ -116,7 +116,8 @@ public class ImageTool {
 	
 	public static INDArray convertToINDArray(byte[] flattened, int width) {
 		int height = calculateHeight(flattened.length, width);
-		return Nd4j.create(toScaledDoubleStream(flattened).toArray(), new int[] {width, height, 3}, 'c');
+//		return Nd4j.create(toScaledDoubleStream(flattened).toArray(), new int[] {width, height, 3}, 'c');
+		return Nd4j.create(toScaledDoubleStream(flattened).toArray());
 	}
 	
 	public static INDArray convertToINDArray(DoubleStream ds, int width) {

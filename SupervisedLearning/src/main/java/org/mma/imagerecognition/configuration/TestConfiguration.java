@@ -26,7 +26,8 @@ import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.conf.layers.SubsamplingLayer;
 import org.deeplearning4j.nn.conf.layers.setup.ConvolutionLayerSetup;
 import org.deeplearning4j.nn.weights.WeightInit;
-import org.nd4j.linalg.lossfunctions.LossFunctions;
+import org.mma.imagerecognition.dbaccess.TrainingDbDao;
+import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 
 public class TestConfiguration {
 
@@ -44,10 +45,15 @@ public class TestConfiguration {
 	private static double l2regularization = 0.0005;
 
 	public static void main(String[] args) {
+		TrainingDbDao.initializeConnection();
 		train();
 	}
 
 	public static void train() {
+		int width = TrainingDbDao.getWidth();
+		int height = TrainingDbDao.getHeight();
+		int numberOfGroundTruths = TrainingDbDao.getNumberOfGroundTruths();
+		
 		// Configuration
 		Builder builder = new NeuralNetConfiguration.Builder()
 				.seed(seed)
@@ -72,27 +78,29 @@ public class TestConfiguration {
 						.stride(2, 2)
 						.build())
 				.layer(2, new DenseLayer.Builder()
-						.nOut(20)
+						.nOut(numberOfGroundTruths)
 						.build())
-				.layer(3, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
-						.nOut(10)
-						.activation("softmax").build())
+				.layer(3, new OutputLayer.Builder().nOut(numberOfGroundTruths).build())
 				.backprop(true).pretrain(false);
-		new ConvolutionLayerSetup(builder, 28, 28, 1);
+		new ConvolutionLayerSetup(builder, width, height, 3);
 		MultiLayerConfiguration configuration = builder.build();
 		
+		DataSetIterator testIterator = new DbIterator(10, 200);
+		DataSetIterator trainIterator = new DbIterator(10, 400);
+		
 		//Training
-        String exampleDirectory = ".." + File.separator + "models" + File.separator;
+//        String exampleDirectory = ".." + File.separator + "models" + File.separator;
+        String exampleDirectory = "models" + File.separator;
         EarlyStoppingModelSaver saver = new LocalFileModelSaver(exampleDirectory);
         EarlyStoppingConfiguration esConf = new EarlyStoppingConfiguration.Builder()
                 .epochTerminationConditions(new MaxEpochsTerminationCondition(50)) //Max of 50 epochs
                 .evaluateEveryNEpochs(1)
-                .iterationTerminationConditions(new MaxTimeIterationTerminationCondition(20, TimeUnit.MINUTES)) //Max of 20 minutes
-                .scoreCalculator(new DataSetLossCalculator(null, true))     //Calculate test set score
+                .iterationTerminationConditions(new MaxTimeIterationTerminationCondition(30, TimeUnit.MINUTES)) //Max of 20 minutes
+                .scoreCalculator(new DataSetLossCalculator(testIterator, true))     //Calculate test set score
                 .modelSaver(saver)
                 .build();
 
-        EarlyStoppingTrainer trainer = new EarlyStoppingTrainer(esConf,configuration,null);
+        EarlyStoppingTrainer trainer = new EarlyStoppingTrainer(esConf,configuration,trainIterator);
 
         //Conduct early stopping training:
         EarlyStoppingResult result = trainer.fit();

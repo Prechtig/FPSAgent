@@ -21,7 +21,9 @@ public class TrainingDbDao {
 	private static PreparedStatement getRandomTrainingDataPS;
 	private static PreparedStatement getColumnCountPS;
 	private static PreparedStatement getRowCountPS;
-	private static PreparedStatement getColumnNames;
+	private static PreparedStatement getColumnNamesPS;
+	private static PreparedStatement getWidthPS;
+	private static PreparedStatement getHeightPS;
 	
 	private static int numberOfNonGroundTruthColumns = 4;
 	
@@ -40,10 +42,10 @@ public class TrainingDbDao {
 			throw new IllegalStateException(ERROR_MESSAGE);
 		}
 		
-		final String GET_RANDOM_IMAGES = "SELECT * FROM" + tableName + "ORDER BY RAND() LIMIT ?";
 		
 		if(getRandomTrainingDataPS == null) {
 			try {
+				final String GET_RANDOM_IMAGES = "SELECT * FROM " + tableName + " ORDER BY RAND() LIMIT ?";
 				getRandomTrainingDataPS = conn.prepareStatement(GET_RANDOM_IMAGES);
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -68,15 +70,69 @@ public class TrainingDbDao {
 		return trainingSet;
 	}
 	
+	public static int getWidth() {
+		if(conn==null) {
+			throw new IllegalStateException(ERROR_MESSAGE);
+		}
+		
+		
+		if(getWidthPS == null) {
+			try {
+				final String GET_WIDTH_HEIGHT = "SELECT width FROM " + tableName + " LIMIT 1";
+				getWidthPS = conn.prepareStatement(GET_WIDTH_HEIGHT);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			ResultSet rs = getWidthPS.executeQuery();
+			rs.next();
+			return rs.getInt(1);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		throw new IllegalStateException();
+	}
+	
+	public static int getHeight() {
+		if(conn==null) {
+			throw new IllegalStateException(ERROR_MESSAGE);
+		}
+		
+		
+		if(getHeightPS == null) {
+			try {
+				final String GET_WIDTH_HEIGHT = "SELECT height FROM " + tableName + " LIMIT 1";
+				getHeightPS = conn.prepareStatement(GET_WIDTH_HEIGHT);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			ResultSet rs = getHeightPS.executeQuery();
+			rs.next();
+			return rs.getInt(1);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		throw new IllegalStateException();
+	}
+	
 	public static int getWidthHeightProduct() {
 		if(conn==null) {
 			throw new IllegalStateException(ERROR_MESSAGE);
 		}
 		
-		final String GET_WIDTH_HEIGHT = "SELECT width, height FROM" + tableName + "LIMIT 1";
 		
 		if(getWidthHeightPS == null) {
 			try {
+				final String GET_WIDTH_HEIGHT = "SELECT width, height FROM " + tableName + " LIMIT 1";
 				getWidthHeightPS = conn.prepareStatement(GET_WIDTH_HEIGHT);
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -106,10 +162,10 @@ public class TrainingDbDao {
 			throw new IllegalStateException(ERROR_MESSAGE);
 		}
 		
-		final String GET_COLUMN_COUNT = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema = '" + DbName + "' AND table_name = '" + tableName + "'";
 		
 		if(getColumnCountPS == null) {
 			try {
+				final String GET_COLUMN_COUNT = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema = '" + DbName + "' AND table_name = '" + tableName + "'";
 				getColumnCountPS = conn.prepareStatement(GET_COLUMN_COUNT);
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -135,10 +191,10 @@ public class TrainingDbDao {
 			throw new IllegalStateException(ERROR_MESSAGE);
 		}
 		
-		final String GET_ROW_COUNT = "SELECT COUNT(*) FROM " + tableName;
 		
 		if(getRowCountPS == null) {
 			try {
+				final String GET_ROW_COUNT = "SELECT COUNT(*) FROM " + tableName;
 				getRowCountPS = conn.prepareStatement(GET_ROW_COUNT);
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -157,15 +213,15 @@ public class TrainingDbDao {
 		throw new IllegalStateException();
 	}
 	
-	public static List<String> getLabelNames() {
+	public static List<String> getGroundTruthLabels() {
 		if(conn==null) {
 			throw new IllegalStateException(ERROR_MESSAGE);
 		}
 		
-		final String GET_COLUMN_NAMES = "SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME =  '" + tableName + "'";
 		
 		if(getColumnCountPS == null) {
 			try {
+				final String GET_COLUMN_NAMES = "SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME =  '" + tableName + "'";
 				getColumnCountPS = conn.prepareStatement(GET_COLUMN_NAMES);
 			} catch (SQLException e) {
 				e.printStackTrace();

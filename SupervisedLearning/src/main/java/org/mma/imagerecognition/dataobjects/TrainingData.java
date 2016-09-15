@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.mma.imagerecognition.tools.ScaleTool;
+
 public class TrainingData {
 	private int height, width;
 	private byte[] pixelData;
@@ -27,8 +29,8 @@ public class TrainingData {
 		featureDoubles = new double[numberOfBots * 4];
 		int featureCounter = 0;
 		for(int i = 1; i <= numberOfBots; i++) {
-			featureDoubles[featureCounter++] = rs.getDouble(getNumeratedKey(horizontalAngleKey, i));
-			featureDoubles[featureCounter++] = rs.getDouble(getNumeratedKey(verticalAngleKey, i));
+			featureDoubles[featureCounter++] = ScaleTool.scaleAngle(rs.getDouble(getNumeratedKey(horizontalAngleKey, i)));
+			featureDoubles[featureCounter++] = ScaleTool.scaleAngle(rs.getDouble(getNumeratedKey(verticalAngleKey, i)));
 			featureDoubles[featureCounter++] = rs.getDouble(getNumeratedKey(distanceKey, i));
 			featureDoubles[featureCounter++] = rs.getDouble(getNumeratedKey(withinSightKey, i));
 			

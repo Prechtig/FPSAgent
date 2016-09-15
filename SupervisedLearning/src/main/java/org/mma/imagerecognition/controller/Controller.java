@@ -8,6 +8,6 @@ public class Controller {
 	public static void main(String[] args) throws IOException {
 		TrainingDbDao.initializeConnection();
 		System.out.println(TrainingDbDao.getTotalNumberOfImages());
-		System.out.println(TrainingDbDao.getLabelNames());
+		System.out.println(TrainingDbDao.getGroundTruthLabels());
 	}
 }
