@@ -3,19 +3,19 @@ using System.Collections;
 
 public class BotMovement : MonoBehaviour {
 
-	private Transform[] waypoints;
+	public Transform[] waypoints;
 	private int currentWaypoint;
 
 	public float moveSpeed;
 	// Use this for initialization
 	void Start () {
-		GameObject[] ways = GameObject.FindGameObjectsWithTag ("Waypoint");
+		/*GameObject[] ways = GameObject.FindGameObjectsWithTag ("Waypoint");
 
 		waypoints = new Transform[ways.Length];
 		for (int i = 0; i < waypoints.Length; i++) {
 			waypoints [i] = ways [i].transform;
 		}
-
+		*/
 		currentWaypoint = 0;
 	}
 	
