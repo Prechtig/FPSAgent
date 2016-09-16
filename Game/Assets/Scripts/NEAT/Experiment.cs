@@ -13,6 +13,7 @@ using SharpNeat.DistanceMetrics;
 using SharpNeat.SpeciationStrategies;
 using SharpNEAT.Core;
 using UnityEngine;
+using Kajabity.Tools.Java;
 
 public class Experiment : INeatExperiment
 {
@@ -70,20 +71,20 @@ public class Experiment : INeatExperiment
 	}
 
 
-	public void Initialize(string name, XmlElement xmlConfig)
+	public void Initialize(string name, JavaProperties jp)
 	{
-		Initialize(name, xmlConfig, 1, 6);
+		Initialize(name, jp, 1, 6);
 	}
 
-	public void Initialize(string name, XmlElement xmlConfig, int input, int output)
+	public void Initialize(string name, JavaProperties jp, int input, int output)
 	{
 		_name = name;
-		_populationSize = XmlUtils.GetValueAsInt(xmlConfig, "PopulationSize");
-		_specieCount = XmlUtils.GetValueAsInt(xmlConfig, "SpecieCount");
-		_activationScheme = ExperimentUtils.CreateActivationScheme(xmlConfig, "Activation");
-		_complexityRegulationStr = XmlUtils.TryGetValueAsString(xmlConfig, "ComplexityRegulationStrategy");
-		_complexityThreshold = XmlUtils.TryGetValueAsInt(xmlConfig, "ComplexityThreshold");
-		_description = XmlUtils.TryGetValueAsString(xmlConfig, "Description");
+		_populationSize = Int32.TryParse(jp.GetProperty ("PopulationSize"));
+		_specieCount = Int32.TryParse(jp.GetProperty ("SpecieCount"));
+		_activationScheme = Int32.TryParse(jp.GetProperty ("Activation"));
+		_complexityRegulationStr = Int32.TryParse(jp.GetProperty ("ComplexityRegulationStrategy"));
+		_complexityThreshold = Int32.TryParse(jp.GetProperty ("ComplexityThreshold"));
+		_description = Int32.TryParse(jp.GetProperty ("Description"));
 
 		_eaParams = new NeatEvolutionAlgorithmParameters();
 		_eaParams.SpecieCount = _specieCount;

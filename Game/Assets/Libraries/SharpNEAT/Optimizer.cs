@@ -7,6 +7,7 @@ using SharpNeat.Genomes.Neat;
 using System;
 using System.Xml;
 using System.IO;
+using Kajabity.Tools.Java;
 
 public class Optimizer : MonoBehaviour {
 
@@ -41,12 +42,12 @@ public class Optimizer : MonoBehaviour {
 	void Start () {
         Utility.DebugLog = true;
         experiment = new Experiment();
-        XmlDocument xmlConfig = new XmlDocument();
+        //XmlDocument xmlConfig = new XmlDocument();
         TextAsset textAsset = (TextAsset)Resources.Load("experiment.config");
-        xmlConfig.LoadXml(textAsset.text);
+        //xmlConfig.LoadXml(textAsset.text);
         experiment.SetOptimizer(this);
-
-        experiment.Initialize("FPS Experiment", xmlConfig.DocumentElement, NUM_INPUTS, NUM_OUTPUTS);
+		JavaProperties jp = PropertiesReader.
+        experiment.Initialize("FPS Experiment", jp, NUM_INPUTS, NUM_OUTPUTS);
 
         champFileSavePath = Application.persistentDataPath + string.Format("/{0}.champ.xml", "car");
         popFileSavePath = Application.persistentDataPath + string.Format("/{0}.pop.xml", "car");
