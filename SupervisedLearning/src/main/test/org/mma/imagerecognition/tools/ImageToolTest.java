@@ -4,12 +4,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.mma.imagerecognition.tools.ImageTool.scale;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.Arrays;
-
 import org.junit.Test;
-import org.mma.imagerecognition.dataobjects.TrainingData;
 import org.mma.imagerecognition.dbaccess.TrainingDbDao;
 import org.nd4j.linalg.api.ndarray.INDArray;
 
@@ -146,24 +141,4 @@ public class ImageToolTest {
 //			fail("Should not happen");
 //		}
 //	}
-	
-	@Test
-	public void testPrintImageFromDatabase() {
-		TrainingDbDao.initializeConnection();
-		TrainingData trainingData = TrainingDbDao.getImages(1).get(0);
-//		ImageTool.printPngImage(trainingData.getPixelData(), trainingData.getWidth());
-		byte[] pixelData = trainingData.getPixelData();
-		byte[] rb1 = Arrays.copyOfRange(pixelData, 0, 8);
-		byte[] gb1 = Arrays.copyOfRange(pixelData, 8, 16);
-		byte[] bb1 = Arrays.copyOfRange(pixelData, 16, 24);
-		
-		double r1 = ByteBuffer.wrap(rb1).order(ByteOrder.BIG_ENDIAN).getDouble();
-		double g1 = ByteBuffer.wrap(gb1).order(ByteOrder.BIG_ENDIAN).getDouble();
-		double b1 = ByteBuffer.wrap(bb1).order(ByteOrder.BIG_ENDIAN).getDouble();
-		
-		assertEquals(0.00000242342113d, ByteBuffer.wrap(trainingData.getPixelData()).order(ByteOrder.LITTLE_ENDIAN).getDouble(), 0d);
-//		Long.toBinaryString(Double.doubleToRawLongBits(0d));
-		
-	}
-
 }

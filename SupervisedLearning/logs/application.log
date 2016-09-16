@@ -830,3 +830,166 @@ Build model....
                 
 Train model....
 
+2016-09-16 13:47:10,272 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Starting early stopping training
+
+2016-09-16 13:50:17,235 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Starting early stopping training
+
+2016-09-16 13:50:34,023 - [WARN] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Early stopping training terminated due to exception at epoch 0, iteration 0
+java.lang.ArrayIndexOutOfBoundsException: 0
+	at org.nd4j.linalg.util.ArrayUtil.flatten(ArrayUtil.java:1237) ~[nd4j-common-0.5.0.jar:na]
+	at org.nd4j.linalg.api.ndarray.BaseNDArray.<init>(BaseNDArray.java:170) ~[nd4j-api-0.5.0.jar:na]
+	at org.nd4j.linalg.api.ndarray.BaseNDArray.<init>(BaseNDArray.java:161) ~[nd4j-api-0.5.0.jar:na]
+	at org.nd4j.linalg.cpu.nativecpu.NDArray.<init>(NDArray.java:73) ~[nd4j-native-0.5.0.jar:na]
+	at org.nd4j.linalg.cpu.nativecpu.CpuNDArrayFactory.create(CpuNDArrayFactory.java:134) ~[nd4j-native-0.5.0.jar:na]
+	at org.nd4j.linalg.factory.Nd4j.create(Nd4j.java:2898) ~[nd4j-api-0.5.0.jar:na]
+	at org.mma.imagerecognition.tools.ImageTool.convertToINDArray(ImageTool.java:130) ~[classes/:na]
+	at org.mma.imagerecognition.configuration.DbIterator.toDataSet(DbIterator.java:71) ~[classes/:na]
+	at org.mma.imagerecognition.configuration.DbIterator.next(DbIterator.java:47) ~[classes/:na]
+	at org.mma.imagerecognition.configuration.DbIterator.next(DbIterator.java:41) ~[classes/:na]
+	at org.mma.imagerecognition.configuration.DbIterator.next(DbIterator.java:1) ~[classes/:na]
+	at org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer.fit(BaseEarlyStoppingTrainer.java:109) ~[deeplearning4j-core-0.5.0.jar:na]
+	at org.mma.imagerecognition.configuration.TestConfiguration.train(TestConfiguration.java:106) [classes/:na]
+	at org.mma.imagerecognition.configuration.TestConfiguration.main(TestConfiguration.java:49) [classes/:na]
+
+2016-09-16 13:51:43,428 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Starting early stopping training
+
+2016-09-16 14:13:10,158 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Starting early stopping training
+
+2016-09-16 14:19:04,650 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Hit per iteration epoch termination condition at epoch 0, iteration 4. Reason: MaxTimeIterationTerminationCondition(5,unit=MINUTES)
+
+2016-09-16 14:19:48,765 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Starting early stopping training
+
+2016-09-16 14:25:26,051 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Starting early stopping training
+
+2016-09-16 14:31:16,751 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Hit per iteration epoch termination condition at epoch 0, iteration 4. Reason: MaxTimeIterationTerminationCondition(5,unit=MINUTES)
+
+2016-09-16 14:33:03,696 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Starting early stopping training
+
+2016-09-16 14:35:12,701 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Starting early stopping training
+
+2016-09-16 14:37:15,027 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Starting early stopping training
+
+2016-09-16 14:40:56,716 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Starting early stopping training
+
+2016-09-16 14:40:56,719 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Completed training epoch 0
+
+2016-09-16 14:42:32,099 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Starting early stopping training
+
+2016-09-16 14:44:55,649 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Starting early stopping training
+
+2016-09-16 14:50:58,854 - [WARN] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Early stopping training terminated due to exception at epoch 0, iteration 0
+java.lang.IllegalStateException: null
+	at org.mma.imagerecognition.dbaccess.TrainingDbDao.getImages(TrainingDbDao.java:60) ~[classes/:na]
+	at org.mma.imagerecognition.configuration.DbIterator.next(DbIterator.java:47) ~[classes/:na]
+	at org.mma.imagerecognition.configuration.DbIterator.next(DbIterator.java:41) ~[classes/:na]
+	at org.mma.imagerecognition.configuration.DbIterator.next(DbIterator.java:1) ~[classes/:na]
+	at org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer.fit(BaseEarlyStoppingTrainer.java:109) ~[deeplearning4j-core-0.5.0.jar:na]
+	at org.mma.imagerecognition.configuration.TestConfiguration.train(TestConfiguration.java:106) [classes/:na]
+	at org.mma.imagerecognition.configuration.TestConfiguration.main(TestConfiguration.java:49) [classes/:na]
+
+2016-09-16 14:52:27,679 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Starting early stopping training
+
+2016-09-16 14:56:18,541 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Starting early stopping training
+
+2016-09-16 14:56:50,849 - [WARN] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Early stopping training terminated due to exception at epoch 0, iteration 0
+java.lang.IllegalStateException: null
+	at org.mma.imagerecognition.dbaccess.TrainingDbDao.getImages(TrainingDbDao.java:60) ~[classes/:na]
+	at org.mma.imagerecognition.configuration.DbIterator.next(DbIterator.java:47) ~[classes/:na]
+	at org.mma.imagerecognition.configuration.DbIterator.next(DbIterator.java:41) ~[classes/:na]
+	at org.mma.imagerecognition.configuration.DbIterator.next(DbIterator.java:1) ~[classes/:na]
+	at org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer.fit(BaseEarlyStoppingTrainer.java:109) ~[deeplearning4j-core-0.5.0.jar:na]
+	at org.mma.imagerecognition.configuration.TestConfiguration.train(TestConfiguration.java:106) [classes/:na]
+	at org.mma.imagerecognition.configuration.TestConfiguration.main(TestConfiguration.java:49) [classes/:na]
+
+2016-09-16 15:04:11,325 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Starting early stopping training
+
+2016-09-16 20:49:18,883 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Starting early stopping training
+
+2016-09-16 20:50:18,069 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Starting early stopping training
+
+2016-09-16 20:55:59,921 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Completed training epoch 0
+
+2016-09-16 20:56:52,549 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Score at epoch 0: 2.0956822699793284E14
+
+2016-09-16 20:57:22,767 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Starting early stopping training
+
+2016-09-16 21:02:22,978 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Completed training epoch 0
+
+2016-09-16 21:03:08,765 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Score at epoch 0: 2.4812816344989784E14
+
+2016-09-16 21:08:23,269 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Completed training epoch 1
+
+2016-09-16 21:14:10,569 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Completed training epoch 2
+
+2016-09-16 21:20:07,640 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Completed training epoch 3
+
+2016-09-16 21:25:19,402 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Completed training epoch 4
+
+2016-09-16 21:27:27,794 - [INFO] - from org.deeplearning4j.earlystopping.trainer.BaseEarlyStoppingTrainer in main
+                
+Hit per iteration epoch termination condition at epoch 5, iteration 11. Reason: MaxTimeIterationTerminationCondition(30,unit=MINUTES)
+

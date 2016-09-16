@@ -6,7 +6,7 @@ import org.mma.imagerecognition.dbaccess.TrainingDbDao;
 
 public class Controller {
 	public static void main(String[] args) throws IOException {
-		TrainingDbDao.initializeConnection();
+//		TrainingDbDao.initializeConnection();
 		System.out.println(TrainingDbDao.getTotalNumberOfImages());
 		System.out.println(TrainingDbDao.getGroundTruthLabels());
 	}

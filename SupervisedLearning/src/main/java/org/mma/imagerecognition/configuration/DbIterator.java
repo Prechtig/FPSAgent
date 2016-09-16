@@ -26,7 +26,7 @@ public class DbIterator implements DataSetIterator {
 	public DbIterator(int batchSize, int numExamples) {
 		this.batchSize = batchSize;
 		this.numExamples = numExamples;
-		TrainingDbDao.initializeConnection();
+//		TrainingDbDao.initializeConnection();
 		
 		batches = numExamples/batchSize + (numExamples % batchSize == 0 ? 0 : 1);
 	}

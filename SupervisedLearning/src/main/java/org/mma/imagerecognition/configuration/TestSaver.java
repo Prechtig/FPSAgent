@@ -26,7 +26,7 @@ public class TestSaver {
 //		System.out.println(Arrays.toString(INDArrayTool.toFlatDoubleArray(output)));
 //		
 //		
-		TrainingDbDao.initializeConnection();
+//		TrainingDbDao.initializeConnection();
 		
 		
 		File model = new File("models\\bestModel.bin");

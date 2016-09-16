@@ -45,7 +45,7 @@ public class TestConfiguration {
 	private static double l2regularization = 0.0005;
 
 	public static void main(String[] args) {
-		TrainingDbDao.initializeConnection();
+//		TrainingDbDao.initializeConnection();
 		train();
 	}
 
