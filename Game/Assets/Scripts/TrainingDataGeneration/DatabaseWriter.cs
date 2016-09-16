@@ -57,9 +57,8 @@ public class DatabaseWriter {
 	}
 
 	private static void LoadUserCredentials() {
-		//Propertie
-		userID = PropertiesReader.GetUserId ();
-		password = PropertiesReader.GetPassword ();
+		userID = PropertiesReader.GetPropertyFile(PropertyFile.UserCredentials).GetProperty("userid");
+		password = PropertiesReader.GetPropertyFile(PropertyFile.UserCredentials).GetProperty("password");
 	}
 
 	private static void InitializeConnection() {
