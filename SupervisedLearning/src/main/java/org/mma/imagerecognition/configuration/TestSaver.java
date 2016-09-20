@@ -7,8 +7,8 @@ import java.util.Arrays;
 
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.util.ModelSerializer;
+import org.mma.imagerecognition.dao.TrainingDbDao;
 import org.mma.imagerecognition.dataobjects.TrainingData;
-import org.mma.imagerecognition.dbaccess.TrainingDbDao;
 import org.mma.imagerecognition.tools.INDArrayTool;
 import org.mma.imagerecognition.tools.ImageTool;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -33,7 +33,7 @@ public class TestSaver {
 		FileInputStream fis = new FileInputStream(model);
 		MultiLayerNetwork network = ModelSerializer.restoreMultiLayerNetwork(fis);
 		
-		TrainingData td = TrainingDbDao.getImages(1).get(0);
+		TrainingData td = TrainingDbDao.getRandomImages(1).get(0);
 		INDArray indArray = ImageTool.convertToINDArray(td.getPixelData(), td.getWidth());
 		INDArray output = network.output(indArray);
 		

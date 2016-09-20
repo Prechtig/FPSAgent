@@ -2,7 +2,7 @@ package org.mma.imagerecognition.controller;
 
 import java.io.IOException;
 
-import org.mma.imagerecognition.dbaccess.TrainingDbDao;
+import org.mma.imagerecognition.dao.TrainingDbDao;
 
 public class Controller {
 	public static void main(String[] args) throws IOException {

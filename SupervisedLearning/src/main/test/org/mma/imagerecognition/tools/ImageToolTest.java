@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mma.imagerecognition.tools.ImageTool.scale;
 
 import org.junit.Test;
-import org.mma.imagerecognition.dbaccess.TrainingDbDao;
+import org.mma.imagerecognition.dao.TrainingDbDao;
 import org.nd4j.linalg.api.ndarray.INDArray;
 
 public class ImageToolTest {
@@ -126,7 +126,7 @@ public class ImageToolTest {
 	
 	@Test
 	public void asdasd() {
-		TrainingDbDao.getImages(1).get(0);
+		TrainingDbDao.getRandomImages(1).get(0);
 	}
 	
 //	@Test

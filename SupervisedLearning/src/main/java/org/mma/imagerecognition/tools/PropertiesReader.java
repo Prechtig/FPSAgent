@@ -40,7 +40,7 @@ public class PropertiesReader {
 		return userCredentialsProperties;
 	}
 	
-	private static Properties getProjectProperties() {
+	public static Properties getProjectProperties() {
 		if(projectProperties == null) {
 			try {
 				InputStream is = new FileInputStream(new File(projectPath));

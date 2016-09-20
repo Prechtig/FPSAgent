@@ -8,7 +8,7 @@ import java.util.Map;
 import org.mma.imagerecognition.tools.ScaleTool;
 
 public class TrainingData {
-	private int height, width;
+	private int height, width, id;
 	private byte[] pixelData;
 	private Map<String, Double> features = new HashMap<String, Double>();
 	private double[] featureDoubles;
@@ -22,6 +22,7 @@ public class TrainingData {
 	
 	
 	public TrainingData(ResultSet rs) throws SQLException {
+		id = rs.getInt("id");
 		pixelData = rs.getBytes("pixelData");
 		height = rs.getInt("height");
 		width = rs.getInt("width");
@@ -39,6 +40,14 @@ public class TrainingData {
 			addFeature(rs, distanceKey, i);
 			addFeature(rs, withinSightKey, i);
 		}
+	}
+	
+	public TrainingData(int id, int width, int height, byte[] pixelData, double[] features) {
+		this.id = id;
+		this.width = width;
+		this.height = height;
+		this.pixelData = pixelData;
+		this.featureDoubles = features;
 	}
 	
 	public double[] getFeatureDoubles() {
@@ -100,5 +109,9 @@ public class TrainingData {
 	
 	public void putFeature(String name, Double value) {
 		features.put(name, value);
+	}
+	
+	public int getId() {
+		return id;
 	}
 }

@@ -1,6 +1,7 @@
 package org.mma.imagerecognition.configuration;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +27,12 @@ import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.conf.layers.SubsamplingLayer;
 import org.deeplearning4j.nn.conf.layers.setup.ConvolutionLayerSetup;
 import org.deeplearning4j.nn.weights.WeightInit;
-import org.mma.imagerecognition.dbaccess.TrainingDbDao;
+import org.mma.imagerecognition.dao.FileSystemDAO;
+import org.mma.imagerecognition.dao.TrainingDbDao;
+import org.mma.imagerecognition.dataobjects.TrainingData;
+import org.mma.imagerecognition.iterator.DatabaseIterator;
+import org.mma.imagerecognition.iterator.FileSystemIterator;
+import org.mma.imagerecognition.tools.PropertiesReader;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 
 public class TestConfiguration {
@@ -44,8 +50,18 @@ public class TestConfiguration {
 	// Regularization
 	private static double l2regularization = 0.0005;
 
-	public static void main(String[] args) {
-//		TrainingDbDao.initializeConnection();
+	public static void main(String[] args) throws IOException {
+		String trainingPersistenceType = PropertiesReader.getProjectProperties().getProperty("training.persistence.type");
+		if(trainingPersistenceType == null) {
+			System.out.println("Please specify the persistence type of training data");
+			System.exit(1);
+		}
+		if(trainingPersistenceType.equals("filesystem")) {
+			FileSystemDAO.createFolders();
+			String batchSize = PropertiesReader.getProjectProperties().getProperty("training.persistence.batchSize");
+			persistImagesToDisk(Integer.parseInt(batchSize));
+		}
+		
 		train();
 	}
 
@@ -85,15 +101,23 @@ public class TestConfiguration {
 		new ConvolutionLayerSetup(builder, width, height, 3);
 		MultiLayerConfiguration configuration = builder.build();
 		
-		DataSetIterator testIterator = new DbIterator(10, 200);
-		DataSetIterator trainIterator = new DbIterator(10, 400);
+		DataSetIterator testIterator, trainIterator;
+		
+		// TODO: Clean up
+		String trainingPersistenceType = PropertiesReader.getProjectProperties().getProperty("training.persistence.type");
+		if(trainingPersistenceType.equals("filesystem")) {
+			testIterator = new FileSystemIterator(25, 200);
+			trainIterator = new FileSystemIterator(25, 400);
+		} else {
+			testIterator = new DatabaseIterator(25, 200);
+			trainIterator = new DatabaseIterator(25, 400);
+		}
 		
 		//Training
-//        String exampleDirectory = ".." + File.separator + "models" + File.separator;
         String exampleDirectory = "models" + File.separator;
         EarlyStoppingModelSaver saver = new LocalFileModelSaver(exampleDirectory);
         EarlyStoppingConfiguration esConf = new EarlyStoppingConfiguration.Builder()
-                .epochTerminationConditions(new MaxEpochsTerminationCondition(50)) //Max of 50 epochs
+                .epochTerminationConditions(new MaxEpochsTerminationCondition(1)) //Max of 50 epochs
                 .evaluateEveryNEpochs(1)
                 .iterationTerminationConditions(new MaxTimeIterationTerminationCondition(30, TimeUnit.MINUTES)) //Max of 20 minutes
                 .scoreCalculator(new DataSetLossCalculator(testIterator, true))     //Calculate test set score
@@ -103,7 +127,9 @@ public class TestConfiguration {
         EarlyStoppingTrainer trainer = new EarlyStoppingTrainer(esConf,configuration,trainIterator);
 
         //Conduct early stopping training:
+        long startTime = System.currentTimeMillis();
         EarlyStoppingResult result = trainer.fit();
+        System.out.println(String.format("The run took %d milliseconds", System.currentTimeMillis() - startTime));
         System.out.println("Termination reason: " + result.getTerminationReason());
         System.out.println("Termination details: " + result.getTerminationDetails());
         System.out.println("Total epochs: " + result.getTotalEpochs());
@@ -118,5 +144,14 @@ public class TestConfiguration {
         for( Integer i : list){
             System.out.println(i + "\t" + scoreVsEpoch.get(i));
         }
+	}
+	
+	private static void persistImagesToDisk(int batchSize) {
+		int maxSavedId = FileSystemDAO.findLatestTrainingDataId();
+		int maxDbId = TrainingDbDao.getTotalNumberOfImages();
+		for(int i = maxSavedId + 1; i <= maxDbId; i += batchSize) {
+			List<TrainingData> images = TrainingDbDao.getTrainingData(i, i + batchSize - 1);
+			FileSystemDAO.persist(images);
+		}
 	}
 }

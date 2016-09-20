@@ -1,2 +1,10 @@
 /bin/
 /target/
+
+# Saved networks folder
+models
+
+# Downloaded training data
+trainingdata
+
+logs

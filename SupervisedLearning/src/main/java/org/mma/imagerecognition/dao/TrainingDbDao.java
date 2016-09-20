@@ -1,4 +1,4 @@
-package org.mma.imagerecognition.dbaccess;
+package org.mma.imagerecognition.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import javax.sql.DataSource;
 
@@ -22,12 +23,12 @@ public class TrainingDbDao {
 	private static final String tableName = "trainingData";
 	private static final String databaseURL = "jdbc:mysql://mydb.itu.dk/" + DbName;
 	
-//	private static final String GET_RANDOM_IMAGES = "SELECT * FROM " + tableName + " ORDER BY RAND() LIMIT ?";
-	private static final String GET_RANDOM_IMAGES = "SELECT * FROM " + tableName + " WHERE id IN ";//ORDER BY RAND() LIMIT ?";
+	private static final String GET_IMAGES = "SELECT * FROM " + tableName + " WHERE id IN ";
 	private static final String GET_WIDTH = "SELECT width FROM " + tableName + " LIMIT 1";
 	private static final String GET_HEIGHT = "SELECT height FROM " + tableName + " LIMIT 1";
 	private static final String GET_WIDTH_HEIGHT = "SELECT width, height FROM " + tableName + " LIMIT 1";
-	private static final String GET_COLUMN_COUNT = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema = '" + DbName + "' AND table_name = '" + tableName + "'";
+	private static final String GET_COLUMN_COUNT = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema = '" + DbName +
+													"' AND table_name = '" + tableName + "'";
 	private static final String GET_ROW_COUNT = "SELECT COUNT(*) FROM " + tableName;
 	private static final String GET_COLUMN_NAMES = "SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME =  '" + tableName + "'";
 	
@@ -35,15 +36,13 @@ public class TrainingDbDao {
 	
 	private static DataSource pooledDataSource = setupC3P0();
 	
-	public static List<TrainingData> getImages(int numberOfImages) {
+	private static List<TrainingData> getImages(String indices) {
 		try (Connection conn = getConnection()) {
-			String randomIndices = getRandomIndices(numberOfImages);
-			PreparedStatement getRandomTrainingDataPS = conn.prepareStatement(GET_RANDOM_IMAGES + randomIndices);
+			PreparedStatement getTrainingDataPS = conn.prepareStatement(GET_IMAGES + indices);
 		
-			getRandomTrainingDataPS.clearParameters();
-//			getRandomTrainingDataPS.setString(1, ids);
-			getRandomTrainingDataPS.execute();
-			ResultSet resultSet = getRandomTrainingDataPS.getResultSet();
+			getTrainingDataPS.clearParameters();
+			getTrainingDataPS.execute();
+			ResultSet resultSet = getTrainingDataPS.getResultSet();
 			
 			List<TrainingData> result = new ArrayList<TrainingData>();
 			while(resultSet.next()) {
@@ -54,6 +53,14 @@ public class TrainingDbDao {
 			e.printStackTrace();
 		}
 		throw new IllegalStateException();
+	}
+	
+	public static List<TrainingData> getRandomImages(int numberOfImages) {
+		return getImages(getRandomIndices(numberOfImages));
+	}
+	
+	public static List<TrainingData> getTrainingData(int fromId, int toId) {
+		return getImages(getIndices(fromId, toId));
 	}
 	
 	public static int getWidth() {
@@ -154,10 +161,11 @@ public class TrainingDbDao {
 	
 	private static DataSource setupC3P0() {
 		ComboPooledDataSource cpds = new ComboPooledDataSource();
-//		cpds.setDriverClass( "org.postgresql.Driver" ); //loads the jdbc driver
 		cpds.setJdbcUrl(databaseURL);
 		cpds.setUser(PropertiesReader.getUserId());
 		cpds.setPassword(PropertiesReader.getPassword());
+		
+		cpds.setIdleConnectionTestPeriod(120);
 
 		cpds.setMinPoolSize(1);
 		cpds.setAcquireIncrement(5);
@@ -167,9 +175,17 @@ public class TrainingDbDao {
 		return cpds;
 	}
 	
-	private static String getRandomIndices(int numberOfImages) {
+	public static String getRandomIndices(int numberOfImages) {
 		List<Integer> range = IntStream.rangeClosed(0, getTotalNumberOfImages()).boxed().collect(Collectors.toList());
 		Collections.shuffle(range);
-		return "(" + range.stream().limit(numberOfImages).map(Object::toString).collect(Collectors.joining(", ")) + ")";
+		return indicesToString(range.parallelStream(), numberOfImages);
+	}
+	
+	public static String getIndices(int from, int to) {
+		return indicesToString(IntStream.rangeClosed(from, to).boxed(), to-from + 1);
+	}
+	
+	private static String indicesToString(Stream<Integer> indices, int limit) {
+		return "(" + indices.limit(limit).map(Object::toString).collect(Collectors.joining(", ")) + ")";
 	}
 }

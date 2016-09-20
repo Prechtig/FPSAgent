@@ -115,8 +115,6 @@ public class ImageTool {
 	}
 	
 	public static INDArray convertToINDArray(byte[] flattened, int width) {
-		int height = calculateHeight(flattened.length, width);
-//		return Nd4j.create(toScaledDoubleStream(flattened).toArray(), new int[] {width, height, 3}, 'c');
 		return Nd4j.create(toScaledDoubleStream(flattened).toArray());
 	}
 	
@@ -175,20 +173,4 @@ public class ImageTool {
 	public static double toDouble(byte b) {
 		return (b & 0xFF);
 	}
-	
-//	public static void asdads(int width, byte[]... bs) {
-//		int arrLength = bs[0].length;
-//		
-//		double[] result = new double[arrLength * bs.length];
-//		
-//		for(int i = 0; i < bs.length; i++) {
-//			byte[] cur = bs[i];
-//			System.arraycopy(cur, 0, result, i * arrLength, arrLength);
-//		}
-//		
-//		int height = calculateHeight(bs[0].length, width);
-//		
-//		
-//		
-//	}
 }
