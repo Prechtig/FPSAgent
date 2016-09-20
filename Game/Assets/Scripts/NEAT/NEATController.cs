@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using SharpNeat.Phenomes;
+using System.Linq;
 
 public class NEATController : UnitController {
 
@@ -9,9 +10,9 @@ public class NEATController : UnitController {
 
 	Transform lookRoot;
 
-	public float minimumY = -60F;
-	public float maximumY = 60F;
-	float rotationY = 0F;
+	public float minimumY = -90F;
+	public float maximumY = 90F;
+
 	public float sensitivityX;
 	public float sensitivityY;
 	public float mouseX;
@@ -19,37 +20,92 @@ public class NEATController : UnitController {
 	public float shootThreshold;
 	public float reloadThreshold;
 	public NEATWeapon weapon;
+	private Camera playerCam;
 	private int once = 0;
 	// Use this for initialization
 	void Start () {
-		//lookRoot = gameObject.transform.GetChild(2).GetChild(0);
+		playerCam = gameObject.GetComponentInChildren<Camera> ();
+		lookRoot = gameObject.transform.GetChild(2).GetChild(0);
 	}
 
 	// Update is called once per frame
 	void FixedUpdate()
 	{
 		if (IsRunning) {
-			System.Random rnd = new System.Random ();
+			//System.Random rnd = new System.Random ();
 			//Debug.Log (box);
 			//Optain input array from convolutional neural network / java
 
 			ISignalArray inputArr = box.InputSignalArray;
-			inputArr [0] = rnd.NextDouble ();
+			float[] groundTruths = GroundTruth.CalculateGroundTruths (playerCam, 5);
+			//inputArr.CopyFrom ();
+			inputArr.CopyFrom(groundTruths.Select(f => (double)f).ToArray(), 0);
 
 			//Activate network
 			box.Activate ();
-
 			//Obtain output
 			ISignalArray outputArr = box.OutputSignalArray;
 
 			double[] output = new double[outputArr.Length];
 			outputArr.CopyTo (output, 0);
 
-			if (once < 10) {
+			/*
+			output[0] = 0.1;
+			output[1] = 0;
+			output[2] = 0.1;
+			output[3] = 0;
+			output[4] = 1;
+			output[5] = 1;
+			*/
+
+
+			//Mouse movement
+			mouseX = (float)(output [0] - output [1]);
+			mouseY = (float)(output [2] - output [3]);
+
+			//mouseX = Input.GetAxis ("Mouse X");
+			//mouseY = Input.GetAxis ("Mouse Y");
+			//Cursor.lockState = CursorLockMode.Locked;
+
+			transform.Rotate (0, mouseX * sensitivityX * Time.deltaTime, 0, Space.World);
+
+			/*
+			float rotationY = -mouseY * sensitivityY * Time.deltaTime;
+			//rotationY = Mathf.Clamp (rotationY, minimumY, maximumY);
+			//Debug.Log (transform.rotation.eulerAngles.x);
+			Debug.Log (mouseY);
+			transform.Rotate (new Vector3(rotationY, 0, 0));
+
+			if (rotationY < 0) { //down
+				if (transform.eulerAngles.x > 90 && transform.eulerAngles.x < 270) {
+					transform.Rotate ((transform.eulerAngles.x + 90), 0, 0);
+				}
+			} else if (rotationY > 0) { //up
+				if (transform.eulerAngles.x > 90 && transform.eulerAngles.x < 270) {
+					transform.Rotate (-(transform.eulerAngles.x - 90), 0, 0);
+				}
+			}
+			if (transform.eulerAngles.x > 90) {
+			//	transform.Rotate (-(transform.eulerAngles.x - 90), 0, 0);
+			} else if (transform.eulerAngles.x < -90) {
+			//	transform.Rotate ((transform.eulerAngles.x + 90), 0, 0);
+			}
+*/
+			/*float rotationX = transform.localEulerAngles.y + mouseX * sensitivityX;
+
+			rotationY += mouseY * sensitivityY;
+			rotationY = Mathf.Clamp (rotationY, minimumY, maximumY);
+
+			transform.localEulerAngles = new Vector3 (-rotationY, rotationX, 0);
+
+			//transform.Rotate (rotationY, rotationX, 0);
+			*/
+
+			/*if (once < 10000) {
 				transform.Rotate (2f, 0, 0);
 				once++;
-			}
-			//Mouse movement
+			}*/
+
 			/*mouseX = (float) output [0]; 
 			Input.GetAxis ("Mouse X");
 			float turnDirection = (float)(output [0] - output [1]);
@@ -79,15 +135,16 @@ public class NEATController : UnitController {
 
 				lookRoot.transform.localEulerAngles = new Vector3 (rotationY, transform.localEulerAngles.y, 0);
 			}
+			*/
 
-
-			if (output [4] > shootThreshold) {
-				weapon.FireOneShot ();
-			}
+			
 			if (output [5] > reloadThreshold) {
 				weapon.Reload ();
+			} else if (output [4] > shootThreshold) {
+				weapon.FireOneShot ();
 			}
-			*/
+
+
 
 			//var turnAngle = outputArr [0];
 

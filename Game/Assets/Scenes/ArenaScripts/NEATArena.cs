@@ -156,6 +156,10 @@ public class NEATArena : MonoBehaviour {
 		bs.StartSpawning ();
 	}
 
+	public float GetFitness(){
+		return bs.GetFitness ();
+	}
+
 	public void OnDestroy(){
 		if (arenaObjects != null) {
 			foreach (GameObject o in arenaObjects) {

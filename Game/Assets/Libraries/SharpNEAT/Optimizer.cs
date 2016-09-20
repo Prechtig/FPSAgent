@@ -10,7 +10,7 @@ using System.IO;
 
 public class Optimizer : MonoBehaviour {
 
-	const int NUM_INPUTS = 5;
+	const int NUM_INPUTS = 20;
 	const int NUM_OUTPUTS = 6;
 
 	public int Trials;
@@ -27,6 +27,7 @@ public class Optimizer : MonoBehaviour {
 
 	Dictionary<IBlackBox, UnitController> ControllerMap = new Dictionary<IBlackBox, UnitController>();
 	Dictionary<IBlackBox, NEATArena> ArenaMap = new Dictionary<IBlackBox, NEATArena>();
+	Dictionary<IBlackBox, float> FitnessMap = new Dictionary<IBlackBox, float>();
 
 	private DateTime startTime;
 	private float timeLeft;
@@ -79,9 +80,10 @@ public class Optimizer : MonoBehaviour {
 	}
 
 	public void StartEA()
-	{        
+	{
 		Utility.DebugLog = true;
 		Utility.Log("Starting FPS Agent experiment");
+		FitnessMap = new Dictionary<IBlackBox, float> ();
 		//_ea = experiment.CreateEvolutionAlgorithm(popFileSavePath);
 		_ea = experiment.CreateEvolutionAlgorithm();
 		startTime = DateTime.Now;
@@ -104,10 +106,7 @@ public class Optimizer : MonoBehaviour {
 		Fitness = _ea.Statistics._maxFitness;
 		Generation = _ea.CurrentGeneration;
 
-
 		//    Utility.Log(string.Format("Moving average: {0}, N: {1}", _ea.Statistics._bestFitnessMA.Mean, _ea.Statistics._bestFitnessMA.Length));
-
-
 	}
 
 	void ea_PauseEvent(object sender, EventArgs e)
@@ -139,10 +138,7 @@ public class Optimizer : MonoBehaviour {
 
 		System.IO.StreamReader stream = new System.IO.StreamReader(popFileSavePath);
 
-
-
-		EARunning = false;        
-
+		EARunning = false;
 	}
 
 	public void StopEA()
@@ -156,6 +152,7 @@ public class Optimizer : MonoBehaviour {
 
 	public void Evaluate(IBlackBox box)
 	{
+		//Time.timeScale = 1;
 		//NEATArena arena = new NEATArena ();
 		//NEATArena arena = NEATArena.CreateInstance<NEATArena>();
 		NEATArena arena = gameObject.AddComponent<NEATArena>();
@@ -175,6 +172,9 @@ public class Optimizer : MonoBehaviour {
 	{
 		UnitController ct = ControllerMap[box];
 		NEATArena nt = ArenaMap [box];
+
+		FitnessMap.Add (box, nt.GetFitness ());
+
 		ControllerMap.Remove (box);
 		ArenaMap.Remove (box);
 
@@ -188,14 +188,11 @@ public class Optimizer : MonoBehaviour {
 
 		NeatGenome genome = null;
 
-
 		// Try to load the genome from the XML document.
 		try
 		{
 			using (XmlReader xr = XmlReader.Create(champFileSavePath))
 				genome = NeatGenomeXmlIO.ReadCompleteGenomeList(xr, false, (NeatGenomeFactory)experiment.CreateGenomeFactory())[0];
-
-
 		}
 		catch (Exception e1)
 		{
@@ -220,9 +217,8 @@ public class Optimizer : MonoBehaviour {
 
 	public float GetFitness(IBlackBox box)
 	{
-		if (ControllerMap.ContainsKey(box))
-		{
-			return ControllerMap[box].GetFitness();
+		if (FitnessMap.ContainsKey (box)) {
+			return FitnessMap [box];
 		}
 		return 0;
 	}

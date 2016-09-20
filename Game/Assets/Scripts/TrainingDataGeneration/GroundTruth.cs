@@ -5,7 +5,7 @@ using System;
 
 public class GroundTruth : MonoBehaviour
 {
-	public float[] CalculateGroundTruths (Camera playerCam, int botsToSave) {
+	public static float[] CalculateGroundTruths (Camera playerCam, int botsToSave) {
 		IEnumerable<GameObject> closestBots = FindClosestBots (playerCam, botsToSave);
 		float[] inputs = new float[4 * botsToSave];
 
@@ -20,7 +20,7 @@ public class GroundTruth : MonoBehaviour
 		return inputs;
 	}
 
-	private IEnumerable<GameObject> FindClosestBots (Camera playerCam, int amountOfBotsToFind) {
+	private static IEnumerable<GameObject> FindClosestBots (Camera playerCam, int amountOfBotsToFind) {
 		GameObject[] allBots = GameObject.FindGameObjectsWithTag ("Bot");
 		return allBots.OrderBy (bot => GameObjectHelper.AngleTo (playerCam.transform, bot.transform))
 					.Take (amountOfBotsToFind);
