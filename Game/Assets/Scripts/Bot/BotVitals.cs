@@ -66,23 +66,24 @@ public class BotVitals : MonoBehaviour
 	{
 		Destroy(obj.GetComponent<PlayerAnimations>());
 		Destroy(obj.GetComponent<Animator>());
-		Rigidbody[] bodies = obj.GetComponentsInChildren<Rigidbody>();
-		Collider[] collies = obj.GetComponentsInChildren<Collider>();
-		foreach (Rigidbody body in bodies)
-		{
-			body.useGravity = true;
-			body.isKinematic = false;
-		}
-		foreach (Collider coll in collies)
-		{
-			coll.isTrigger = false;
-		}
+		//Rigidbody[] bodies = obj.GetComponentsInChildren<Rigidbody>();
+		//Collider[] collies = obj.GetComponentsInChildren<Collider>();
+		//foreach (Rigidbody body in bodies)
+		//{
+			//body.useGravity = true;
+			//body.isKinematic = false;
+		//}
+		//foreach (Collider coll in collies)
+		//{
+			//coll.isTrigger = false;
+		//}
 		wep.useGravity = true;
 		wep.isKinematic = false;
 		wep.transform.parent = null;
 		obj.transform.parent = null;
 		bs.KillBot (this.gameObject);
-		Destroy (wep); //Destroy(wep, 10);
+		Destroy (wep.gameObject);
+		//Destroy (wep); //Destroy(wep, 10);
 		Destroy (obj); //Destroy(obj, 10);
 		Destroy (this.gameObject);
 	}
