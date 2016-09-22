@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <Config>
-  <PopulationSize>10</PopulationSize>
+    
+  <TrialCount>5</TrialCount>
+  <TrialDuration>20</TrialDuration>
+  <StoppingFitness>99999</StoppingFitness>
+  
+  <PopulationSize>5</PopulationSize>
   <SpecieCount>1</SpecieCount>
   <Activation>
     <Scheme>Acyclic</Scheme>
   </Activation>
   <ComplexityRegulationStrategy>Absolute</ComplexityRegulationStrategy>
-  <ComplexityThreshold>10</ComplexityThreshold>
+  <ComplexityThreshold>1000</ComplexityThreshold>
   <Description>
   </Description>
 </Config>

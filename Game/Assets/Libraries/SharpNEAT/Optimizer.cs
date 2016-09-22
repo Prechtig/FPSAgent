@@ -7,6 +7,7 @@ using SharpNeat.Genomes.Neat;
 using System;
 using System.Xml;
 using System.IO;
+using SharpNeat.Domains;
 
 public class Optimizer : MonoBehaviour {
 
@@ -15,9 +16,6 @@ public class Optimizer : MonoBehaviour {
 	const int NUM_INPUTS = 20;
 	const int NUM_OUTPUTS = 6;
 
-	public int Trials;
-	public float TrialDuration;
-	public float StoppingFitness;
 	bool EARunning;
 	string popFileSavePath, champFileSavePath;
 
@@ -40,6 +38,23 @@ public class Optimizer : MonoBehaviour {
 	private uint Generation;
 	private double Fitness;
 
+	private int trials;
+	private float trialDuration;
+	private float stoppingFitness;
+
+	public int Trials
+	{
+		get { return trials; }
+	}
+
+	public float TrialDuration {
+		get { return trialDuration; }
+	}
+
+	public float StoppingFitness {
+		get { return stoppingFitness; }
+	}
+
 	// Use this for initialization
 	void Start () {
 		Utility.DebugLog = true;
@@ -47,6 +62,9 @@ public class Optimizer : MonoBehaviour {
 		XmlDocument xmlConfig = new XmlDocument();
 		TextAsset textAsset = (TextAsset)Resources.Load("experiment.config");
 		xmlConfig.LoadXml(textAsset.text);
+
+		InitFromConfig (xmlConfig.DocumentElement);
+
 		experiment.SetOptimizer(this);
 
 		experiment.Initialize("FPS Experiment", xmlConfig.DocumentElement, NUM_INPUTS, NUM_OUTPUTS);
@@ -243,5 +261,11 @@ public class Optimizer : MonoBehaviour {
 		}
 
 		GUI.Button(new Rect(10, Screen.height - 70, 100, 60), string.Format("Generation: {0}\nFitness: {1:0.00}", Generation, Fitness));
+	}
+
+	private void InitFromConfig(XmlElement config) {
+		trials = XmlUtils.GetValueAsInt (config, "TrialCount");
+		trialDuration = Convert.ToSingle(XmlUtils.GetValueAsDouble (config, "TrialDuration"));
+		stoppingFitness = Convert.ToSingle (XmlUtils.GetValueAsDouble (config, "StoppingFitness"));
 	}
 }
