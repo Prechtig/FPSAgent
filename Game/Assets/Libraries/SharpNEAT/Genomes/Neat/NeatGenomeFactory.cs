@@ -72,7 +72,7 @@ namespace SharpNeat.Genomes.Neat
 
             _neatGenomeParamsCurrent = new NeatGenomeParameters();
             _neatGenomeParamsComplexifying = _neatGenomeParamsCurrent;
-            _neatGenomeParamsSimplifying = NeatGenomeParameters.CreateSimplifyingParameters(_neatGenomeParamsComplexifying);
+            _neatGenomeParamsSimplifying = _neatGenomeParamsCurrent;
 
             _genomeIdGenerator = new UInt32IdGenerator();
             _innovationIdGenerator = new UInt32IdGenerator();
@@ -92,7 +92,7 @@ namespace SharpNeat.Genomes.Neat
 
             _neatGenomeParamsCurrent = neatGenomeParams;
             _neatGenomeParamsComplexifying = _neatGenomeParamsCurrent;
-            _neatGenomeParamsSimplifying = NeatGenomeParameters.CreateSimplifyingParameters(_neatGenomeParamsComplexifying);
+            _neatGenomeParamsSimplifying = _neatGenomeParamsCurrent;
 
             _genomeIdGenerator = new UInt32IdGenerator();
             _innovationIdGenerator = new UInt32IdGenerator();
@@ -112,7 +112,7 @@ namespace SharpNeat.Genomes.Neat
 
             _neatGenomeParamsCurrent = neatGenomeParams;
             _neatGenomeParamsComplexifying = _neatGenomeParamsCurrent;
-            _neatGenomeParamsSimplifying = NeatGenomeParameters.CreateSimplifyingParameters(_neatGenomeParamsComplexifying);
+            _neatGenomeParamsSimplifying = _neatGenomeParamsCurrent;
 
             _genomeIdGenerator = genomeIdGenerator;
             _innovationIdGenerator = innovationIdGenerator;
@@ -136,7 +136,7 @@ namespace SharpNeat.Genomes.Neat
 
             _neatGenomeParamsCurrent = new NeatGenomeParameters();
             _neatGenomeParamsComplexifying = _neatGenomeParamsCurrent;
-            _neatGenomeParamsSimplifying = NeatGenomeParameters.CreateSimplifyingParameters(_neatGenomeParamsComplexifying);
+            _neatGenomeParamsSimplifying = _neatGenomeParamsCurrent;
 
             _genomeIdGenerator = new UInt32IdGenerator();
             _innovationIdGenerator = new UInt32IdGenerator();
@@ -157,7 +157,7 @@ namespace SharpNeat.Genomes.Neat
 
             _neatGenomeParamsCurrent = neatGenomeParams;
             _neatGenomeParamsComplexifying = _neatGenomeParamsCurrent;
-            _neatGenomeParamsSimplifying = NeatGenomeParameters.CreateSimplifyingParameters(_neatGenomeParamsComplexifying);
+            _neatGenomeParamsSimplifying = _neatGenomeParamsCurrent;
 
             _genomeIdGenerator = new UInt32IdGenerator();
             _innovationIdGenerator = new UInt32IdGenerator();
@@ -180,7 +180,7 @@ namespace SharpNeat.Genomes.Neat
 
             _neatGenomeParamsCurrent = neatGenomeParams;
             _neatGenomeParamsComplexifying = _neatGenomeParamsCurrent;
-            _neatGenomeParamsSimplifying = NeatGenomeParameters.CreateSimplifyingParameters(_neatGenomeParamsComplexifying);
+            _neatGenomeParamsSimplifying = _neatGenomeParamsCurrent;
 
             _genomeIdGenerator = genomeIdGenerator;
             _innovationIdGenerator = innovationIdGenerator;

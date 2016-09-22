@@ -19,6 +19,7 @@
 
 using SharpNeat.Network;
 using SharpNeat.Utility;
+using System;
 
 namespace SharpNeat.Genomes.Neat
 {
@@ -427,6 +428,7 @@ namespace SharpNeat.Genomes.Neat
         /// </summary>
         public static NeatGenomeParameters CreateSimplifyingParameters(NeatGenomeParameters copyFrom)
         {
+            throw new NotSupportedException();
             NeatGenomeParameters newParams = new NeatGenomeParameters(copyFrom);
             newParams._connectionWeightMutationProbability = 0.6;
             newParams._addNodeMutationProbability = 0.0;
