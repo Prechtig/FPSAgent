@@ -12,6 +12,7 @@
   </Activation>
   <ComplexityRegulationStrategy>Absolute</ComplexityRegulationStrategy>
   <ComplexityThreshold>1000</ComplexityThreshold>
+  <PersistNGenerations>2</PersistNGenerations>
   <Description>
   </Description>
 </Config>

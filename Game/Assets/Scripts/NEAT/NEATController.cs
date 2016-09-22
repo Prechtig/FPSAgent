@@ -21,7 +21,6 @@ public class NEATController : UnitController {
 	public float reloadThreshold;
 	public NEATWeapon weapon;
 	private Camera playerCam;
-	private int once = 0;
 	// Use this for initialization
 	void Start () {
 		playerCam = gameObject.GetComponentInChildren<Camera> ();
@@ -37,7 +36,7 @@ public class NEATController : UnitController {
 			//Optain input array from convolutional neural network / java
 
 			ISignalArray inputArr = box.InputSignalArray;
-			float[] groundTruths = GroundTruth.CalculateGroundTruths (playerCam, 5);
+			float[] groundTruths = GroundTruth.CalculateGroundTruthsScaled (playerCam, 3);
 			//inputArr.CopyFrom ();
 			inputArr.CopyFrom(groundTruths.Select(f => (double)f).ToArray(), 0);
 
@@ -136,7 +135,6 @@ public class NEATController : UnitController {
 				lookRoot.transform.localEulerAngles = new Vector3 (rotationY, transform.localEulerAngles.y, 0);
 			}
 			*/
-
 			
 			if (output [5] > reloadThreshold) {
 				weapon.Reload ();

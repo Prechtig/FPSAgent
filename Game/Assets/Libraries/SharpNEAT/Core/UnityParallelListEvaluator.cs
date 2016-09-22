@@ -17,6 +17,7 @@ namespace SharpNEAT.Core
         IPhenomeEvaluator<TPhenome> _phenomeEvaluator;
         //readonly IPhenomeEvaluator<TPhenome> _phenomeEvaluator;
         Optimizer _optimizer;
+		private int _persistNGenerations;
 
         #region Constructor
 
@@ -49,6 +50,7 @@ namespace SharpNEAT.Core
             yield return Coroutiner.StartCoroutine(evaluateList(genomeList));
         }
 
+		//The one we use, Mikkel
         private IEnumerator evaluateList(IList<TGenome> genomeList)
         {
             Dictionary<TGenome, TPhenome> dict = new Dictionary<TGenome, TPhenome>();
@@ -58,10 +60,11 @@ namespace SharpNEAT.Core
                 Utility.Log("Iteration " + (i + 1));                
                 _phenomeEvaluator.Reset();
 				NEATArena.ResetYOffset ();
+				_optimizer.CheckPersistPopulation (); //Persist population
+
                 dict = new Dictionary<TGenome, TPhenome>();
                 foreach (TGenome genome in genomeList)
                 {
-                    
                     TPhenome phenome = _genomeDecoder.Decode(genome);
                     if (null == phenome)
                     {   // Non-viable genome.
@@ -81,8 +84,6 @@ namespace SharpNEAT.Core
                         //    fitnessDict.Add(phenome, new FitnessInfo[_optimizer.Trials]);
                         //}
                         Coroutiner.StartCoroutine(_phenomeEvaluator.Evaluate(phenome));
-
-
                     }
                 }
 
