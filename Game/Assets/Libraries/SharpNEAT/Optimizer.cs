@@ -10,6 +10,8 @@ using System.IO;
 
 public class Optimizer : MonoBehaviour {
 
+	public GameObject wallPrefab;
+
 	const int NUM_INPUTS = 20;
 	const int NUM_OUTPUTS = 6;
 
@@ -156,6 +158,8 @@ public class Optimizer : MonoBehaviour {
 		//NEATArena arena = new NEATArena ();
 		//NEATArena arena = NEATArena.CreateInstance<NEATArena>();
 		NEATArena arena = gameObject.AddComponent<NEATArena>();
+		arena.wallPrefab = wallPrefab;
+		arena.Init ();
 		//Instantiate (arena, arena.transform.position, arena.transform.rotation);
 
 		GameObject obj = arena.GetPlayer ();

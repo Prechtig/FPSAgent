@@ -19,7 +19,9 @@ public class NEATArena : MonoBehaviour {
 	private static int yOffset;
 	private static Object yOffsetLock = new Object();
 
-	public void OnEnable(){
+	public GameObject wallPrefab;
+
+	public void Init() {
 		y = GetAndIncrementYOffset () * 100;
 		x = 25;
 		z = 25;
@@ -73,7 +75,8 @@ public class NEATArena : MonoBehaviour {
 	}
 
 	private void CreateCube(Vector3 position, Vector3 scale) {
-		GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+//		GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		GameObject cube = Instantiate(wallPrefab);
 		cube.transform.position = position;
 		cube.transform.localScale = scale;
 		cube.AddComponent<MeshCollider> ();
