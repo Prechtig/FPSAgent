@@ -33,7 +33,7 @@ namespace SharpNeat.Genomes.Neat
         #region Constants
 
         const double DefaultConnectionWeightRange = 5.0;
-        const double DefaultInitialInterconnectionsProportion = 0.05;
+		const double DefaultInitialInterconnectionsProportion = 1f;
         const double DefaultDisjointExcessGenesRecombineProbability = 0.1;
 
         // High level mutation probabilities
