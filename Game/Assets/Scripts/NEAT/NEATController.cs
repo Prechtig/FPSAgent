@@ -172,7 +172,7 @@ public class NEATController : UnitController {
 
 	public override float GetFitness()
 	{
-		//return 360f - System.Math.Abs (transform.rotation.eulerAngles.y - 180f);
-		return 100f;
+		//THIS IS NOT USED!
+		return -1;
 	}
 }
