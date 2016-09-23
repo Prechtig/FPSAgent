@@ -28,7 +28,7 @@ public class NEATController : UnitController {
 	}
 
 	// Update is called once per frame
-	void FixedUpdate()
+	void Update()
 	{
 		if (IsRunning) {
 			//System.Random rnd = new System.Random ();
@@ -145,13 +145,11 @@ public class NEATController : UnitController {
 
 
 
-			/*
 			if (output [5] > reloadThreshold) {
 				weapon.Reload ();
 			} else if (output [4] > shootThreshold) {
 				weapon.FireOneShot ();
 			}
-		*/
 
 
 			//var turnAngle = outputArr [0];
