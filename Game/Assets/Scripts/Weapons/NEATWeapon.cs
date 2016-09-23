@@ -61,16 +61,6 @@ public class NEATWeapon : MonoBehaviour
 
 	#endregion
 
-	#region sound
-
-	public AudioSource localSource;
-	public AudioClip fireSound;
-	public ReloadSound[] drawSound;
-	public ReloadSound[] reloadSounds;
-	public ReloadSound[] reloadSoundsEmpty;
-
-	#endregion
-
 	#region ads
 
 	public Camera cam;

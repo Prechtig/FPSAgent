@@ -38,7 +38,7 @@ public class TrainingDataCapturer : MonoBehaviour
 	}
 
 	public TrainingData CaptureTrainingData() {
-		float[] groundTruths = groundTruthScript.CalculateGroundTruths (playerCam, botsToSave);
+		float[] groundTruths = GroundTruth.CalculateGroundTruths (playerCam, botsToSave);
 		Screenshot screenshot = ScreenSnapper.SnapScreenshot (playerCam);
 		return new TrainingData (groundTruths, screenshot);
 	}

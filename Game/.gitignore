@@ -17,3 +17,7 @@ obj/
 *.pidb
 *.sln
 *.log
+*.app
+Library/CrashedAssetImports.txt
+Library/ShaderCache.db
+ProjectSettings/EditorBuildSettings.asset

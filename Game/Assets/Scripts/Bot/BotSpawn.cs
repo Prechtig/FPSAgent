@@ -9,6 +9,7 @@ public class BotSpawn : MonoBehaviour
 	public Transform[] spawnPoints;
 	private float spawnTime;
 	private static int botsToSpawn = 3;
+	private int BotsKilled = 0;
 
 	public BotSpawn (Transform[] spawnPoints){
 		this.spawnPoints = spawnPoints;
@@ -28,7 +29,7 @@ public class BotSpawn : MonoBehaviour
 
 	public void StartSpawning(){
 		bots = new List<GameObject>();
-		bot = Resources.Load ("BotPreFab") as GameObject;
+		bot = Resources.Load ("BotPrefab") as GameObject;
 		spawnTime = 3f;
 		//bot.GetComponent<BotMovement> ().waypoints = spawnPoints;
 		//bm.waypoints = spawnPoints;
@@ -41,11 +42,25 @@ public class BotSpawn : MonoBehaviour
 		if(bots.Count < botsToSpawn){
 			int spawnPoint = Random.Range (0, spawnPoints.Length);
 			GameObject b = Instantiate (bot, spawnPoints[spawnPoint].position, spawnPoints[spawnPoint].rotation) as GameObject;
+			b.GetComponent<BotVitals> ().bs = this;
 			b.GetComponent<BotMovement> ().waypoints = spawnPoints;
 			bots.Add (b);
 		}
 	}
 
+	public float GetFitness(){
+		float fitness = 0f;
+		fitness += BotVitals.MAX_HITPOINTS * BotsKilled;
+		foreach (GameObject b in bots) {
+			fitness += BotVitals.MAX_HITPOINTS - b.GetComponent<BotVitals>().hitPoints;
+		}
+		return fitness;
+	}
+
+	public void KillBot(GameObject b){
+		bots.Remove (b);
+		BotsKilled++;
+	}
 
 	public void OnDestroy(){
 		CancelInvoke ();
@@ -56,6 +71,4 @@ public class BotSpawn : MonoBehaviour
 			Destroy (t);
 		}*/
 	}
-
 }
-

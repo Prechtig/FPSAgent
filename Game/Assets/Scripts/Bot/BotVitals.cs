@@ -9,11 +9,12 @@ public class BotVitals : MonoBehaviour
 	public Transform hitCam;
 	public Transform hitWep;
 	public static int botsAlive;
+	public BotSpawn bs;
+	public static readonly float MAX_HITPOINTS = 100;
 
 	void Start()
 	{
-		botsAlive++;
-
+		hitPoints = MAX_HITPOINTS;
 		Rigidbody[] bodies = obj.GetComponentsInChildren<Rigidbody>();
 		Collider[] collies = obj.GetComponentsInChildren<Collider>();
 		wep.useGravity = false;
@@ -65,25 +66,25 @@ public class BotVitals : MonoBehaviour
 	{
 		Destroy(obj.GetComponent<PlayerAnimations>());
 		Destroy(obj.GetComponent<Animator>());
-		Rigidbody[] bodies = obj.GetComponentsInChildren<Rigidbody>();
-		Collider[] collies = obj.GetComponentsInChildren<Collider>();
-		foreach (Rigidbody body in bodies)
-		{
-			body.useGravity = true;
-			body.isKinematic = false;
-		}
-		foreach (Collider coll in collies)
-		{
-			coll.isTrigger = false;
-		}
+		//Rigidbody[] bodies = obj.GetComponentsInChildren<Rigidbody>();
+		//Collider[] collies = obj.GetComponentsInChildren<Collider>();
+		//foreach (Rigidbody body in bodies)
+		//{
+			//body.useGravity = true;
+			//body.isKinematic = false;
+		//}
+		//foreach (Collider coll in collies)
+		//{
+			//coll.isTrigger = false;
+		//}
 		wep.useGravity = true;
 		wep.isKinematic = false;
 		wep.transform.parent = null;
 		obj.transform.parent = null;
-		Destroy(wep, 10);
-		Destroy(obj, 10);
-		Destroy(this.gameObject);
-
-		botsAlive--;
+		bs.KillBot (this.gameObject);
+		Destroy (wep.gameObject);
+		//Destroy (wep); //Destroy(wep, 10);
+		Destroy (obj); //Destroy(obj, 10);
+		Destroy (this.gameObject);
 	}
 }
