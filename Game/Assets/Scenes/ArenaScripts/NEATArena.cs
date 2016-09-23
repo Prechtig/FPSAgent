@@ -79,7 +79,7 @@ public class NEATArena : MonoBehaviour {
 		GameObject cube = Instantiate(wallPrefab);
 		cube.transform.position = position;
 		cube.transform.localScale = scale;
-		cube.AddComponent<MeshCollider> ();
+		cube.AddComponent<BoxCollider> ();
 
 		arenaObjects.Add (cube);
 	}

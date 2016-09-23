@@ -10,8 +10,8 @@ public class NEATController : UnitController {
 
 	Transform lookRoot;
 
-	public float minimumY = -90F;
-	public float maximumY = 90F;
+	float rotationX = 0;
+	float rotationY = 0;
 
 	public float sensitivityX;
 	public float sensitivityY;
@@ -66,17 +66,23 @@ public class NEATController : UnitController {
 			//mouseY = Input.GetAxis ("Mouse Y");
 			//Cursor.lockState = CursorLockMode.Locked;
 
-			transform.Rotate (0, mouseX * sensitivityX * Time.deltaTime, 0, Space.World);
+			//transform.Rotate (0, mouseX * sensitivityX * Time.deltaTime, 0, Space.World);
 
-			/*
-			float rotationY = -mouseY * sensitivityY * Time.deltaTime;
-			//rotationY = Mathf.Clamp (rotationY, minimumY, maximumY);
-			//Debug.Log (transform.rotation.eulerAngles.x);
-			Debug.Log (mouseY);
-			transform.Rotate (new Vector3(rotationY, 0, 0));
 
-			if (rotationY < 0) { //down
-				if (transform.eulerAngles.x > 90 && transform.eulerAngles.x < 270) {
+			rotationX += -mouseY * sensitivityY * Time.deltaTime;
+			rotationX = Mathf.Clamp (rotationX, -90, 90);
+
+			rotationY += mouseX * sensitivityX * Time.deltaTime;
+			rotationY = Mathf.Clamp (rotationY, -90, 90);
+
+			transform.localEulerAngles = new Vector3(rotationX, rotationY, transform.localEulerAngles.z);
+
+			//Debug.Log (transform.localEulerAngles.x);
+			//Debug.Log (mouseY);
+			//transform.Rotate (new Vector3(rotationY, 0, 0));
+
+			/*if (rotationY < 0) { //down
+				/*if (transform.eulerAngles.x > 90 && transform.eulerAngles.x < 270) {
 					transform.Rotate ((transform.eulerAngles.x + 90), 0, 0);
 				}
 			} else if (rotationY > 0) { //up
@@ -89,7 +95,8 @@ public class NEATController : UnitController {
 			} else if (transform.eulerAngles.x < -90) {
 			//	transform.Rotate ((transform.eulerAngles.x + 90), 0, 0);
 			}
-*/
+			*/
+
 			/*float rotationX = transform.localEulerAngles.y + mouseX * sensitivityX;
 
 			rotationY += mouseY * sensitivityY;
@@ -135,13 +142,16 @@ public class NEATController : UnitController {
 				lookRoot.transform.localEulerAngles = new Vector3 (rotationY, transform.localEulerAngles.y, 0);
 			}
 			*/
-			
+
+
+
+			/*
 			if (output [5] > reloadThreshold) {
 				weapon.Reload ();
 			} else if (output [4] > shootThreshold) {
 				weapon.FireOneShot ();
 			}
-
+		*/
 
 
 			//var turnAngle = outputArr [0];

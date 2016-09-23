@@ -2,17 +2,17 @@
 
 <Config>
   <TrialCount>5</TrialCount>
-  <TrialDuration>20</TrialDuration>
+  <TrialDuration>30</TrialDuration>
   <StoppingFitness>99999</StoppingFitness>
 
-  <PopulationSize>5</PopulationSize>
-  <SpecieCount>1</SpecieCount>
+  <PopulationSize>10</PopulationSize>
+  <SpecieCount>5</SpecieCount>
   <Activation>
     <Scheme>Acyclic</Scheme>
   </Activation>
   <ComplexityRegulationStrategy>Absolute</ComplexityRegulationStrategy>
   <ComplexityThreshold>1000</ComplexityThreshold>
-  <PersistNGenerations>2</PersistNGenerations>
+  <PersistNGenerations>10</PersistNGenerations>
   <Description>
   </Description>
 </Config>

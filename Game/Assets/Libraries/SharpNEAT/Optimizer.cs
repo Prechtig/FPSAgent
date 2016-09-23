@@ -86,6 +86,7 @@ public class Optimizer : MonoBehaviour {
 		timeLeft -= Time.deltaTime;
 		accum += Time.timeScale / Time.deltaTime;
 		++frames;
+		//Time.timeScale = 1; //TODO REmove this
 
 		if (timeLeft <= 0.0)
 		{
@@ -227,6 +228,7 @@ public class Optimizer : MonoBehaviour {
 
 	public void Evaluate(IBlackBox box)
 	{
+		
 		//Time.timeScale = 1;
 		//NEATArena arena = new NEATArena ();
 		//NEATArena arena = NEATArena.CreateInstance<NEATArena>();

@@ -29,7 +29,7 @@ public class BotSpawn : MonoBehaviour
 
 	public void StartSpawning(){
 		bots = new List<GameObject>();
-		bot = Resources.Load ("BotPreFab") as GameObject;
+		bot = Resources.Load ("BotPrefab") as GameObject;
 		spawnTime = 3f;
 		//bot.GetComponent<BotMovement> ().waypoints = spawnPoints;
 		//bm.waypoints = spawnPoints;
@@ -72,4 +72,3 @@ public class BotSpawn : MonoBehaviour
 		}*/
 	}
 }
-
