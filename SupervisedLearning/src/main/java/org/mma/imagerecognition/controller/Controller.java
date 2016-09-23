@@ -15,6 +15,7 @@ import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 
 public class Controller {
 	public static void main(String[] args) throws IOException {
+		int batchSize = 0;
 		String trainingPersistenceType = PropertiesReader.getProjectProperties().getProperty("training.persistence.type");
 		if(trainingPersistenceType == null) {
 			System.out.println("Please specify the persistence type of training data");
@@ -22,18 +23,18 @@ public class Controller {
 		}
 		if(trainingPersistenceType.equals("filesystem")) {
 			FileSystemDAO.createFolders();
-			String batchSize = PropertiesReader.getProjectProperties().getProperty("training.persistence.batchSize");
-			persistImagesToDisk(Integer.parseInt(batchSize));
+			batchSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.persistence.batchSize"));
+			persistImagesToDisk(batchSize);
 		}
 		
 		DataSetIterator trainIterator, testIterator;
 		
 		if(trainingPersistenceType.equals("filesystem")) {
-			testIterator = new FileSystemIterator(25, 40);
-			trainIterator = new FileSystemIterator(25, 80);
+			testIterator = new FileSystemIterator(batchSize, 100);
+			trainIterator = new FileSystemIterator(batchSize, 100);
 		} else {
-			testIterator = new DatabaseIterator(25, 40);
-			trainIterator = new DatabaseIterator(25, 80);
+			testIterator = new DatabaseIterator(batchSize, 40);
+			trainIterator = new DatabaseIterator(batchSize, 80);
 		}
 		
 		TestConfiguration.train(trainIterator, testIterator, "models" + File.separator);
