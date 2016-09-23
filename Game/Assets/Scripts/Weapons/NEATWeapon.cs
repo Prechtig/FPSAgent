@@ -121,7 +121,7 @@ public class NEATWeapon : MonoBehaviour
 	public Texture2D tex;
 	public float size = 32;
 	private float hitAlpha;
-	public AudioClip hitMarkerSound;
+	//public AudioClip hitMarkerSound;
 
 	#endregion
 
@@ -241,7 +241,7 @@ public class NEATWeapon : MonoBehaviour
 	void DoHitMark ()
 	{
 		hitAlpha = 2;
-		GetComponent<AudioSource> ().PlayOneShot (hitMarkerSound, 1f);
+		//GetComponent<AudioSource> ().PlayOneShot (hitMarkerSound, 1f);
 	}
 
 	void OnHit (RaycastHit hit)
