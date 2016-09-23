@@ -15,6 +15,7 @@ namespace SharpNEAT.Core
         
         readonly IGenomeDecoder<TGenome, TPhenome> _genomeDecoder;
         readonly IPhenomeEvaluator<TPhenome> _phenomeEvaluator;
+        Optimizer _optimizer;
 
         #region Constructor
 
@@ -22,10 +23,12 @@ namespace SharpNEAT.Core
         /// Construct with the provided IGenomeDecoder and IPhenomeEvaluator.
         /// </summary>
         public UnityListEvaluator(IGenomeDecoder<TGenome, TPhenome> genomeDecoder,
-                                         IPhenomeEvaluator<TPhenome> phenomeEvaluator)
+                                         IPhenomeEvaluator<TPhenome> phenomeEvaluator,
+                                         Optimizer opt)
         {
             _genomeDecoder = genomeDecoder;
             _phenomeEvaluator = phenomeEvaluator;
+            _optimizer = opt;
         }
 
         #endregion
@@ -49,6 +52,8 @@ namespace SharpNEAT.Core
         {
             foreach (TGenome genome in genomeList)
             {
+                NEATArena.ResetYOffset();
+                _optimizer.CheckPersistPopulation(); //Persist population
                 TPhenome phenome = _genomeDecoder.Decode(genome);
                 if (null == phenome)
                 {   // Non-viable genome.

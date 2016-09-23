@@ -174,7 +174,7 @@ public class Experiment : INeatExperiment
 		IGenomeDecoder<NeatGenome, IBlackBox> genomeDecoder = CreateGenomeDecoder();
 
 
-		IGenomeListEvaluator<NeatGenome> innerEvaluator = new UnityParallelListEvaluator<NeatGenome, IBlackBox>(genomeDecoder, evaluator, _optimizer);
+		IGenomeListEvaluator<NeatGenome> innerEvaluator = new UnityListEvaluator<NeatGenome, IBlackBox>(genomeDecoder, evaluator, _optimizer);
 
 		new SelectiveGenomeListEvaluator<NeatGenome>(innerEvaluator,
 			SelectiveGenomeListEvaluator<NeatGenome>.CreatePredicate_OnceOnly());
