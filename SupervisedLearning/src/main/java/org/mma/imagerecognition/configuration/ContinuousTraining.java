@@ -26,7 +26,8 @@ public class ContinuousTraining implements Trainable {
 		int featureCount = TrainingDbDao.getNumberOfGroundTruths();
         int nEpochs = 100;
 
-		MultiLayerConfiguration configuration = BuilderFactory.getDeepConvNet(height, width, featureCount).build();
+		//MultiLayerConfiguration configuration = BuilderFactory.getDeepConvNet(height, width, featureCount).build();
+		MultiLayerConfiguration configuration = BuilderFactory.getConvNet(height, width, featureCount).build();
         MultiLayerNetwork model = new MultiLayerNetwork(configuration);
         model.init();
         
