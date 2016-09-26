@@ -227,4 +227,10 @@ public class CharacterIterator implements DataSetIterator {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public boolean asyncSupported() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

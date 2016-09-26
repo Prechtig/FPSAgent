@@ -28,8 +28,8 @@ public class Controller {
 		DataSetIterator trainIterator, testIterator;
 		
 		if(trainingPersistenceType.equals("filesystem")) {
-			testIterator = new FileSystemIterator(batchSize, 50);
-			trainIterator = new FileSystemIterator(batchSize, 50);
+			testIterator = new FileSystemIterator(batchSize, 10000);
+			trainIterator = new FileSystemIterator(batchSize, 1000);
 		} else {
 			testIterator = new DatabaseIterator(batchSize, 40);
 			trainIterator = new DatabaseIterator(batchSize, 80);
@@ -41,6 +41,11 @@ public class Controller {
 	private static void persistImagesToDisk(int batchSize) {
 		int maxSavedId = FileSystemDAO.findLatestTrainingDataId();
 		int maxDbId = TrainingDbDao.getTotalNumberOfImages();
+		
+		if(maxSavedId != maxDbId) {
+			System.out.println("Downloading " + (maxDbId - maxSavedId) + " instances of training data");
+		}
+		
 		for(int i = maxSavedId + 1; i <= maxDbId; i += batchSize) {
 			List<TrainingData> images = TrainingDbDao.getTrainingData(i, i + batchSize - 1);
 			FileSystemDAO.persist(images);
