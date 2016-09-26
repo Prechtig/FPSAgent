@@ -50,6 +50,7 @@ public class ContinuousTraining implements Trainable {
 						.nIn(1)
 						.stride(1, 1)
 						.nOut(20)
+						.padding(1,1)
 						.dropOut(0.5)
 						.activation("relu")
 						.build())
@@ -62,6 +63,7 @@ public class ContinuousTraining implements Trainable {
 						.nIn(1)
 						.stride(1, 1)
 						.nOut(20)
+						.padding(1,1)
 						.dropOut(0.5)
 						.activation("relu")
 						.build())
@@ -74,6 +76,7 @@ public class ContinuousTraining implements Trainable {
 						.nIn(1)
 						.stride(1, 1)
 						.nOut(20)
+						.padding(1,1)
 						.dropOut(0.5)
 						.activation("relu")
 						.build())
@@ -90,9 +93,8 @@ public class ContinuousTraining implements Trainable {
 						.activation("identity")
 						.build())
 				.backprop(true).pretrain(false);
-		new ConvolutionLayerSetup(builder, width, height, 3);
+        new ConvolutionLayerSetup(builder, height, width, 3);
 		MultiLayerConfiguration configuration = builder.build();
-
         MultiLayerNetwork model = new MultiLayerNetwork(configuration);
         model.init();
         
