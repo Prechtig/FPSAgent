@@ -207,5 +207,10 @@ public class CustomSequenceIterator implements MultiDataSetIterator {
     public void setPreProcessor(MultiDataSetPreProcessor multiDataSetPreProcessor) {
 
     }
+	@Override
+	public boolean asyncSupported() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
 
