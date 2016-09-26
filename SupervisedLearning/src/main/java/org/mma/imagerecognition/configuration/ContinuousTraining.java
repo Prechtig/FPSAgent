@@ -1,5 +1,8 @@
 package org.mma.imagerecognition.configuration;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.deeplearning4j.eval.Evaluation;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
@@ -15,7 +18,9 @@ import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.ui.weights.HistogramIterationListener;
+import org.deeplearning4j.util.ModelSerializer;
 import org.mma.imagerecognition.dao.TrainingDbDao;
+import org.mma.imagerecognition.tools.PropertiesReader;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
@@ -93,6 +98,8 @@ public class ContinuousTraining implements Trainable {
         
         model.setListeners(new HistogramIterationListener(1));
         model.setListeners(new ScoreIterationListener(1));
+        
+        double bestAccuracy = Double.MAX_VALUE;
         for( int i=0; i<nEpochs; i++ ) {
             model.fit(trainIterator);
             System.out.println("*** Completed epoch {} ***" + i);
@@ -103,6 +110,14 @@ public class ContinuousTraining implements Trainable {
                 DataSet ds = testIterator.next();
                 INDArray output = model.output(ds.getFeatureMatrix(), false);
                 eval.eval(ds.getLabels(), output);
+                if (eval.accuracy() < bestAccuracy) {
+                	bestAccuracy = eval.accuracy();
+                	try {
+						ModelSerializer.writeModel(model, PropertiesReader.getProjectProperties().getProperty("training.persistence.savePath") + File.separator + "continuous" + File.separator + "bestModel.bin", true);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+                }
             }
             testIterator.reset();
         }

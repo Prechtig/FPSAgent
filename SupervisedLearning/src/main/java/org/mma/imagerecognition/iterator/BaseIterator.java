@@ -88,4 +88,9 @@ public abstract class BaseIterator implements DataSetIterator {
 		
 		return dataSet;
 	}
+	
+	@Override
+	public boolean asyncSupported() {
+		return false;
+	}
 }
