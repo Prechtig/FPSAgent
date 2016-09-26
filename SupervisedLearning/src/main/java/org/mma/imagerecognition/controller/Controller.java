@@ -3,7 +3,7 @@ package org.mma.imagerecognition.controller;
 import java.io.IOException;
 import java.util.List;
 
-import org.mma.imagerecognition.configuration.EarlyStoppingTraining;
+import org.mma.imagerecognition.configuration.ContinuousTraining;
 import org.mma.imagerecognition.dao.FileSystemDAO;
 import org.mma.imagerecognition.dao.TrainingDbDao;
 import org.mma.imagerecognition.dataobjects.TrainingData;
@@ -35,7 +35,7 @@ public class Controller {
 			trainIterator = new DatabaseIterator(batchSize, 80);
 		}
 		
-		new EarlyStoppingTraining().train(trainIterator, testIterator);
+		new ContinuousTraining().train(trainIterator, testIterator);
 	}
 	
 	private static void persistImagesToDisk(int batchSize) {
