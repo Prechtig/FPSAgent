@@ -1,10 +1,9 @@
 package org.mma.imagerecognition.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.mma.imagerecognition.configuration.TestConfiguration;
+import org.mma.imagerecognition.configuration.EarlyStoppingTraining;
 import org.mma.imagerecognition.dao.FileSystemDAO;
 import org.mma.imagerecognition.dao.TrainingDbDao;
 import org.mma.imagerecognition.dataobjects.TrainingData;
@@ -15,7 +14,7 @@ import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 
 public class Controller {
 	public static void main(String[] args) throws IOException {
-		int batchSize = 0;
+		int batchSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.persistence.batchSize"));;
 		String trainingPersistenceType = PropertiesReader.getProjectProperties().getProperty("training.persistence.type");
 		if(trainingPersistenceType == null) {
 			System.out.println("Please specify the persistence type of training data");
@@ -23,21 +22,20 @@ public class Controller {
 		}
 		if(trainingPersistenceType.equals("filesystem")) {
 			FileSystemDAO.createFolders();
-			batchSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.persistence.batchSize"));
 			persistImagesToDisk(batchSize);
 		}
 		
 		DataSetIterator trainIterator, testIterator;
 		
 		if(trainingPersistenceType.equals("filesystem")) {
-			testIterator = new FileSystemIterator(batchSize, 100);
-			trainIterator = new FileSystemIterator(batchSize, 100);
+			testIterator = new FileSystemIterator(batchSize, 50);
+			trainIterator = new FileSystemIterator(batchSize, 50);
 		} else {
 			testIterator = new DatabaseIterator(batchSize, 40);
 			trainIterator = new DatabaseIterator(batchSize, 80);
 		}
 		
-		TestConfiguration.train(trainIterator, testIterator, "models" + File.separator);
+		new EarlyStoppingTraining().train(trainIterator, testIterator);
 	}
 	
 	private static void persistImagesToDisk(int batchSize) {

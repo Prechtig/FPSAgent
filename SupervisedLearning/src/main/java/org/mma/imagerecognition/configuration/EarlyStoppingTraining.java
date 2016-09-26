@@ -1,5 +1,6 @@
 package org.mma.imagerecognition.configuration;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,12 +28,13 @@ import org.deeplearning4j.nn.conf.layers.setup.ConvolutionLayerSetup;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.mma.imagerecognition.dao.TrainingDbDao;
+import org.mma.imagerecognition.tools.PropertiesReader;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
-public class TestConfiguration {
+public class EarlyStoppingTraining implements Trainable {
 
-	public static void train(DataSetIterator trainIterator, DataSetIterator testIterator, String savePath) {
+	public void train(DataSetIterator trainIterator, DataSetIterator testIterator) {
 		int width = TrainingDbDao.getWidth();
 		int height = TrainingDbDao.getHeight();
 		int numberOfGroundTruths = TrainingDbDao.getNumberOfGroundTruths();
@@ -97,7 +99,7 @@ public class TestConfiguration {
 		MultiLayerConfiguration configuration = builder.build();
 		
 		//Training
-        EarlyStoppingModelSaver<MultiLayerNetwork> saver = new LocalFileModelSaver(savePath);
+        EarlyStoppingModelSaver<MultiLayerNetwork> saver = new LocalFileModelSaver(PropertiesReader.getProjectProperties().getProperty("training.persistence.savePath") + File.separator);
         EarlyStoppingConfiguration<MultiLayerNetwork> esConf = new EarlyStoppingConfiguration.Builder<MultiLayerNetwork>()
                 .epochTerminationConditions(new MaxEpochsTerminationCondition(50))
                 .evaluateEveryNEpochs(1)
