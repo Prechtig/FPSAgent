@@ -25,7 +25,7 @@ public abstract class BaseIterator implements DataSetIterator {
 
 	@Override
 	public boolean hasNext() {
-		return cursor+1 < batches;
+		return cursor < batches;
 	}
 
 	@Override
