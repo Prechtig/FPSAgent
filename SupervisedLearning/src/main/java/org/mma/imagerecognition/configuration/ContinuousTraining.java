@@ -2,8 +2,8 @@ package org.mma.imagerecognition.configuration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Properties;
 
-import org.deeplearning4j.eval.Evaluation;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
@@ -11,22 +11,19 @@ import org.deeplearning4j.ui.weights.HistogramIterationListener;
 import org.deeplearning4j.util.ModelSerializer;
 import org.mma.imagerecognition.dao.TrainingDbDao;
 import org.mma.imagerecognition.tools.PropertiesReader;
-import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 
 public class ContinuousTraining implements Trainable {
+	
+	private String modelFilePath, modelFileName;
+	private int height, width, featureCount, nEpochs;
+	
+	public ContinuousTraining() {
+		init();
+	}
 
 	@Override
 	public void train(DataSetIterator trainIterator, DataSetIterator testIterator) {
-		String modelFilePath = PropertiesReader.getProjectProperties().getProperty("training.persistence.savePath") + File.separator + "continuous" + File.separator;
-		String modelFileName = "model";
-		int width = TrainingDbDao.getWidth();
-		int height = TrainingDbDao.getHeight();
-		int featureCount = TrainingDbDao.getNumberOfGroundTruths();
-        int nEpochs = 100;
-
-		//MultiLayerConfiguration configuration = BuilderFactory.getDeepConvNet(height, width, featureCount).build();
 		MultiLayerConfiguration configuration = BuilderFactory.getConvNet(height, width, featureCount).build();
         MultiLayerNetwork model = new MultiLayerNetwork(configuration);
         model.init();
@@ -44,13 +41,15 @@ public class ContinuousTraining implements Trainable {
 			}
             testIterator.reset();
         }
-        
-        System.out.println("Evaluate model....");
-        Evaluation eval = new Evaluation(featureCount);
-        while(testIterator.hasNext()){
-            DataSet ds = testIterator.next();
-            INDArray output = model.output(ds.getFeatureMatrix(), false);
-            eval.eval(ds.getLabels(), output);
-        }
+	}
+	
+	private void init() {
+		Properties projectProperties = PropertiesReader.getProjectProperties();
+		modelFilePath = projectProperties.getProperty("training.persistence.savePath") + File.separator + "continuous" + File.separator;
+		modelFileName = "model";
+		width = TrainingDbDao.getWidth();
+		height = TrainingDbDao.getHeight();
+		featureCount = TrainingDbDao.getNumberOfGroundTruths();
+        nEpochs = Integer.parseInt(projectProperties.getProperty("training.epochs"));
 	}
 }
