@@ -120,13 +120,13 @@ public class NEATWeapon : MonoBehaviour
 
 	public Texture2D tex;
 	public float size = 32;
-	private float hitAlpha;
+	//private float hitAlpha;
 	//public AudioClip hitMarkerSound;
 
 	#endregion
 
 
-	private Text shotsLeftText;
+	public Text ShotsLeftText;
 
 	void Start ()
 	{
@@ -135,7 +135,7 @@ public class NEATWeapon : MonoBehaviour
 		//spread = basicSpread;
 		//StartCoroutine (CheckBools ());
 		StartCoroutine (Draw ());
-		shotsLeftText = GameObject.FindWithTag("UIText").GetComponent<Text>() as Text;
+		//shotsLeftText = GameObject.FindWithTag("UIText").GetComponent<Text>() as Text;
 	}
 
 	void Update ()
@@ -176,7 +176,7 @@ public class NEATWeapon : MonoBehaviour
 		if (!canAim)
 			aiming = false;
 		 */
-		shotsLeftText.text = bulletsLeft + " / " + magsLeft;
+		ShotsLeftText.text = bulletsLeft + " / " + magsLeft;
 	}
 
 	/*
@@ -240,7 +240,7 @@ public class NEATWeapon : MonoBehaviour
 
 	void DoHitMark ()
 	{
-		hitAlpha = 2;
+		//hitAlpha = 2;
 		//GetComponent<AudioSource> ().PlayOneShot (hitMarkerSound, 1f);
 	}
 
