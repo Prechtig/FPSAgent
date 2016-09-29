@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.mma.imagerecognition.dao.FileSystemDAO;
 import org.mma.imagerecognition.dao.TrainingDbDao;
+import org.mma.imagerecognition.dataobjects.TrainingData;
 import org.nd4j.linalg.dataset.DataSet;
 
 public class DatabaseIterator extends BaseIterator {
@@ -47,7 +48,7 @@ public class DatabaseIterator extends BaseIterator {
 	@Override
 	public int totalOutcomes() {
 		if(outputColumns == -1) {
-			outputColumns = TrainingDbDao.getNumberOfGroundTruths();
+			outputColumns = TrainingData.getFeatureCount();
 		}
 		return outputColumns;
 	}

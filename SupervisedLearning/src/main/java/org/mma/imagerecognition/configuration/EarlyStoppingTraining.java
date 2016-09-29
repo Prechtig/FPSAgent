@@ -18,6 +18,7 @@ import org.deeplearning4j.earlystopping.trainer.EarlyStoppingTrainer;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.mma.imagerecognition.dao.TrainingDbDao;
+import org.mma.imagerecognition.dataobjects.TrainingData;
 import org.mma.imagerecognition.tools.PropertiesReader;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 
@@ -26,7 +27,7 @@ public class EarlyStoppingTraining implements Trainable {
 	public void train(DataSetIterator trainIterator, DataSetIterator testIterator) {
 		int width = TrainingDbDao.getWidth();
 		int height = TrainingDbDao.getHeight();
-		int featureCount = TrainingDbDao.getNumberOfGroundTruths();
+		int featureCount = TrainingData.getFeatureCount();
 		
 		// Configuration
 		MultiLayerConfiguration configuration = BuilderFactory.getDeepConvNet(height, width, featureCount).build();
