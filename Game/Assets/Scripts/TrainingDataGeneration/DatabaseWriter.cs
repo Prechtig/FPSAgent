@@ -24,10 +24,6 @@ public class DatabaseWriter {
 	public static void InsertTrainingData(TrainingData td) {
 		InitializeConnection ();
 		PrepareInsertStatement ();
-//		if (connection == null)
-//			throw new InvalidOperationException ("Connection has not been initialized");
-//		if (insertCommand == null)
-//			throw new InvalidOperationException ("Insert statement has not been prepared");
 
 		insertCommand.Parameters.Clear ();
 
@@ -71,6 +67,7 @@ public class DatabaseWriter {
 		mysqlsb.UserID = userID;
 		mysqlsb.Password = password;
 		mysqlsb.Database = database;
+		mysqlsb.Pooling = false;
 		connection = new MySqlConnection(mysqlsb.ToString());
 		connection.Open();
 	}
