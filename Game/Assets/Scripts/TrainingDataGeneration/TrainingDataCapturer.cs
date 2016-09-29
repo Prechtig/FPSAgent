@@ -1,25 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using Kajabity.Tools.Java;
 
 public class TrainingDataCapturer : MonoBehaviour
 {
-	public int saveInterval;
+	private int saveInterval;
 	private int frameCounter = 0;
 
-	public int botsToSave;
+	private int bots;
 
 	public string cameraTag;
 	private Camera playerCam;
-
-	private GroundTruth groundTruthScript;
-
 
 	// Use this for initialization
 	void Start ()
 	{
 		DatabaseWriter.Initialize ();
-		groundTruthScript = GetComponent<GroundTruth> ();
+		Init ();
 	}
 	
 	// Update is called once per frame
@@ -38,9 +36,9 @@ public class TrainingDataCapturer : MonoBehaviour
 	}
 
 	public TrainingData CaptureTrainingData() {
-		float[] groundTruths = GroundTruth.CalculateGroundTruths (playerCam, botsToSave);
+		float[] groundTruths = GroundTruth.CalculateGroundTruths (playerCam, bots);
 		Screenshot screenshot = ScreenSnapper.SnapScreenshot (playerCam);
-		return new TrainingData (groundTruths, screenshot);
+		return new TrainingData (bots, groundTruths, screenshot);
 	}
 
 	private bool IsCameraInitialized() {
@@ -52,5 +50,11 @@ public class TrainingDataCapturer : MonoBehaviour
 		if(cam != null) {
 			playerCam = cam.GetComponent<Camera> ();
 		}
+	}
+
+	private void Init() {
+		JavaProperties projectProperties = PropertiesReader.GetPropertyFile (PropertyFile.Project);
+		bots = int.Parse (projectProperties.GetProperty ("game.bots"));
+		saveInterval = int.Parse(projectProperties.GetProperty("datageneration.screenshot.save.interval"));
 	}
 }
