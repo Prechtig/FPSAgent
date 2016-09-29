@@ -22,10 +22,12 @@ public class DatabaseWriter {
 	private static int numberOfBots;
 
 	public static void InsertTrainingData(TrainingData td) {
-		if (connection == null)
-			throw new InvalidOperationException ("Connection has not been initialized");
-		if (insertCommand == null)
-			throw new InvalidOperationException ("Insert statement has not been prepared");
+		InitializeConnection ();
+		PrepareInsertStatement ();
+//		if (connection == null)
+//			throw new InvalidOperationException ("Connection has not been initialized");
+//		if (insertCommand == null)
+//			throw new InvalidOperationException ("Insert statement has not been prepared");
 
 		insertCommand.Parameters.Clear ();
 
@@ -44,6 +46,7 @@ public class DatabaseWriter {
 		}
 
 		insertCommand.ExecuteNonQuery();
+		CloseConnection ();
 	}
 
 	public static void Initialize() {
