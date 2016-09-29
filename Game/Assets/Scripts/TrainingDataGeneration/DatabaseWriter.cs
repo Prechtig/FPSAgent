@@ -19,7 +19,7 @@ public class DatabaseWriter {
 	public static string horizontalAngleKey = "horizontalangle";
 	public static string distanceKey = "distance";
 	public static string withinSightKey = "withinsight";
-	public static int numberOfBots = 5;
+	private static int numberOfBots;
 
 	public static void InsertTrainingData(TrainingData td) {
 		if (connection == null)
@@ -47,6 +47,7 @@ public class DatabaseWriter {
 	}
 
 	public static void Initialize() {
+		numberOfBots = int.Parse (PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("game.bots"));
 		LoadUserCredentials ();
 		InitializeConnection ();
 		PrepareInsertStatement ();
