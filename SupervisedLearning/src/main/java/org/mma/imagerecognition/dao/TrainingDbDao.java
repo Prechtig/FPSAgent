@@ -36,7 +36,7 @@ public class TrainingDbDao {
 	
 	private static DataSource pooledDataSource = setupC3P0();
 	
-	private static List<TrainingData> getImages(String indices) {
+	public static List<TrainingData> getImages(String indices) {
 		try (Connection conn = getConnection()) {
 			PreparedStatement getTrainingDataPS = conn.prepareStatement(GET_IMAGES + indices);
 		
