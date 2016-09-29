@@ -1,10 +1,9 @@
 package org.mma.imagerecognition.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.mma.imagerecognition.configuration.TestConfiguration;
+import org.mma.imagerecognition.configuration.ContinuousTraining;
 import org.mma.imagerecognition.dao.FileSystemDAO;
 import org.mma.imagerecognition.dao.TrainingDbDao;
 import org.mma.imagerecognition.dataobjects.TrainingData;
@@ -15,7 +14,7 @@ import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 
 public class Controller {
 	public static void main(String[] args) throws IOException {
-		int batchSize = 0;
+		int batchSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.persistence.batchSize"));;
 		String trainingPersistenceType = PropertiesReader.getProjectProperties().getProperty("training.persistence.type");
 		if(trainingPersistenceType == null) {
 			System.out.println("Please specify the persistence type of training data");
@@ -23,7 +22,6 @@ public class Controller {
 		}
 		if(trainingPersistenceType.equals("filesystem")) {
 			FileSystemDAO.createFolders();
-			batchSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.persistence.batchSize"));
 			persistImagesToDisk(batchSize);
 		}
 		
@@ -37,12 +35,17 @@ public class Controller {
 			trainIterator = new DatabaseIterator(batchSize, 80);
 		}
 		
-		TestConfiguration.train(trainIterator, testIterator, "models" + File.separator);
+		new ContinuousTraining().train(trainIterator, testIterator);
 	}
 	
 	private static void persistImagesToDisk(int batchSize) {
 		int maxSavedId = FileSystemDAO.findLatestTrainingDataId();
 		int maxDbId = TrainingDbDao.getTotalNumberOfImages();
+		
+		if(maxSavedId != maxDbId) {
+			System.out.println("Downloading " + (maxDbId - maxSavedId) + " instances of training data");
+		}
+		
 		for(int i = maxSavedId + 1; i <= maxDbId; i += batchSize) {
 			List<TrainingData> images = TrainingDbDao.getTrainingData(i, i + batchSize - 1);
 			FileSystemDAO.persist(images);

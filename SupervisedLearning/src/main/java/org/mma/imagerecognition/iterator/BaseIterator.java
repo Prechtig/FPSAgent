@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.mma.imagerecognition.dataobjects.TrainingData;
 import org.mma.imagerecognition.tools.ImageTool;
-import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.DataSetPreProcessor;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
@@ -26,7 +25,7 @@ public abstract class BaseIterator implements DataSetIterator {
 
 	@Override
 	public boolean hasNext() {
-		return cursor+1 < batches;
+		return cursor < batches;
 	}
 
 	@Override
@@ -70,22 +69,19 @@ public abstract class BaseIterator implements DataSetIterator {
 	}
 	
 	protected DataSet toDataSet(List<TrainingData> trainingData) {
-		DataSet dataSet = new DataSet();
-		
-		double[] labelValues = new double[ batch() * totalOutcomes() ];
-		double[][] features = new double[trainingData.size()][];
+		double[][] pixelData			= new double[batch()][];
+		double[][] groundTruthValues	= new double[batch()][];
 		
 		for(int i = 0; i < trainingData.size(); i++) {
 			TrainingData td = trainingData.get(i);
-			
-			double[] groundTruths = td.getFeatureDoubles();
-			System.arraycopy(groundTruths, 0, labelValues, i * groundTruths.length, groundTruths.length);
-			features[i] = ImageTool.toScaledDoubleStream(td.getPixelData()).toArray();
+			pixelData[i] = ImageTool.toScaledDoubleStream(td.getPixelData()).toArray();
+			groundTruthValues[i] = td.getFeatureDoubles();
 		}
-		dataSet.setFeatures(ImageTool.convertToINDArray(features));
-		INDArray labels = Nd4j.create(labelValues, new int[] { batch(), totalOutcomes() }, 'c');
-		dataSet.setLabels(labels);
-		
-		return dataSet;
+		return new DataSet(Nd4j.create(pixelData), Nd4j.create(groundTruthValues));
+	}
+	
+	@Override
+	public boolean asyncSupported() {
+		return false;
 	}
 }

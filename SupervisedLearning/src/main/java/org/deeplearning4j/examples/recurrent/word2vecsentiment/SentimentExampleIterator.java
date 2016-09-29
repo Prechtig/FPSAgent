@@ -224,4 +224,11 @@ public class SentimentExampleIterator implements DataSetIterator {
     public boolean isPositiveReview(int index){
         return index%2 == 0;
     }
+
+
+	@Override
+	public boolean asyncSupported() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
