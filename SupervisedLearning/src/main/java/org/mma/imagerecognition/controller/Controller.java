@@ -28,8 +28,8 @@ public class Controller {
 		DataSetIterator trainIterator, testIterator;
 		
 		if(trainingPersistenceType.equals("filesystem")) {
-			testIterator = new FileSystemIterator(batchSize, 10000);
-			trainIterator = new FileSystemIterator(batchSize, 1000);
+			testIterator = new FileSystemIterator(batchSize, 100);
+			trainIterator = new FileSystemIterator(batchSize, 100);
 		} else {
 			testIterator = new DatabaseIterator(batchSize, 40);
 			trainIterator = new DatabaseIterator(batchSize, 80);
