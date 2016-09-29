@@ -5,19 +5,24 @@ using Kajabity.Tools.Java;
 
 public class TrainingDataCapturer : MonoBehaviour
 {
-	private int saveInterval;
+	private static int saveInterval;
 	private int frameCounter = 0;
 
-	private int bots;
+	private static int bots;
 
 	private string cameraTag = "MainCamera";
 	private Camera playerCam;
+
+	static TrainingDataCapturer() {
+		JavaProperties projectProperties = PropertiesReader.GetPropertyFile (PropertyFile.Project);
+		bots = int.Parse (projectProperties.GetProperty ("game.bots"));
+		saveInterval = int.Parse(projectProperties.GetProperty("datageneration.screenshot.save.interval"));
+	}
 
 	// Use this for initialization
 	void Start ()
 	{
 		DatabaseWriter.Initialize ();
-		Init ();
 	}
 	
 	// Update is called once per frame
@@ -50,11 +55,5 @@ public class TrainingDataCapturer : MonoBehaviour
 		if(cam != null) {
 			playerCam = cam.GetComponent<Camera> ();
 		}
-	}
-
-	private void Init() {
-		JavaProperties projectProperties = PropertiesReader.GetPropertyFile (PropertyFile.Project);
-		bots = int.Parse (projectProperties.GetProperty ("game.bots"));
-		saveInterval = int.Parse(projectProperties.GetProperty("datageneration.screenshot.save.interval"));
 	}
 }
