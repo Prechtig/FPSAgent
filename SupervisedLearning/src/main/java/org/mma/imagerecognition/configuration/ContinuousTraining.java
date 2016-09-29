@@ -10,6 +10,7 @@ import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.ui.weights.HistogramIterationListener;
 import org.deeplearning4j.util.ModelSerializer;
 import org.mma.imagerecognition.dao.TrainingDbDao;
+import org.mma.imagerecognition.dataobjects.TrainingData;
 import org.mma.imagerecognition.tools.PropertiesReader;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 
@@ -49,7 +50,7 @@ public class ContinuousTraining implements Trainable {
 		modelFileName = "model";
 		width = TrainingDbDao.getWidth();
 		height = TrainingDbDao.getHeight();
-		featureCount = TrainingDbDao.getNumberOfGroundTruths();
+		featureCount = TrainingData.getFeatureCount();
         nEpochs = Integer.parseInt(projectProperties.getProperty("training.epochs"));
 	}
 }

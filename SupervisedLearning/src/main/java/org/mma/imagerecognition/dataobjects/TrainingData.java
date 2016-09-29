@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.mma.imagerecognition.tools.PropertiesReader;
 import org.mma.imagerecognition.tools.ScaleTool;
 
 public class TrainingData {
@@ -18,8 +19,12 @@ public class TrainingData {
 	public static final String distanceKey = "distance";
 	public static final String withinSightKey = "withinsight";
 	
-	public static final int numberOfBots = 5;
+	public static final int numberOfBots = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("game.bots"));
 	
+	public static int getFeatureCount() {
+		int featuresPerBot = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.featuresPerBot"));
+		return numberOfBots * featuresPerBot;
+	}
 	
 	public TrainingData(ResultSet rs) throws SQLException {
 		id = rs.getInt("id");
