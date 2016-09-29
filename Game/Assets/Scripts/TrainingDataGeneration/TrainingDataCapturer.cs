@@ -10,7 +10,7 @@ public class TrainingDataCapturer : MonoBehaviour
 
 	private int bots;
 
-	public string cameraTag;
+	private string cameraTag = "MainCamera";
 	private Camera playerCam;
 
 	// Use this for initialization

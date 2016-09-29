@@ -8,7 +8,7 @@ public class BotSpawn : MonoBehaviour
 	private IList<GameObject> bots;
 	public Transform[] spawnPoints;
 	private float spawnTime;
-	private static int botsToSpawn = 3;
+	private static int botsToSpawn = 1;
 	private int BotsKilled = 0;
 
 	public BotSpawn (Transform[] spawnPoints){
