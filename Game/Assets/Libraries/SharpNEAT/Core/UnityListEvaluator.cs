@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using SharpNeat.Phenomes;
 using SharpNeat.Core;
 using System.Collections;
 using UnityEngine;
@@ -52,11 +53,19 @@ namespace SharpNEAT.Core
         {
             Dictionary<TGenome, TPhenome> dict = new Dictionary<TGenome, TPhenome>();
             Dictionary<TGenome, FitnessInfo[]> fitnessDict = new Dictionary<TGenome, FitnessInfo[]>();
+			_optimizer.CheckPersistPopulation(); //Persist population
+			if (_optimizer.RunBestNetwork) {
+				float timeScale = Time.timeScale;
+				IBlackBox bestBlackBox = _optimizer.GetBestPhenome ();
+				TPhenome phenome = (TPhenome)bestBlackBox;
+				yield return Coroutiner.StartCoroutine(_phenomeEvaluator.Evaluate(phenome));
+				_optimizer.RunBestNetwork = false;
+				Time.timeScale = timeScale;
+			}
             for (int i = 0; i < _optimizer.Trials; i++)
             {
                 NEATArena.ResetYOffset();
                 _phenomeEvaluator.Reset();
-                _optimizer.CheckPersistPopulation(); //Persist population
 
                 dict = new Dictionary<TGenome, TPhenome>();
                 foreach (TGenome genome in genomeList)
