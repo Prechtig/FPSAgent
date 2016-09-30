@@ -175,7 +175,7 @@ public class Optimizer : MonoBehaviour {
 	}
 	*/
 
-	void Pause()
+	void PauseUnpause()
 	{
 		if (!EARunning) { //Unpause
 			Time.timeScale = PreviousTimeScale;
@@ -320,9 +320,14 @@ public class Optimizer : MonoBehaviour {
 				RunBestNetwork = true;
 			}
 		}
-		if (GUI.Button(new Rect(10, 160, 100, 40), "Pause EA"))
-		{
-			Pause();
+		if (EARunning) {
+			if (GUI.Button (new Rect (10, 160, 100, 40), "Pause EA")) {
+				PauseUnpause ();
+			}
+		} else {
+			if (GUI.Button (new Rect (10, 160, 100, 40), "Resume EA")) {
+				PauseUnpause ();
+			}
 		}
 
 		GUI.Button(new Rect(10, Screen.height - 70, 100, 60), string.Format("Generation: {0}\nFitness: {1:0.00}", Generation, Fitness));
