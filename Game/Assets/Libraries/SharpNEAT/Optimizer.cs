@@ -13,8 +13,8 @@ using SharpNeat.Domains;
 public class Optimizer : MonoBehaviour {
 	public GameObject wallPrefab;
 
-	readonly int NUM_INPUTS;
-	readonly int NUM_OUTPUTS;
+	private int NUM_INPUTS;
+	private int NUM_OUTPUTS;
 
 	bool EARunning;
 	//string popFileSavePath, champFileSavePath;
@@ -104,6 +104,18 @@ public class Optimizer : MonoBehaviour {
 			{
 				Time.timeScale = Time.timeScale - 1;
 				print("Lowering time scale to " + Time.timeScale);
+			}
+		}
+
+		if (Input.GetKeyDown("up")) {
+			Time.timeScale++;
+			print("Increasing time scale to " + Time.timeScale);
+		} else if (Input.GetKeyDown("down")) {
+			if (Time.timeScale > 1) {
+				Time.timeScale--;
+				print("Lowering time scale to " + Time.timeScale);
+			} else {
+				print ("Cannot lower time scale to 0");
 			}
 		}
 	}
@@ -347,7 +359,7 @@ public class Optimizer : MonoBehaviour {
 		trialDuration = Convert.ToSingle(XmlUtils.GetValueAsDouble (config, "TrialDuration"));
 		stoppingFitness = Convert.ToSingle (XmlUtils.GetValueAsDouble (config, "StoppingFitness"));
 		PersistNGenerations = XmlUtils.GetValueAsInt(config, "PersistNGenerations");
-		NUM_INPUTS = XmlUtils.GetValueAsInt ("inputs");
-		NUM_OUTPUTS = XmlUtils.GetValueAsInt ("outputs");
+		NUM_INPUTS = XmlUtils.GetValueAsInt (config, "inputs");
+		NUM_OUTPUTS = XmlUtils.GetValueAsInt (config, "outputs");
 	}
 }
