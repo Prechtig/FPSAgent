@@ -54,22 +54,28 @@ namespace SharpNEAT.Core
             Dictionary<TGenome, TPhenome> dict = new Dictionary<TGenome, TPhenome>();
             Dictionary<TGenome, FitnessInfo[]> fitnessDict = new Dictionary<TGenome, FitnessInfo[]>();
 			_optimizer.CheckPersistPopulation(); //Persist population
-			if (_optimizer.RunBestNetwork) {
-				float timeScale = Time.timeScale;
-				IBlackBox bestBlackBox = _optimizer.GetBestPhenome ();
-				TPhenome phenome = (TPhenome)bestBlackBox;
-				yield return Coroutiner.StartCoroutine(_phenomeEvaluator.Evaluate(phenome));
-				_optimizer.RunBestNetwork = false;
-				Time.timeScale = timeScale;
-			}
+
             for (int i = 0; i < _optimizer.Trials; i++)
             {
                 NEATArena.ResetYOffset();
                 _phenomeEvaluator.Reset();
 
+
+
                 dict = new Dictionary<TGenome, TPhenome>();
                 foreach (TGenome genome in genomeList)
                 {
+					if (_optimizer.RunBestNetwork) {
+						IBlackBox bestBlackBox = _optimizer.GetBestPhenome ();
+						if (bestBlackBox != null) {
+							float timeScale = Time.timeScale;
+							TPhenome bestPhenome = (TPhenome)bestBlackBox;
+							yield return Coroutiner.StartCoroutine (_phenomeEvaluator.Evaluate (bestPhenome));
+							_optimizer.RunBestNetwork = false;
+							Time.timeScale = timeScale;
+						}
+					}
+
                     TPhenome phenome = _genomeDecoder.Decode(genome);
                     if (null == phenome)
                     {   // Non-viable genome.

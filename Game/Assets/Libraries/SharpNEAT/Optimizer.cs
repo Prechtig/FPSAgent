@@ -79,7 +79,7 @@ public class Optimizer : MonoBehaviour {
 		//champFileSavePath = Application.persistentDataPath + string.Format("/{0}.champ.xml", "FPSAgent");
 		//popFileSavePath = Application.persistentDataPath + string.Format("/{0}.pop.xml", "FPSAgent");
 
-		print("Data sve path: " + Application.persistentDataPath + string.Format("/GENERATION/"));
+		print("Data save path: " + Application.persistentDataPath + string.Format("/GENERATION/"));
 	}
 
 	// Update is called once per frame
@@ -141,9 +141,9 @@ public class Optimizer : MonoBehaviour {
 
 	void ea_UpdateEvent(object sender, EventArgs e)
 	{
-		if (!_firstUpdateEvent) {
+		if (_ea.CurrentGeneration != 1) {
 			Utility.Log (string.Format ("gen={0:N0} bestFitness={1:N6}",
-				_ea.CurrentGeneration, _ea.Statistics._maxFitness));
+				Generation, Fitness));
 		} else {
 			_firstUpdateEvent = false;
 		}
@@ -284,29 +284,31 @@ public class Optimizer : MonoBehaviour {
 	}
 
 	public IBlackBox GetBestPhenome(){
-		Time.timeScale = 1;
+		if (Generation > 1) {
+			Time.timeScale = 1;
 
-		NeatGenome genome = null;
-		string champFileLoadPath = Application.persistentDataPath + string.Format("/{0}/{1}.champ.xml", Generation, "FPSAgent");
-		// Try to load the genome from the XML document.
-		try
-		{
-			using (XmlReader xr = XmlReader.Create(champFileLoadPath))
-				genome = NeatGenomeXmlIO.ReadCompleteGenomeList(xr, false, (NeatGenomeFactory)experiment.CreateGenomeFactory())[0];
-		}
-		catch (Exception e1)
-		{
-			print(champFileLoadPath + " Error loading genome from file!\nLoading aborted.\n"
+			NeatGenome genome = null;
+			string champFileLoadPath = Application.persistentDataPath + string.Format ("/{0}/{1}.champ.xml", Generation - 1, "FPSAgent");
+			// Try to load the genome from the XML document.
+			try {
+				using (XmlReader xr = XmlReader.Create (champFileLoadPath))
+					genome = NeatGenomeXmlIO.ReadCompleteGenomeList (xr, false, (NeatGenomeFactory)experiment.CreateGenomeFactory ()) [0];
+			} catch (Exception e1) {
+				print (champFileLoadPath + " Error loading genome from file!\nLoading aborted.\n"
 				+ e1.Message + "\nJoe: " + champFileLoadPath);
-			return null;
+				return null;
+			}
+
+			// Get a genome decoder that can convert genomes to phenomes.
+			var genomeDecoder = experiment.CreateGenomeDecoder ();
+
+			// Decode the genome into a phenome (neural network).
+			var phenome = genomeDecoder.Decode (genome);
+			return phenome;
 		}
-
-		// Get a genome decoder that can convert genomes to phenomes.
-		var genomeDecoder = experiment.CreateGenomeDecoder();
-
-		// Decode the genome into a phenome (neural network).
-		var phenome = genomeDecoder.Decode(genome);
-		return phenome;
+		print ("Cannot run best network in first generation!");
+		RunBestNetwork = false;
+		return null;
 	}
 
 	public float GetFitness(IBlackBox box)
