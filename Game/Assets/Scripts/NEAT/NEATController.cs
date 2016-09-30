@@ -8,7 +8,7 @@ public class NEATController : UnitController {
 	IBlackBox box;
 	bool IsRunning;
 
-	Transform lookRoot;
+	//Transform lookRoot;
 
 	float rotationX = 0;
 	float rotationY = 0;
@@ -24,7 +24,7 @@ public class NEATController : UnitController {
 	// Use this for initialization
 	void Start () {
 		playerCam = gameObject.GetComponentInChildren<Camera> ();
-		lookRoot = gameObject.transform.GetChild(2).GetChild(0);
+		//lookRoot = gameObject.transform.GetChild(2).GetChild(0);
 	}
 
 	// Update is called once per frame
@@ -36,7 +36,7 @@ public class NEATController : UnitController {
 			//Optain input array from convolutional neural network / java
 
 			ISignalArray inputArr = box.InputSignalArray;
-			float[] groundTruths = GroundTruth.CalculateGroundTruthsScaled (playerCam, 3);
+			float[] groundTruths = GroundTruth.CalculateGroundTruthsScaled (playerCam, 1);
 			//inputArr.CopyFrom ();
 			inputArr.CopyFrom(groundTruths.Select(f => (double)f).ToArray(), 0);
 

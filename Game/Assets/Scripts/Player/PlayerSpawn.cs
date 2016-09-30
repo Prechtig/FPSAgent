@@ -58,7 +58,7 @@ public class PlayerSpawn : MonoBehaviour
 		//Object[] obs = Resources.FindObjectsOfTypeAll(typeof(UnityEngine.Object));
 		Object a = Resources.Load ("Player");
 		player = (GameObject)Instantiate(a, spawnPoints.position, spawnPoints.rotation);
-		HUD.worldCamera = this.GetComponentInChildren<Camera> ();
+		//HUD.worldCamera = player.GetComponentInChildren<Camera> ();
 		player.GetComponentInChildren<NEATWeapon> ().ShotsLeftText = ShotsLeftText;
 		//Instantiate (GameObject., spawnPoints.position, spawnPoints.rotation);
 	}

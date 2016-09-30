@@ -13,8 +13,8 @@ using SharpNeat.Domains;
 public class Optimizer : MonoBehaviour {
 	public GameObject wallPrefab;
 
-	const int NUM_INPUTS = 20;
-	const int NUM_OUTPUTS = 6;
+	private int NUM_INPUTS;
+	private int NUM_OUTPUTS;
 
 	bool EARunning;
 	//string popFileSavePath, champFileSavePath;
@@ -71,6 +71,7 @@ public class Optimizer : MonoBehaviour {
 
 		InitFromConfig (xmlConfig.DocumentElement);
 
+
 		experiment.SetOptimizer(this);
 
 		experiment.Initialize("FPS Experiment", xmlConfig.DocumentElement, NUM_INPUTS, NUM_OUTPUTS);
@@ -78,7 +79,7 @@ public class Optimizer : MonoBehaviour {
 		//champFileSavePath = Application.persistentDataPath + string.Format("/{0}.champ.xml", "FPSAgent");
 		//popFileSavePath = Application.persistentDataPath + string.Format("/{0}.pop.xml", "FPSAgent");
 
-		print("Data sve path: " + Application.persistentDataPath + string.Format("/GENERATION/{0}.pop.xml", "FPSAgent"));
+		print("Data sve path: " + Application.persistentDataPath + string.Format("/GENERATION/"));
 	}
 
 	// Update is called once per frame
@@ -103,6 +104,18 @@ public class Optimizer : MonoBehaviour {
 			{
 				Time.timeScale = Time.timeScale - 1;
 				print("Lowering time scale to " + Time.timeScale);
+			}
+		}
+
+		if (Input.GetKeyDown("up")) {
+			Time.timeScale++;
+			print("Increasing time scale to " + Time.timeScale);
+		} else if (Input.GetKeyDown("down")) {
+			if (Time.timeScale > 1) {
+				Time.timeScale--;
+				print("Lowering time scale to " + Time.timeScale);
+			} else {
+				print ("Cannot lower time scale to 0");
 			}
 		}
 	}
@@ -346,5 +359,7 @@ public class Optimizer : MonoBehaviour {
 		trialDuration = Convert.ToSingle(XmlUtils.GetValueAsDouble (config, "TrialDuration"));
 		stoppingFitness = Convert.ToSingle (XmlUtils.GetValueAsDouble (config, "StoppingFitness"));
 		PersistNGenerations = XmlUtils.GetValueAsInt(config, "PersistNGenerations");
+		NUM_INPUTS = XmlUtils.GetValueAsInt (config, "inputs");
+		NUM_OUTPUTS = XmlUtils.GetValueAsInt (config, "outputs");
 	}
 }
