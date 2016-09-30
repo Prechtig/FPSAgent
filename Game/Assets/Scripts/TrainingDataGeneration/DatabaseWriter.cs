@@ -19,13 +19,11 @@ public class DatabaseWriter {
 	public static string horizontalAngleKey = "horizontalangle";
 	public static string distanceKey = "distance";
 	public static string withinSightKey = "withinsight";
-	public static int numberOfBots = 5;
+	private static int numberOfBots;
 
 	public static void InsertTrainingData(TrainingData td) {
-		if (connection == null)
-			throw new InvalidOperationException ("Connection has not been initialized");
-		if (insertCommand == null)
-			throw new InvalidOperationException ("Insert statement has not been prepared");
+		InitializeConnection ();
+		PrepareInsertStatement ();
 
 		insertCommand.Parameters.Clear ();
 
@@ -44,9 +42,11 @@ public class DatabaseWriter {
 		}
 
 		insertCommand.ExecuteNonQuery();
+		CloseConnection ();
 	}
 
 	public static void Initialize() {
+		numberOfBots = int.Parse (PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("game.bots"));
 		LoadUserCredentials ();
 		InitializeConnection ();
 		PrepareInsertStatement ();
@@ -67,6 +67,7 @@ public class DatabaseWriter {
 		mysqlsb.UserID = userID;
 		mysqlsb.Password = password;
 		mysqlsb.Database = database;
+		mysqlsb.Pooling = false;
 		connection = new MySqlConnection(mysqlsb.ToString());
 		connection.Open();
 	}

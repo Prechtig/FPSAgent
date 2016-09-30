@@ -36,7 +36,7 @@ public class TrainingDbDao {
 	
 	private static DataSource pooledDataSource = setupC3P0();
 	
-	private static List<TrainingData> getImages(String indices) {
+	public static List<TrainingData> getImages(String indices) {
 		try (Connection conn = getConnection()) {
 			PreparedStatement getTrainingDataPS = conn.prepareStatement(GET_IMAGES + indices);
 		
@@ -102,6 +102,7 @@ public class TrainingDbDao {
 		throw new IllegalStateException();
 	}
 	
+	@Deprecated
 	public static int getNumberOfGroundTruths() {
 		try (Connection conn = getConnection()) {
 			PreparedStatement getColumnCountPS = conn.prepareStatement(GET_COLUMN_COUNT);
