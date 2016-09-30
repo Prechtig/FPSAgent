@@ -13,8 +13,8 @@ using SharpNeat.Domains;
 public class Optimizer : MonoBehaviour {
 	public GameObject wallPrefab;
 
-	const int NUM_INPUTS = 20;
-	const int NUM_OUTPUTS = 6;
+	readonly int NUM_INPUTS;
+	readonly int NUM_OUTPUTS;
 
 	bool EARunning;
 	//string popFileSavePath, champFileSavePath;
@@ -71,6 +71,7 @@ public class Optimizer : MonoBehaviour {
 
 		InitFromConfig (xmlConfig.DocumentElement);
 
+
 		experiment.SetOptimizer(this);
 
 		experiment.Initialize("FPS Experiment", xmlConfig.DocumentElement, NUM_INPUTS, NUM_OUTPUTS);
@@ -78,7 +79,7 @@ public class Optimizer : MonoBehaviour {
 		//champFileSavePath = Application.persistentDataPath + string.Format("/{0}.champ.xml", "FPSAgent");
 		//popFileSavePath = Application.persistentDataPath + string.Format("/{0}.pop.xml", "FPSAgent");
 
-		print("Data sve path: " + Application.persistentDataPath + string.Format("/GENERATION/{0}.pop.xml", "FPSAgent"));
+		print("Data sve path: " + Application.persistentDataPath + string.Format("/GENERATION/"));
 	}
 
 	// Update is called once per frame
@@ -346,5 +347,7 @@ public class Optimizer : MonoBehaviour {
 		trialDuration = Convert.ToSingle(XmlUtils.GetValueAsDouble (config, "TrialDuration"));
 		stoppingFitness = Convert.ToSingle (XmlUtils.GetValueAsDouble (config, "StoppingFitness"));
 		PersistNGenerations = XmlUtils.GetValueAsInt(config, "PersistNGenerations");
+		NUM_INPUTS = XmlUtils.GetValueAsInt ("inputs");
+		NUM_OUTPUTS = XmlUtils.GetValueAsInt ("outputs");
 	}
 }
