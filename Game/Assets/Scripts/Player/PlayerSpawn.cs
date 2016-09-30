@@ -1,10 +1,35 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class PlayerSpawn : MonoBehaviour
 {
 	public GameObject player;
 	public Transform spawnPoints;
+
+	private static Text _shots;
+
+
+	//Canvas components
+	private static Canvas _hud;
+	private static Canvas HUD{
+		get {
+			if (_hud == null) {
+				_hud = GameObject.FindWithTag("PlayerHUD").GetComponent<Canvas>() as Canvas;
+			}
+			return _hud;
+		}
+	}
+
+	private static Text _shotsLeftText;
+	private static Text ShotsLeftText{
+		get {
+			if (_shotsLeftText == null) {
+				_shotsLeftText = GameObject.FindWithTag("UIText").GetComponent<Text>() as Text;
+			}
+			return _shotsLeftText;
+		}
+	}
 
 	public void OnEnable(){
 		//SpawnPlayer ();
@@ -33,6 +58,8 @@ public class PlayerSpawn : MonoBehaviour
 		//Object[] obs = Resources.FindObjectsOfTypeAll(typeof(UnityEngine.Object));
 		Object a = Resources.Load ("Player");
 		player = (GameObject)Instantiate(a, spawnPoints.position, spawnPoints.rotation);
+		HUD.worldCamera = this.GetComponentInChildren<Camera> ();
+		player.GetComponentInChildren<NEATWeapon> ().ShotsLeftText = ShotsLeftText;
 		//Instantiate (GameObject., spawnPoints.position, spawnPoints.rotation);
 	}
 
