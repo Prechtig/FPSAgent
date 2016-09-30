@@ -306,31 +306,39 @@ public class Optimizer : MonoBehaviour {
 
 	void OnGUI()
 	{
-		if (GUI.Button(new Rect(10, 10, 100, 40), "Start EA"))
-		{
-			StartEA();
-		}
-		if (GUI.Button(new Rect(10, 60, 100, 40), "Stop EA"))
-		{
-			StopEA();
-		}
-		if (GUI.Button(new Rect(10, 110, 100, 40), "Run best"))
-		{
-			if (EARunning) {
-				RunBestNetwork = true;
-			}
-		}
 		if (EARunning) {
+			/*if (GUI.Button(new Rect(10, 60, 100, 40), "Stop EA"))
+			{
+				StopEA();
+			}*/
 			if (GUI.Button (new Rect (10, 160, 100, 40), "Pause EA")) {
 				PauseUnpause ();
 			}
+			if (GUI.Button(new Rect(10, 110, 100, 40), "Run best"))
+			{
+				RunBestNetwork = true;
+			}
+
 		} else {
-			if (GUI.Button (new Rect (10, 160, 100, 40), "Resume EA")) {
-				PauseUnpause ();
+			if (_firstUpdateEvent) {
+				if (GUI.Button (new Rect (10, 10, 100, 40), "Start EA")) {
+					StartEA ();
+				}
+			}
+
+			else {
+				if (GUI.Button(new Rect(10, 110, 100, 40), "Run best"))
+				{
+					RunBestNetwork = true;
+				}
+				if (GUI.Button (new Rect (10, 160, 100, 40), "Resume EA")) {
+					PauseUnpause ();
+				}
 			}
 		}
 
-		GUI.Button(new Rect(10, Screen.height - 70, 100, 60), string.Format("Generation: {0}\nFitness: {1:0.00}", Generation, Fitness));
+		//Show current generation and max fitness from all generations
+		GUI.Button(new Rect(10, Screen.height - 70, 150, 60), string.Format("Current generation: {0}\nMax fitness: {1:0.00}", Generation, Fitness));
 	}
 
 	private void InitFromConfig(XmlElement config) {

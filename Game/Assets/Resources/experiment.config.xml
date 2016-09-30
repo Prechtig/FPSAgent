@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <Config>
-  <TrialCount>2</TrialCount>
+  <TrialCount>10</TrialCount>
   <TrialDuration>20</TrialDuration>
   <StoppingFitness>99999</StoppingFitness>
 
-  <PopulationSize>1</PopulationSize>
-  <SpecieCount>1</SpecieCount>
+  <PopulationSize>50</PopulationSize>
+  <SpecieCount>5</SpecieCount>
   <Activation>
     <Scheme>Acyclic</Scheme>
   </Activation>
