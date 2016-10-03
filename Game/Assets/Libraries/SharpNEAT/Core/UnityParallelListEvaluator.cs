@@ -15,9 +15,7 @@ namespace SharpNEAT.Core
 
         readonly IGenomeDecoder<TGenome, TPhenome> _genomeDecoder;
         IPhenomeEvaluator<TPhenome> _phenomeEvaluator;
-        //readonly IPhenomeEvaluator<TPhenome> _phenomeEvaluator;
         Optimizer _optimizer;
-		private int _persistNGenerations;
 
         #region Constructor
 
@@ -55,12 +53,10 @@ namespace SharpNEAT.Core
         {
             Dictionary<TGenome, TPhenome> dict = new Dictionary<TGenome, TPhenome>();
             Dictionary<TGenome, FitnessInfo[]> fitnessDict = new Dictionary<TGenome, FitnessInfo[]>();
-            for (int i = 0; i < _optimizer.Trials; i++)
+			for (int i = 0; i < _optimizer.Trials; i++)
             {
-                Utility.Log("Iteration " + (i + 1));                
                 _phenomeEvaluator.Reset();
 				NEATArena.ResetYOffset ();
-				_optimizer.CheckPersistPopulation (); //Persist population
 
                 dict = new Dictionary<TGenome, TPhenome>();
                 foreach (TGenome genome in genomeList)
@@ -83,6 +79,7 @@ namespace SharpNEAT.Core
                         //    dict.Add(genome, phenome);
                         //    fitnessDict.Add(phenome, new FitnessInfo[_optimizer.Trials]);
                         //}
+
                         Coroutiner.StartCoroutine(_phenomeEvaluator.Evaluate(phenome));
                     }
                 }

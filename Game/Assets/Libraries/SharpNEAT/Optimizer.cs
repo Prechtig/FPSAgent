@@ -24,6 +24,7 @@ public class Optimizer : MonoBehaviour {
 
 	public GameObject Unit;
 	public bool RunBestNetwork = false;
+	public int MaxParallel;
 	//public NEATArena arena;
 
 	Dictionary<IBlackBox, UnitController> ControllerMap = new Dictionary<IBlackBox, UnitController>();
@@ -46,7 +47,10 @@ public class Optimizer : MonoBehaviour {
 	private float trialDuration;
 	private float stoppingFitness;
 
-	private bool _firstUpdateEvent = true;
+	private uint LastPrinted = 0;
+
+	private bool AutomaticTimeScaleOn = true;
+	private bool Started = false;
 
 	public int Trials
 	{
@@ -91,7 +95,6 @@ public class Optimizer : MonoBehaviour {
 		timeLeft -= Time.deltaTime;
 		accum += Time.timeScale / Time.deltaTime;
 		++frames;
-		//Time.timeScale = 1; //TODO REmove this
 
 		if (timeLeft <= 0.0)
 		{
@@ -100,23 +103,33 @@ public class Optimizer : MonoBehaviour {
 			accum = 0.0f;
 			frames = 0;
 			//   print("FPS: " + fps);
-			if (fps < 10 && Time.timeScale > 1)
+			if (AutomaticTimeScaleOn && fps < 10 && Time.timeScale > 1)
 			{
 				Time.timeScale = Time.timeScale - 1;
 				print("Lowering time scale to " + Time.timeScale);
+			} else if (AutomaticTimeScaleOn && fps > 70 && Time.timeScale < 25) {
+				Time.timeScale = Time.timeScale++;
+				print("Increasing time scale to " + Time.timeScale);
 			}
 		}
 
 		if (Input.GetKeyDown("up")) {
+			AutomaticTimeScaleOn = false;
 			Time.timeScale++;
 			print("Increasing time scale to " + Time.timeScale);
 		} else if (Input.GetKeyDown("down")) {
+			AutomaticTimeScaleOn = false;
 			if (Time.timeScale > 1) {
 				Time.timeScale--;
 				print("Lowering time scale to " + Time.timeScale);
 			} else {
 				print ("Cannot lower time scale to 0");
 			}
+		}
+
+		if (Input.GetKeyDown ("right")) {
+			AutomaticTimeScaleOn = true;
+			print ("Automatic timescale enabled");
 		}
 	}
 
@@ -127,12 +140,9 @@ public class Optimizer : MonoBehaviour {
 		FitnessMap = new Dictionary<IBlackBox, float> ();
 		//_ea = experiment.CreateEvolutionAlgorithm(popFileSavePath);
 		_ea = experiment.CreateEvolutionAlgorithm();
-		//startTime = DateTime.Now;
-
 		_ea.UpdateEvent += new EventHandler(ea_UpdateEvent);
-		//_ea.PausedEvent += new EventHandler(ea_PauseEvent);
 		var evoSpeed = 25;
-
+		Started = true;
 		//   Time.fixedDeltaTime = 0.045f;
 		Time.timeScale = evoSpeed;       
 		_ea.StartContinue();
@@ -141,52 +151,17 @@ public class Optimizer : MonoBehaviour {
 
 	void ea_UpdateEvent(object sender, EventArgs e)
 	{
-		if (_ea.CurrentGeneration != 1) {
+		if (Generation != 0 && _ea.CurrentGeneration != Generation) {
 			Utility.Log (string.Format ("gen={0:N0} bestFitness={1:N6}",
 				Generation, Fitness));
-		} else {
-			_firstUpdateEvent = false;
+			LastPrinted = Generation;
 		}
 
 		Fitness = _ea.Statistics._maxFitness;
 		Generation = _ea.CurrentGeneration;
 
-		//    Utility.Log(string.Format("Moving average: {0}, N: {1}", _ea.Statistics._bestFitnessMA.Mean, _ea.Statistics._bestFitnessMA.Length));
+		//Utility.Log(string.Format("Moving average: {0}, N: {1}", _ea.Statistics._bestFitnessMA.Mean, _ea.Statistics._bestFitnessMA.Length));
 	}
-
-	/*
-	void ea_PauseEvent(object sender, EventArgs e)
-	{
-		Time.timeScale = 1;
-		Utility.Log("Done ea'ing (and neat'ing)");
-
-		XmlWriterSettings _xwSettings = new XmlWriterSettings();
-		_xwSettings.Indent = true;
-		// Save genomes to xml file.        
-		DirectoryInfo dirInf = new DirectoryInfo(Application.persistentDataPath);
-		if (!dirInf.Exists)
-		{
-			Debug.Log("Creating subdirectory");
-			dirInf.Create();
-		}
-		using (XmlWriter xw = XmlWriter.Create(popFileSavePath, _xwSettings))
-		{
-			experiment.SavePopulation(xw, _ea.GenomeList);
-		}
-		// Also save the best genome
-
-		using (XmlWriter xw = XmlWriter.Create(champFileSavePath, _xwSettings))
-		{
-			experiment.SavePopulation(xw, new NeatGenome[] { _ea.CurrentChampGenome });
-		}
-		DateTime endTime = DateTime.Now;
-		Utility.Log("Total time elapsed: " + (endTime - startTime));
-
-		System.IO.StreamReader stream = new System.IO.StreamReader(popFileSavePath);
-
-		EARunning = false;
-	}
-	*/
 
 	void PauseUnpause()
 	{
@@ -220,7 +195,6 @@ public class Optimizer : MonoBehaviour {
 		// Save genomes to xml file.        
 		DirectoryInfo dirInf = new DirectoryInfo (Application.persistentDataPath + string.Format ("/{0}", _ea.CurrentGeneration - 1));
 		if (!dirInf.Exists) {
-			//Debug.Log ("Creating subdirectory");
 			dirInf.Create ();
 		}
 
@@ -230,17 +204,9 @@ public class Optimizer : MonoBehaviour {
 			}
 		}
 		// Also save the best genome
-
-
 		using (XmlWriter xw = XmlWriter.Create (champFileSavePath, _xwSettings)) {
 			experiment.SavePopulation (xw, new NeatGenome[] { _ea.CurrentChampGenome });
 		}
-
-		//DateTime endTime = DateTime.Now;
-		//Utility.Log ("Total time elapsed: " + (endTime - startTime));
-
-		//System.IO.StreamReader stream = new System.IO.StreamReader (popFileSavePath);
-
 	}
 
 	public void StopEA()
@@ -335,7 +301,7 @@ public class Optimizer : MonoBehaviour {
 			}
 
 		} else {
-			if (_firstUpdateEvent) {
+			if (!Started) {
 				if (GUI.Button (new Rect (10, 10, 100, 40), "Start EA")) {
 					StartEA ();
 				}
@@ -363,5 +329,6 @@ public class Optimizer : MonoBehaviour {
 		PersistNGenerations = XmlUtils.GetValueAsInt(config, "PersistNGenerations");
 		NUM_INPUTS = XmlUtils.GetValueAsInt (config, "inputs");
 		NUM_OUTPUTS = XmlUtils.GetValueAsInt (config, "outputs");
+		MaxParallel = XmlUtils.GetValueAsInt (config, "parallelAgents");
 	}
 }
