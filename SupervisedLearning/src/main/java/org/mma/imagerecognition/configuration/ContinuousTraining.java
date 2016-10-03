@@ -7,9 +7,7 @@ import java.util.Properties;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
-import org.deeplearning4j.ui.weights.HistogramIterationListener;
 import org.deeplearning4j.util.ModelSerializer;
-import org.mma.imagerecognition.dao.TrainingDbDao;
 import org.mma.imagerecognition.dataobjects.TrainingData;
 import org.mma.imagerecognition.tools.PropertiesReader;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
@@ -29,7 +27,6 @@ public class ContinuousTraining implements Trainable {
         MultiLayerNetwork model = new MultiLayerNetwork(configuration);
         model.init();
         
-        model.setListeners(new HistogramIterationListener(1));
         model.setListeners(new ScoreIterationListener(1));
         
         for( int i=0; i<nEpochs; i++ ) {
@@ -48,8 +45,8 @@ public class ContinuousTraining implements Trainable {
 		Properties projectProperties = PropertiesReader.getProjectProperties();
 		modelFilePath = projectProperties.getProperty("training.persistence.savePath") + File.separator + "continuous" + File.separator;
 		modelFileName = "model";
-		width = TrainingDbDao.getWidth();
-		height = TrainingDbDao.getHeight();
+		width = Integer.parseInt(projectProperties.getProperty("training.image.width"));
+		height = Integer.parseInt(projectProperties.getProperty("training.image.height"));
 		featureCount = TrainingData.getFeatureCount();
         nEpochs = Integer.parseInt(projectProperties.getProperty("training.epochs"));
 	}

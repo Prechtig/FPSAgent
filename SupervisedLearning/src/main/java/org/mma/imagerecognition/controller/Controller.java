@@ -10,10 +10,13 @@ import org.mma.imagerecognition.dataobjects.TrainingData;
 import org.mma.imagerecognition.iterator.DatabaseIterator;
 import org.mma.imagerecognition.iterator.FileSystemIterator;
 import org.mma.imagerecognition.tools.PropertiesReader;
+//import org.nd4j.jita.conf.CudaEnvironment;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 
 public class Controller {
 	public static void main(String[] args) throws IOException {
+//		CudaEnvironment.getInstance().getConfiguration().allowMultiGPU(true);
+		
 		int batchSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.persistence.batchSize"));;
 		String trainingPersistenceType = PropertiesReader.getProjectProperties().getProperty("training.persistence.type");
 		if(trainingPersistenceType == null) {
