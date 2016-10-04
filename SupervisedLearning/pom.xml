@@ -49,6 +49,7 @@
 				<archive>
 					<manifest>
 						<mainClass>org.mma.imagerecognition.controller.Controller</mainClass>
+						<!-- <mainClass>org.mma.imagerecognition.configuration.Evaluator</mainClass> -->
 					</manifest>
 				</archive>
 			</configuration>
