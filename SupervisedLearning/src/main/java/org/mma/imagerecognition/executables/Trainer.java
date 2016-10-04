@@ -10,11 +10,26 @@ import org.mma.imagerecognition.dataobjects.TrainingData;
 import org.mma.imagerecognition.iterator.DatabaseIterator;
 import org.mma.imagerecognition.iterator.FileSystemIterator;
 import org.mma.imagerecognition.tools.PropertiesReader;
+import org.nd4j.jita.conf.CudaEnvironment;
+import org.nd4j.linalg.api.buffer.DataBuffer;
+import org.nd4j.linalg.api.buffer.util.DataTypeUtil;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 
 public class Trainer {
+	
+	private static final long GIGABYTE = 1024 * 1024 * 1024;
+	
 	public static void main(String[] args) throws IOException {
-		int batchSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.persistence.batchSize"));
+		DataTypeUtil.setDTypeForContext(DataBuffer.Type.FLOAT);
+		
+		CudaEnvironment.getInstance().getConfiguration()
+			.allowMultiGPU(true)
+		    .setMaximumDeviceCacheableLength(GIGABYTE * 1)
+		    .setMaximumDeviceCache			(GIGABYTE * 12)
+		    .setMaximumHostCacheableLength	(GIGABYTE * 1)
+		    .setMaximumHostCache			(GIGABYTE * 12);
+		
+		int batchSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.persistence.batchSize"));;
 		String trainingPersistenceType = PropertiesReader.getProjectProperties().getProperty("training.persistence.type");
 		FileSystemDAO.createFolders();
 		if(trainingPersistenceType == null) {
@@ -37,7 +52,7 @@ public class Trainer {
 			trainIterator = new DatabaseIterator(batchSize, 80);
 		}
 		
-		new ContinuousTraining().train(trainIterator, testIterator);
+		new ContinuousTraining().trainParallel(trainIterator, testIterator);
 	}
 	
 	private static void persistImagesToDisk(int batchSize ,int maxNumberOfImagesToPersist) {
