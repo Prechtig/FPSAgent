@@ -160,7 +160,8 @@ public class NEATArena : MonoBehaviour {
 	}
 
 	public float GetFitness(){
-		return bs.GetFitness ();
+        return 0.0f;
+		//return bs.GetFitness ();
 	}
 
 	public void OnDestroy(){
