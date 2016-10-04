@@ -27,7 +27,7 @@ public class Trainer {
 		    .setMaximumDeviceCacheableLength(GIGABYTE * 1)
 		    .setMaximumDeviceCache			(GIGABYTE * 12)
 		    .setMaximumHostCacheableLength	(GIGABYTE * 1)
-		    .setMaximumHostCache			(GIGABYTE * 12);
+		    .setMaximumHostCache			(GIGABYTE * 16);
 		
 		int batchSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.persistence.batchSize"));;
 		String trainingPersistenceType = PropertiesReader.getProjectProperties().getProperty("training.persistence.type");
@@ -44,12 +44,15 @@ public class Trainer {
 		
 		DataSetIterator trainIterator, testIterator;
 		
+		int testSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.testSize"));
+		int trainSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.trainSize"));
+		
 		if(trainingPersistenceType.equals("filesystem")) {
-			testIterator = new FileSystemIterator(batchSize, 500);
-			trainIterator = new FileSystemIterator(batchSize, 5000);
+			testIterator = new FileSystemIterator(batchSize, testSize);
+			trainIterator = new FileSystemIterator(batchSize, trainSize);
 		} else {
-			testIterator = new DatabaseIterator(batchSize, 40);
-			trainIterator = new DatabaseIterator(batchSize, 80);
+			testIterator = new DatabaseIterator(batchSize, testSize);
+			trainIterator = new DatabaseIterator(batchSize, trainSize);
 		}
 		
 		new ContinuousTraining().trainParallel(trainIterator, testIterator);
