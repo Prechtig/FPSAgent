@@ -89,7 +89,7 @@ public class FileSystemDAO {
 		try {
 			return Files.walk(getFeatureFolder())
 					.filter(Files::isRegularFile)
-					.map(file -> Integer.valueOf(file.getFileName().toString())).sorted()
+					.map(file -> Integer.valueOf(file.getFileName().toString()))
 					.reduce(0, (curMax, cur) -> Math.max(curMax, cur));
 		} catch(IOException e) {
 			e.printStackTrace();
@@ -122,5 +122,14 @@ public class FileSystemDAO {
 	
 	private static Path getPersistenceFolder() {
 		return Paths.get(ROOT_FOLDER);
+	}
+	
+	public static boolean exists(int fileId) {
+		boolean pixelDataExists = Files.exists(getPixelDataPath(fileId));
+		boolean featureDataExists = Files.exists(getFeaturePath(fileId));
+		if(pixelDataExists ^ featureDataExists) {
+			throw new IllegalStateException("Downloaded feature or pixel data without the other.");
+		}
+		return pixelDataExists && featureDataExists;
 	}
 }

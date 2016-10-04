@@ -10,14 +10,11 @@ import org.mma.imagerecognition.dataobjects.TrainingData;
 import org.mma.imagerecognition.iterator.DatabaseIterator;
 import org.mma.imagerecognition.iterator.FileSystemIterator;
 import org.mma.imagerecognition.tools.PropertiesReader;
-//import org.nd4j.jita.conf.CudaEnvironment;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 
 public class Controller {
 	public static void main(String[] args) throws IOException {
-//		CudaEnvironment.getInstance().getConfiguration().allowMultiGPU(true);
-		
-		int batchSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.persistence.batchSize"));;
+		int batchSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.persistence.batchSize"));
 		String trainingPersistenceType = PropertiesReader.getProjectProperties().getProperty("training.persistence.type");
 		if(trainingPersistenceType == null) {
 			System.out.println("Please specify the persistence type of training data");
@@ -31,8 +28,8 @@ public class Controller {
 		DataSetIterator trainIterator, testIterator;
 		
 		if(trainingPersistenceType.equals("filesystem")) {
-			testIterator = new FileSystemIterator(batchSize, 50);
-			trainIterator = new FileSystemIterator(batchSize, 50);
+			testIterator = new FileSystemIterator(batchSize, 40000);
+			trainIterator = new FileSystemIterator(batchSize, 2000);
 		} else {
 			testIterator = new DatabaseIterator(batchSize, 40);
 			trainIterator = new DatabaseIterator(batchSize, 80);
@@ -52,6 +49,17 @@ public class Controller {
 		for(int i = maxSavedId + 1; i <= maxDbId; i += batchSize) {
 			List<TrainingData> images = TrainingDbDao.getTrainingData(i, i + batchSize - 1);
 			FileSystemDAO.persist(images);
+		}
+	}
+	
+	private static void persistMissingImages() {
+		int maxDbId = TrainingDbDao.getTotalNumberOfImages();
+		for(int i = 1; i <= maxDbId; i++) {
+			if(!FileSystemDAO.exists(i)) {
+				List<TrainingData> images = TrainingDbDao.getTrainingData(i, i);
+				FileSystemDAO.persist(images);
+				System.out.format("Downloaded training data with id %i", i);
+			}
 		}
 	}
 }

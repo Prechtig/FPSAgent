@@ -10,16 +10,27 @@ import org.deeplearning4j.nn.conf.layers.DenseLayer;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.conf.layers.SubsamplingLayer;
 import org.deeplearning4j.nn.weights.WeightInit;
+import org.mma.imagerecognition.tools.PropertiesReader;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
 public class BuilderFactory {
+	private static double learningRate = 0.0;
+	private static double l2 = 0.0;
+	private static int seed = 0;
+	
+	static {
+		learningRate = Double.parseDouble(PropertiesReader.getProjectProperties().getProperty("training.learningRate"));
+		l2 = Double.parseDouble(PropertiesReader.getProjectProperties().getProperty("training.l2"));
+		seed = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.seed"));
+	}
+	
 	public static Builder getDeepConvNet(int height, int width, int featureCount) {
 		Builder builder = new NeuralNetConfiguration.Builder()
 		.seed(98)
 		.iterations(1)
 		.regularization(true)
-		.l2(0.0005)
-		.learningRate(0.008)
+		.l2(l2)
+		.learningRate(learningRate)
 		.weightInit(WeightInit.XAVIER)
 		.activation("relu")
 		.optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
@@ -81,8 +92,8 @@ public class BuilderFactory {
 		.seed(98)
 		.iterations(1)
 		.regularization(true)
-		.l2(0.0005)
-		.learningRate(0.008)
+		.l2(l2)
+		.learningRate(learningRate)
 		.weightInit(WeightInit.XAVIER)
 		.activation("relu")
 		.optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
