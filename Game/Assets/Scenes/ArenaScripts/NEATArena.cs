@@ -97,28 +97,6 @@ public class NEATArena : MonoBehaviour {
 		obj.name = "Light";
 
 		arenaObjects.Add (obj);
-
-		/*
-		Vector3[] rotations = new Vector3[4];
-		rotations[0] = new Vector3 (45.0f, 0, 0);
-		rotations[1] = new Vector3 (135.0f, 0, 0);
-		rotations[2] = new Vector3 (45.0f, 90.0f, 0);
-		rotations[3] = new Vector3 (45.0f, 270.0f, 0);
-
-		for (int i = 0; i < 4; i++) {
-			GameObject obj = new GameObject ();
-			obj.transform.Translate (lightVector);
-			obj.transform.eulerAngles = rotations [i];
-			Light l = obj.AddComponent<Light> ();
-			l.type = LightType.Directional;
-			l.color = new Color (255/255.0f, 244/255.0f, 214/255.0f);
-			l.shadows = LightShadows.Soft;
-			obj.name = "Light";
-			//obj.hideFlags = HideFlags.HideInHierarchy;
-
-			arenaObjects.Add (obj);
-		}
-		*/
 	}
 
 	private void SetSpawnPoints(float x, float z){
@@ -149,6 +127,8 @@ public class NEATArena : MonoBehaviour {
 
 	public void SpawnPlayer(){
 		ps = gameObject.AddComponent<PlayerSpawn>();
+		ps.X = x;
+		ps.Z = z;
 		ps.spawnPoints = playerSpawnPoint;
 		ps.SpawnPlayer ();
 	}

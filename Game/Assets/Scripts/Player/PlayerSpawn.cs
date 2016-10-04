@@ -6,6 +6,10 @@ public class PlayerSpawn : MonoBehaviour
 {
 	public GameObject player;
 	public Transform spawnPoints;
+	public float X;
+	public float Z;
+
+	private GameObject spawnObject;
 
 	private static Text _shots;
 
@@ -57,15 +61,35 @@ public class PlayerSpawn : MonoBehaviour
 		*/
 		//Object[] obs = Resources.FindObjectsOfTypeAll(typeof(UnityEngine.Object));
 		Object a = Resources.Load ("Player");
-		player = (GameObject)Instantiate(a, spawnPoints.position, spawnPoints.rotation);
+
+		Vector3 spawnPosition = GenerateSpawnPoint ();
+		player = (GameObject)Instantiate(a, spawnPosition, spawnPoints.rotation);
 		//HUD.worldCamera = player.GetComponentInChildren<Camera> ();
 		player.GetComponentInChildren<NEATWeapon> ().ShotsLeftText = ShotsLeftText;
 		//Instantiate (GameObject., spawnPoints.position, spawnPoints.rotation);
 	}
 
-	/*
-	public void OnDestroy(){
-		Destroy (spawnPoints);
+	private Vector3 GenerateSpawnPoint(){
+		float rX = Random.Range (-(X/2) - 1, X/2 - 1);
+		float y = Random.Range (1, 10);
+
+
+		Vector3 scale = new Vector3 (1, y, 1);
+
+		Vector3 position = new Vector3 (rX, spawnPoints.position.y, -2);
+
+		spawnObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		spawnObject.transform.position = position;
+		spawnObject.transform.localScale = scale;
+		spawnObject.AddComponent<BoxCollider> ();
+
+
+		y += spawnPoints.position.y;
+		return new Vector3(rX, y, -2);
 	}
-	*/
+
+
+	public void OnDestroy(){
+		Destroy (spawnObject);
+	}
 }
