@@ -70,13 +70,13 @@ public class PlayerSpawn : MonoBehaviour
 	}
 
 	private Vector3 GenerateSpawnPoint(){
-		float rX = Random.Range (-(X/2) - 1, X/2 - 1);
-		float y = Random.Range (1, 10);
+		float rX = Random.Range (-(X/2) + 1, X/2 - 1);
+		float y = Random.Range (1, 15);
+		float zOffset = -4;
 
+		Vector3 scale = new Vector3 (0.3f, y + 1, 0.3f);
 
-		Vector3 scale = new Vector3 (1, y, 1);
-
-		Vector3 position = new Vector3 (rX, spawnPoints.position.y, -2);
+		Vector3 position = new Vector3 (rX, (spawnPoints.position.y + y/2) - 0.5f, zOffset);
 
 		spawnObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
 		spawnObject.transform.position = position;
@@ -84,8 +84,8 @@ public class PlayerSpawn : MonoBehaviour
 		spawnObject.AddComponent<BoxCollider> ();
 
 
-		y += spawnPoints.position.y;
-		return new Vector3(rX, y, -2);
+		y += spawnPoints.position.y - 0.5f;
+		return new Vector3(rX, y, zOffset);
 	}
 
 

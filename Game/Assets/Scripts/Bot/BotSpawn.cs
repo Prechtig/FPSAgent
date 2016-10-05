@@ -11,6 +11,13 @@ public class BotSpawn : MonoBehaviour
 	private static int botsToSpawn = 1;
 	private int BotsKilled = 0;
 
+	//public static int iteration = 1;
+
+	public float X;
+	public float Z;
+
+	private GameObject spawnObject;
+
 	public BotSpawn (Transform[] spawnPoints){
 		this.spawnPoints = spawnPoints;
 	}
@@ -40,12 +47,38 @@ public class BotSpawn : MonoBehaviour
 	void Spawn ()
 	{
 		if(bots.Count < botsToSpawn){
+			Vector3 spawnPosition = GenerateSpawnPoint ();
+			GameObject b = Instantiate (bot, spawnPosition, new Quaternion(0, 180, 0, 0)) as GameObject;
+			b.GetComponent<BotVitals> ().bs = this;
+			//b.GetComponent<BotMovement> ().waypoints = spawnPoints;
+			bots.Add (b);
+			/*
 			int spawnPoint = Random.Range (0, spawnPoints.Length);
 			GameObject b = Instantiate (bot, spawnPoints[spawnPoint].position, spawnPoints[spawnPoint].rotation) as GameObject;
 			b.GetComponent<BotVitals> ().bs = this;
 			b.GetComponent<BotMovement> ().waypoints = spawnPoints;
 			bots.Add (b);
+			*/
 		}
+	}
+
+	private Vector3 GenerateSpawnPoint(){
+		float rX = Random.Range (-(X/2) + 1, X/2 - 1);
+		float y = Random.Range (0, 15);
+		float zOffset = spawnPoints[0].position.z;
+
+		Vector3 scale = new Vector3 (0.3f, y + 1, 0.3f);
+
+		Vector3 position = new Vector3 (rX, (spawnPoints[0].position.y + y/2) - 0.5f, zOffset);
+
+		spawnObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		spawnObject.transform.position = position;
+		spawnObject.transform.localScale = scale;
+		spawnObject.AddComponent<BoxCollider> ();
+		//spawnObject.name = "Cube: " + iteration;
+
+		y += spawnPoints[0].position.y + 0.75f;
+		return new Vector3(rX, y, zOffset);
 	}
 
 	public float GetFitness(){
@@ -63,12 +96,11 @@ public class BotSpawn : MonoBehaviour
 	}
 
 	public void OnDestroy(){
-		CancelInvoke ();
+		Destroy (spawnObject);
 		foreach (GameObject b in bots) {
 			Destroy (b);
 		}
-		/*foreach (Transform t in spawnPoints) {
-			Destroy (t);
-		}*/
+
+		CancelInvoke ();
 	}
 }

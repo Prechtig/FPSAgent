@@ -87,6 +87,7 @@ namespace SharpNEAT.Core
 							parallel++;
 						} else {
 							yield return Coroutiner.StartCoroutine(_phenomeEvaluator.Evaluate(phenome));
+							//BotSpawn.iteration++;
 							parallel = 0;
 							NEATArena.ResetYOffset ();
 						}

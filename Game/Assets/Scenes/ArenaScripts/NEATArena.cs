@@ -134,6 +134,8 @@ public class NEATArena : MonoBehaviour {
 
 	public void SpawnEnemies(){
 		bs = gameObject.AddComponent<BotSpawn>();
+		bs.X = x;
+		bs.Z = z;
 		bs.spawnPoints = botSpawnPoints;
 		bs.StartSpawning ();
 	}
