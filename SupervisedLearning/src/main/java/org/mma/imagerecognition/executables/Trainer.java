@@ -10,11 +10,26 @@ import org.mma.imagerecognition.dataobjects.TrainingData;
 import org.mma.imagerecognition.iterator.DatabaseIterator;
 import org.mma.imagerecognition.iterator.FileSystemIterator;
 import org.mma.imagerecognition.tools.PropertiesReader;
+import org.nd4j.jita.conf.CudaEnvironment;
+import org.nd4j.linalg.api.buffer.DataBuffer;
+import org.nd4j.linalg.api.buffer.util.DataTypeUtil;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 
 public class Trainer {
+	
+	private static final long GIGABYTE = 1024 * 1024 * 1024;
+	
 	public static void main(String[] args) throws IOException {
-		int batchSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.persistence.batchSize"));
+		DataTypeUtil.setDTypeForContext(DataBuffer.Type.FLOAT);
+		
+		CudaEnvironment.getInstance().getConfiguration()
+			.allowMultiGPU(true)
+		    .setMaximumDeviceCacheableLength(GIGABYTE * 1)
+		    .setMaximumDeviceCache			(GIGABYTE * 12)
+		    .setMaximumHostCacheableLength	(GIGABYTE * 1)
+		    .setMaximumHostCache			(GIGABYTE * 16);
+		
+		int batchSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.persistence.batchSize"));;
 		String trainingPersistenceType = PropertiesReader.getProjectProperties().getProperty("training.persistence.type");
 		FileSystemDAO.createFolders();
 		if(trainingPersistenceType == null) {
@@ -29,15 +44,22 @@ public class Trainer {
 		
 		DataSetIterator trainIterator, testIterator;
 		
+		int testSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.testSize"));
+		int trainSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.trainSize"));
+		
 		if(trainingPersistenceType.equals("filesystem")) {
-			testIterator = new FileSystemIterator(batchSize, 500);
-			trainIterator = new FileSystemIterator(batchSize, 5000);
+			testIterator = new FileSystemIterator(batchSize, testSize);
+			trainIterator = new FileSystemIterator(batchSize, trainSize);
 		} else {
-			testIterator = new DatabaseIterator(batchSize, 40);
-			trainIterator = new DatabaseIterator(batchSize, 80);
+			testIterator = new DatabaseIterator(batchSize, testSize);
+			trainIterator = new DatabaseIterator(batchSize, trainSize);
 		}
 		
-		new ContinuousTraining().train(trainIterator, testIterator);
+		if(PropertiesReader.getProjectProperties().getProperty("training.sli").equals("true")) {
+			new ContinuousTraining().trainParallel(trainIterator, testIterator);
+		} else {
+			new ContinuousTraining().train(trainIterator, testIterator);
+		}
 	}
 	
 	private static void persistImagesToDisk(int batchSize ,int maxNumberOfImagesToPersist) {
