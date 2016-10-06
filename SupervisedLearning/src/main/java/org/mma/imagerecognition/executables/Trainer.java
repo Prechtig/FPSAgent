@@ -54,12 +54,12 @@ public class Trainer {
 			testIterator = new DatabaseIterator(batchSize, testSize);
 			trainIterator = new DatabaseIterator(batchSize, trainSize);
 		}
+		
 		if(PropertiesReader.getProjectProperties().getProperty("training.sli").equals("true")) {
 			new ContinuousTraining().trainParallel(trainIterator, testIterator);
 		} else {
 			new ContinuousTraining().train(trainIterator, testIterator);
 		}
-		
 	}
 	
 	private static void persistImagesToDisk(int batchSize ,int maxNumberOfImagesToPersist) {
