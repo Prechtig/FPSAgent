@@ -3,6 +3,7 @@
 
 # Saved networks folder
 models
+samples
 
 # Downloaded training data
 trainingdata

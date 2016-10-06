@@ -8,21 +8,31 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.mma.imagerecognition.dataobjects.TrainingData;
+import org.mma.imagerecognition.tools.PropertiesReader;
 
 public class FileSystemDAO {
 	
-	private static final String ROOT_FOLDER = "trainingdata";
+	private static final Random RNG = new Random();
+	private static final String TRAINING_DATA_FOLDER = "trainingdata";
 	private static final String FEATURE_FOLDER = "features";
 	private static final String PIXEL_DATA_FOLDER = "pixeldata";
+	private static final String MODELS_FOLDER = "models";
+	private static final String CONTINUOUS_FOLDER = "continuous";
+	private static final String SAMPLES_FOLDER = "samples";
+	
+	static {
+		RNG.setSeed(Long.parseLong(PropertiesReader.getProjectProperties().getProperty("training.seed")));
+	}
 	
 	public static List<TrainingData> getRandomImages(int amount) {
 		List<Integer> range = IntStream.rangeClosed(1, findLatestTrainingDataId()).boxed().collect(Collectors.toList());
-		Collections.shuffle(range);
+		Collections.shuffle(range, RNG);
 		return load(range.parallelStream().limit(amount));
 	}
 	
@@ -99,7 +109,10 @@ public class FileSystemDAO {
 	}
 	
 	public static void createFolders() throws IOException {
-		Files.createDirectories(getPersistenceFolder());
+		Files.createDirectories(getSamplesFolder());
+		Files.createDirectories(getModelsFolder());
+		Files.createDirectories(getContinuousFolder());
+		Files.createDirectories(getTrainingDataFolder());
 		Files.createDirectories(getFeatureFolder());
 		Files.createDirectories(getPixelDataFolder());
 	}
@@ -113,15 +126,27 @@ public class FileSystemDAO {
 	}
 	
 	private static Path getFeatureFolder() {
-		return getPersistenceFolder().resolve(FEATURE_FOLDER);
+		return getTrainingDataFolder().resolve(FEATURE_FOLDER);
 	}
 	
 	private static Path getPixelDataFolder() {
-		return getPersistenceFolder().resolve(PIXEL_DATA_FOLDER);
+		return getTrainingDataFolder().resolve(PIXEL_DATA_FOLDER);
 	}
 	
-	private static Path getPersistenceFolder() {
-		return Paths.get(ROOT_FOLDER);
+	private static Path getTrainingDataFolder() {
+		return Paths.get(TRAINING_DATA_FOLDER);
+	}
+	
+	private static Path getModelsFolder() {
+		return Paths.get(MODELS_FOLDER);
+	}
+	
+	private static Path getContinuousFolder() {
+		return getModelsFolder().resolve(CONTINUOUS_FOLDER);
+	}
+	
+	public static Path getSamplesFolder() {
+		return Paths.get(SAMPLES_FOLDER);
 	}
 	
 	public static boolean exists(int fileId) {
