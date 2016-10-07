@@ -107,8 +107,8 @@ public class Optimizer : MonoBehaviour {
 			{
 				Time.timeScale = Time.timeScale - 1;
 				print("Lowering time scale to " + Time.timeScale);
-			} else if (AutomaticTimeScaleOn && fps > 70 && Time.timeScale < 25) {
-				Time.timeScale = Time.timeScale++;
+			} else if (AutomaticTimeScaleOn && fps > 50 && Time.timeScale < 25) {
+				Time.timeScale++;
 				print("Increasing time scale to " + Time.timeScale);
 			}
 		}
@@ -144,7 +144,7 @@ public class Optimizer : MonoBehaviour {
 		var evoSpeed = 25;
 		Started = true;
 		//   Time.fixedDeltaTime = 0.045f;
-		Time.timeScale = evoSpeed;       
+		Time.timeScale = evoSpeed;
 		_ea.StartContinue();
 		EARunning = true;
 	}

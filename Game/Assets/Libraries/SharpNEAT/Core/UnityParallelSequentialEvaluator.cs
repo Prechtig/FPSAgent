@@ -60,7 +60,7 @@ namespace SharpNEAT.Core
 			int maxParallel = _optimizer.MaxParallel;
 			int parallel = 0;
 			if (genomeList.Count % maxParallel != 0) {
-				Debug.Log ("Population do not match the max parallel setting!!!!!");
+				Debug.Log ("Population do not match the max-parallel setting!!!!!");
 			}
 			for (int i = 0; i < _optimizer.Trials; i++) {
 				_phenomeEvaluator.Reset ();
@@ -82,16 +82,20 @@ namespace SharpNEAT.Core
 						//    fitnessDict.Add(phenome, new FitnessInfo[_optimizer.Trials]);
 						//}
 
-						if (parallel < maxParallel-1) {
+						if (parallel <= maxParallel) {
+							Evaluator.RunCount++;
 							Coroutiner.StartCoroutine (_phenomeEvaluator.Evaluate (phenome));
 							parallel++;
 						} else {
-							yield return Coroutiner.StartCoroutine(_phenomeEvaluator.Evaluate(phenome));
-							//BotSpawn.iteration++;
+							while(Evaluator.RunCount != 0){
+								yield return null;
+							}
 							parallel = 0;
 							NEATArena.ResetYOffset ();
 						}
 					}
+
+					
 				}
 
 				//yield return new WaitForSeconds (_optimizer.TrialDuration);

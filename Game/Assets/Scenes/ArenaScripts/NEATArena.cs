@@ -162,8 +162,7 @@ public class NEATArena : MonoBehaviour {
 				Destroy (t.gameObject);
 			}
 		}
-
-		Destroy (ps);
 		Destroy (bs);
+		Destroy (ps);
 	}
 }

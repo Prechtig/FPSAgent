@@ -11,12 +11,10 @@ public class BotSpawn : MonoBehaviour
 	private static int botsToSpawn = 1;
 	private int BotsKilled = 0;
 
-	//public static int iteration = 1;
-
 	public float X;
 	public float Z;
 
-	private GameObject spawnObject;
+	//private GameObject spawnObject;
 
 	public BotSpawn (Transform[] spawnPoints){
 		this.spawnPoints = spawnPoints;
@@ -71,12 +69,12 @@ public class BotSpawn : MonoBehaviour
 
 		Vector3 position = new Vector3 (rX, (spawnPoints[0].position.y + y/2) - 0.5f, zOffset);
 
+		/*
 		spawnObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
 		spawnObject.transform.position = position;
 		spawnObject.transform.localScale = scale;
 		spawnObject.AddComponent<BoxCollider> ();
-		//spawnObject.name = "Cube: " + iteration;
-
+		*/
 		y += spawnPoints[0].position.y + 0.75f;
 		return new Vector3(rX, y, zOffset);
 	}
@@ -96,7 +94,7 @@ public class BotSpawn : MonoBehaviour
 	}
 
 	public void OnDestroy(){
-		Destroy (spawnObject);
+		//Destroy (spawnObject);
 		foreach (GameObject b in bots) {
 			Destroy (b);
 		}

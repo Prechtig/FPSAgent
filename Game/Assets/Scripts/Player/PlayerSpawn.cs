@@ -9,7 +9,7 @@ public class PlayerSpawn : MonoBehaviour
 	public float X;
 	public float Z;
 
-	private GameObject spawnObject;
+	//private GameObject spawnObject;
 
 	private static Text _shots;
 
@@ -78,11 +78,12 @@ public class PlayerSpawn : MonoBehaviour
 
 		Vector3 position = new Vector3 (rX, (spawnPoints.position.y + y/2) - 0.5f, zOffset);
 
+		/*
 		spawnObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
 		spawnObject.transform.position = position;
 		spawnObject.transform.localScale = scale;
 		spawnObject.AddComponent<BoxCollider> ();
-
+		*/
 
 		y += spawnPoints.position.y - 0.5f;
 		return new Vector3(rX, y, zOffset);
@@ -90,6 +91,6 @@ public class PlayerSpawn : MonoBehaviour
 
 
 	public void OnDestroy(){
-		Destroy (spawnObject);
+		//Destroy (spawnObject);
 	}
 }
