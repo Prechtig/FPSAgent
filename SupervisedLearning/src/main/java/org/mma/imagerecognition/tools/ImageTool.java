@@ -150,6 +150,26 @@ public class ImageTool {
 		return toDoubleStream(bs).map(d -> scale(d));
 	}
 	
+	public static double[] toScaledDoubles(byte[] bs) {
+		final int channelLength = bs.length / 3;
+		
+		double[] r = new double[channelLength];
+		double[] g = new double[channelLength];
+		double[] b = new double[channelLength];
+		
+		for(int i = 0; i < channelLength; i++) {
+			r[i] = scale(bs[i * 3 + 0]);
+			g[i] = scale(bs[i * 3 + 1]);
+			b[i] = scale(bs[i * 3 + 2]);
+		}
+		
+		double[] result = new double[bs.length];
+		System.arraycopy(r, 0, result, channelLength * 0, channelLength);
+		System.arraycopy(g, 0, result, channelLength * 1, channelLength);
+		System.arraycopy(b, 0, result, channelLength * 2, channelLength);
+		return result;
+	}
+	
 	public static DoubleStream toDoubleStream(byte[] bs) {
 		return DoubleStream.of(toDoubleArray(bs));
 	}
