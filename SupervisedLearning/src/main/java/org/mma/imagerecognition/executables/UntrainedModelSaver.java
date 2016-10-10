@@ -18,7 +18,7 @@ public class UntrainedModelSaver {
 		int width = Integer.parseInt(projectProperties.getProperty("training.image.width"));
 		int height = Integer.parseInt(projectProperties.getProperty("training.image.height"));
 		
-		MultiLayerConfiguration configuration = BuilderFactory.getReducingConvNet(height, width, featureCount).build();
+		MultiLayerConfiguration configuration = BuilderFactory.getDeepConvNet(height, width, featureCount).build();
         MultiLayerNetwork model = new MultiLayerNetwork(configuration);
         model.init();
 		

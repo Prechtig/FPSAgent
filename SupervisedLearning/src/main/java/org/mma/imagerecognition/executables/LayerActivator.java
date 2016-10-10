@@ -45,7 +45,7 @@ public class LayerActivator {
 		TrainingData image = FileSystemDAO.getRandomImages(1).get(0);
 		ImageTool.printColoredPngImage(image.getPixelData(), image.getWidth(), new File("image.png"));
 		
-		INDArray latestOutput = Nd4j.create(ImageTool.toDoubleStream(image.getPixelData()).toArray(), new int[] { 1, 3, image.getWidth(), image.getHeight()});
+		INDArray latestOutput = Nd4j.create(ImageTool.toScaledDoubles(image.getPixelData()), new int[] { 1, 3, image.getWidth(), image.getHeight()});
 		int convLayers = numberOfConvolutionalLayers(network);
 		
 		for(int currentLayer = 0; currentLayer < convLayers; currentLayer++) {
@@ -60,6 +60,13 @@ public class LayerActivator {
 		Layer denseLayer = network.getLayer(convLayers);
 		denseLayer.setInput(preProcessed);
 		latestOutput = denseLayer.activate();
+		System.out.println("Output of dense layer:");
+		System.out.println(Arrays.toString(INDArrayTool.toFlatDoubleArray(latestOutput)));
+		
+		Layer outputLayer = network.getLayer(convLayers+1);
+		outputLayer.setInput(latestOutput);
+		latestOutput = outputLayer.activate();
+		System.out.println("Output of output layer:");
 		System.out.println(Arrays.toString(INDArrayTool.toFlatDoubleArray(latestOutput)));
 	}
 	
