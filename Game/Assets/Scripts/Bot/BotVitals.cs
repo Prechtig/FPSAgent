@@ -9,7 +9,7 @@ public class BotVitals : MonoBehaviour
 	public Transform hitCam;
 	public Transform hitWep;
 	public static int botsAlive;
-	public BotSpawn bs;
+	public IBotSpawn bs;
 	public static readonly float MAX_HITPOINTS = 100;
 
 	void Start()

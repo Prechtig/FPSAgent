@@ -47,8 +47,6 @@ public class Optimizer : MonoBehaviour {
 	private float trialDuration;
 	private float stoppingFitness;
 
-	private uint LastPrinted = 0;
-
 	private bool AutomaticTimeScaleOn = true;
 	private bool Started = false;
 
@@ -154,7 +152,6 @@ public class Optimizer : MonoBehaviour {
 		if (Generation != 0 && _ea.CurrentGeneration != Generation) {
 			Utility.Log (string.Format ("gen={0:N0} bestFitness={1:N6}",
 				Generation, Fitness));
-			LastPrinted = Generation;
 		}
 
 		Fitness = _ea.Statistics._maxFitness;
