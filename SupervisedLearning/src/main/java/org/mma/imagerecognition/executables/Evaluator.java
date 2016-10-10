@@ -13,6 +13,7 @@ import org.mma.imagerecognition.dao.TrainingDbDao;
 import org.mma.imagerecognition.dataobjects.TrainingData;
 import org.mma.imagerecognition.tools.INDArrayTool;
 import org.mma.imagerecognition.tools.ImageTool;
+import org.nd4j.linalg.factory.Nd4j;
 
 public class Evaluator {
 	public static void main(String[] args) throws FileNotFoundException, IOException {
@@ -43,7 +44,7 @@ public class Evaluator {
 		
 		ImageTool.printColoredPngImage(randomImage.getPixelData(), randomImage.getWidth(), new File("image.png"));
 		System.out.println(Arrays.toString(randomImage.getFeatureDoubles()));
-		System.out.println(Arrays.toString(INDArrayTool.toFlatDoubleArray(network.output(ImageTool.convertToINDArray(randomImage.getPixelData(), 640)))));
+		System.out.println(Arrays.toString(INDArrayTool.toFlatDoubleArray(network.output(Nd4j.create(ImageTool.toScaledDoubles(randomImage.getPixelData()))))));
 	}
 	
 	public static boolean isInteger(String s) {
