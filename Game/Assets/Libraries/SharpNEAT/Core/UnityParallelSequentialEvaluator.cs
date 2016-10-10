@@ -5,6 +5,7 @@ using System.Text;
 using SharpNeat.Core;
 using System.Collections;
 using UnityEngine;
+using SharpNeat.Phenomes;
 
 namespace SharpNEAT.Core
 {
@@ -57,6 +58,8 @@ namespace SharpNEAT.Core
 
 			Dictionary<TGenome, TPhenome> dict = new Dictionary<TGenome, TPhenome> ();
 			Dictionary<TGenome, FitnessInfo[]> fitnessDict = new Dictionary<TGenome, FitnessInfo[]> ();
+			_optimizer.CheckPersistPopulation(); //Persist population
+
 			int maxParallel = _optimizer.MaxParallel;
 			int parallel = 0;
 			if (genomeList.Count % maxParallel != 0) {
@@ -67,6 +70,19 @@ namespace SharpNEAT.Core
 
 				dict = new Dictionary<TGenome, TPhenome> ();
 				foreach (TGenome genome in genomeList) {
+					//Run best netowork
+					if (_optimizer.RunBestNetwork && parallel == 0) {
+						float timeScale = Time.timeScale;
+						IBlackBox bestBlackBox = _optimizer.GetBestPhenome ();
+						if (bestBlackBox != null) {
+							TPhenome bestPhenome = (TPhenome)bestBlackBox;
+							yield return Coroutiner.StartCoroutine (_phenomeEvaluator.Evaluate (bestPhenome));
+							Evaluator.RunCount++;
+							_optimizer.RunBestNetwork = false;
+							Time.timeScale = timeScale;
+						}
+					}
+
 					TPhenome phenome = _genomeDecoder.Decode (genome);
 					if (null == phenome) {   // Non-viable genome.
 						genome.EvaluationInfo.SetFitness (0.0);
@@ -82,11 +98,13 @@ namespace SharpNEAT.Core
 						//    fitnessDict.Add(phenome, new FitnessInfo[_optimizer.Trials]);
 						//}
 
-						if (parallel <= maxParallel) {
+						if (parallel != maxParallel - 1) {
 							Evaluator.RunCount++;
 							Coroutiner.StartCoroutine (_phenomeEvaluator.Evaluate (phenome));
 							parallel++;
 						} else {
+							Evaluator.RunCount++;
+							Coroutiner.StartCoroutine (_phenomeEvaluator.Evaluate (phenome));
 							while(Evaluator.RunCount != 0){
 								yield return null;
 							}
@@ -94,8 +112,6 @@ namespace SharpNEAT.Core
 							NEATArena.ResetYOffset ();
 						}
 					}
-
-					
 				}
 
 				//yield return new WaitForSeconds (_optimizer.TrialDuration);

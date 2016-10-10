@@ -101,13 +101,15 @@ public class Optimizer : MonoBehaviour {
 			accum = 0.0f;
 			frames = 0;
 			//   print("FPS: " + fps);
-			if (AutomaticTimeScaleOn && fps < 10 && Time.timeScale > 1)
-			{
-				Time.timeScale = Time.timeScale - 1;
-				print("Lowering time scale to " + Time.timeScale);
-			} else if (AutomaticTimeScaleOn && fps > 50 && Time.timeScale < 25) {
-				Time.timeScale++;
-				print("Increasing time scale to " + Time.timeScale);
+			if(EARunning) {
+				if (AutomaticTimeScaleOn && fps < 10 && Time.timeScale > 1)
+				{
+					Time.timeScale = Time.timeScale - 1;
+					print("Lowering time scale to " + Time.timeScale);
+				} else if (AutomaticTimeScaleOn && fps > 50 && Time.timeScale < 25 && !RunBestNetwork) {
+					Time.timeScale++;
+					print("Increasing time scale to " + Time.timeScale);
+				}
 			}
 		}
 
@@ -303,7 +305,6 @@ public class Optimizer : MonoBehaviour {
 					StartEA ();
 				}
 			}
-
 			else {
 				if (GUI.Button(new Rect(10, 110, 100, 40), "Run best"))
 				{

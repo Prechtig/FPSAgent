@@ -53,6 +53,8 @@ namespace SharpNEAT.Core
         {
             Dictionary<TGenome, TPhenome> dict = new Dictionary<TGenome, TPhenome>();
             Dictionary<TGenome, FitnessInfo[]> fitnessDict = new Dictionary<TGenome, FitnessInfo[]>();
+			_optimizer.CheckPersistPopulation(); //Persist population
+
 			for (int i = 0; i < _optimizer.Trials; i++)
             {
                 _phenomeEvaluator.Reset();
