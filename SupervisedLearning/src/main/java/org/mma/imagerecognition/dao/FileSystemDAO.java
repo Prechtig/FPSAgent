@@ -25,6 +25,7 @@ public class FileSystemDAO {
 	private static final String MODELS_FOLDER = "models";
 	private static final String CONTINUOUS_FOLDER = "continuous";
 	private static final String SAMPLES_FOLDER = "samples";
+	private static final String FEATURE_MAPS_FOLDER = "featuremaps";
 	
 	static {
 		RNG.setSeed(Long.parseLong(PropertiesReader.getProjectProperties().getProperty("training.seed")));
@@ -109,6 +110,7 @@ public class FileSystemDAO {
 	}
 	
 	public static void createFolders() throws IOException {
+		Files.createDirectories(getFeatureMapsFolder());
 		Files.createDirectories(getSamplesFolder());
 		Files.createDirectories(getModelsFolder());
 		Files.createDirectories(getContinuousFolder());
@@ -137,7 +139,7 @@ public class FileSystemDAO {
 		return Paths.get(TRAINING_DATA_FOLDER);
 	}
 	
-	private static Path getModelsFolder() {
+	public static Path getModelsFolder() {
 		return Paths.get(MODELS_FOLDER);
 	}
 	
@@ -147,6 +149,16 @@ public class FileSystemDAO {
 	
 	public static Path getSamplesFolder() {
 		return Paths.get(SAMPLES_FOLDER);
+	}
+	
+	public static Path getFeatureMapsFolder() {
+		return Paths.get(FEATURE_MAPS_FOLDER);
+	}
+	
+	public static Path getFeatureMapsFolderForLayer(int layer) throws IOException {
+		Path forLayer = getFeatureMapsFolder().resolve(new Integer(layer).toString());
+		Files.createDirectories(forLayer);
+		return forLayer;
 	}
 	
 	public static boolean exists(int fileId) {

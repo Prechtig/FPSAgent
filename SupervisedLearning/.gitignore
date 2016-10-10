@@ -4,6 +4,7 @@
 # Saved networks folder
 models
 samples
+featuremaps
 
 # Downloaded training data
 trainingdata

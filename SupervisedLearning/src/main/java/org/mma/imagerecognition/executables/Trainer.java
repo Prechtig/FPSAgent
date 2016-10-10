@@ -10,7 +10,6 @@ import org.mma.imagerecognition.dataobjects.TrainingData;
 import org.mma.imagerecognition.iterator.DatabaseIterator;
 import org.mma.imagerecognition.iterator.FileSystemIterator;
 import org.mma.imagerecognition.tools.PropertiesReader;
-import org.nd4j.jita.conf.CudaEnvironment;
 import org.nd4j.linalg.api.buffer.DataBuffer;
 import org.nd4j.linalg.api.buffer.util.DataTypeUtil;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
@@ -22,12 +21,12 @@ public class Trainer {
 	public static void main(String[] args) throws IOException {
 		DataTypeUtil.setDTypeForContext(DataBuffer.Type.FLOAT);
 		
-		CudaEnvironment.getInstance().getConfiguration()
-			.allowMultiGPU(true)
-		    .setMaximumDeviceCacheableLength(GIGABYTE * 1)
-		    .setMaximumDeviceCache			(GIGABYTE * 12)
-		    .setMaximumHostCacheableLength	(GIGABYTE * 1)
-		    .setMaximumHostCache			(GIGABYTE * 16);
+//		CudaEnvironment.getInstance().getConfiguration()
+//			.allowMultiGPU(true)
+//		    .setMaximumDeviceCacheableLength(GIGABYTE * 1)
+//		    .setMaximumDeviceCache			(GIGABYTE * 12)
+//		    .setMaximumHostCacheableLength	(GIGABYTE * 1)
+//		    .setMaximumHostCache			(GIGABYTE * 16);
 		
 		int batchSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.persistence.batchSize"));;
 		String trainingPersistenceType = PropertiesReader.getProjectProperties().getProperty("training.persistence.type");

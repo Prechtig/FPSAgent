@@ -23,7 +23,7 @@ public class Sampler {
 		
 		int imageNumber = 1;
 		for(TrainingData td : randomImages) {
-			ImageTool.printPngImage(td.getPixelData(), td.getWidth(), new File(FileSystemDAO.getSamplesFolder().resolve("image" + imageNumber + ".png").toString()));
+			ImageTool.printColoredPngImage(td.getPixelData(), td.getWidth(), new File(FileSystemDAO.getSamplesFolder().resolve("image" + imageNumber + ".png").toString()));
 			imageNumber++;
 		}
 	}

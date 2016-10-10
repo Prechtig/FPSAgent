@@ -17,6 +17,7 @@ import java.util.stream.IntStream;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 
@@ -30,7 +31,7 @@ public class ImageTool {
 	 * @param file The file to save the image to
 	 * @throws IOException @see {@link javax.imageio.ImageIO#write(java.awt.image.RenderedImage, String, File)}
 	 */
-	public static void printPngImage(byte[] flattened, int width, File file) throws IOException {
+	public static void printColoredPngImage(byte[] flattened, int width, File file) throws IOException {
 		int height = flattened.length / width / 3;
 		
 		byte[] flipped = flipImageBytes(flattened, width, 3);
@@ -43,6 +44,30 @@ public class ImageTool {
 		BufferedImage image = new BufferedImage(cm, raster, true, null);
 
 		ImageIO.write(image, "png", file);
+	}
+	
+	public static void printGreyScalePngImage(double[] flattened, int width, File file) throws IOException {
+		byte[] greyScale = DoubleStream.of(flattened)
+			.boxed()
+			.map(d -> toGreyScale(d))
+			.reduce(new byte[0], (cumArr, curArr) -> ArrayUtils.addAll(cumArr, curArr));
+		printColoredPngImage(greyScale, width, file);
+	}
+	
+	private static byte toByte(double d) {
+		double cutOff = 30.0;
+		if(d > cutOff) {
+			d = cutOff;
+		}
+		int colorValue = (int) Math.round((255.0/cutOff) * d);
+		if(colorValue > 255 || colorValue < 0) {
+			throw new IllegalStateException();
+		}
+		return (byte) colorValue;
+	}
+	
+	private static byte[] toGreyScale(double d) {
+		return new byte[] { toByte(d), toByte(d), toByte(d) };
 	}
 	
 	/**
