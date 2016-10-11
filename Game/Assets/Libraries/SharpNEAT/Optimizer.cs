@@ -197,7 +197,7 @@ public class Optimizer : MonoBehaviour {
 			dirInf.Create ();
 		}
 
-		if (_ea.CurrentGeneration - 1 == 1 || ((_ea.CurrentGeneration - 1) % PersistNGenerations == 0 && _ea.CurrentGeneration != 1)) {
+		if (PersistNGenerations != 0 && (_ea.CurrentGeneration - 1 == 1 || ((_ea.CurrentGeneration - 1) % PersistNGenerations == 0 && _ea.CurrentGeneration != 1))) {
 			using (XmlWriter xw = XmlWriter.Create (popFileSavePath, _xwSettings)) {
 				experiment.SavePopulation (xw, _ea.GenomeList);
 			}
