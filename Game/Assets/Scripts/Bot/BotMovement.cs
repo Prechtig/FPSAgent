@@ -6,7 +6,7 @@ public class BotMovement : MonoBehaviour {
 	public Transform[] waypoints;
 	private int currentWaypoint;
 
-	public float moveSpeed;
+	public float moveSpeed = 2;
 	// Use this for initialization
 	void Start () {
 		/*GameObject[] ways = GameObject.FindGameObjectsWithTag ("Waypoint");

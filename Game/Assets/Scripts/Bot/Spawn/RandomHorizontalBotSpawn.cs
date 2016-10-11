@@ -27,7 +27,10 @@ public class RandomHorizontalBotSpawn : MonoBehaviour, IBotSpawn
 			int spawnPoint = Random.Range (0, SpawnPoints.Length);
 			GameObject b = Instantiate (Bot, SpawnPoints[spawnPoint].position, SpawnPoints[spawnPoint].rotation) as GameObject;
 			b.GetComponent<BotVitals> ().bs = this;
-			b.GetComponent<BotMovement> ().waypoints = SpawnPoints;
+
+
+			BotMovement movement = b.AddComponent<BotMovement> ();
+			movement.waypoints = SpawnPoints;
 			Bots.Add (b);
 		}
 	}

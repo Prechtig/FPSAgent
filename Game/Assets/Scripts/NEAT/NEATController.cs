@@ -51,7 +51,7 @@ public class NEATController : UnitController {
 			/*
 			output[0] = 0;
 			output[1] = 0;
-			output[2] = 1;
+			output[2] = 0;
 			output[3] = 0;
 			output[4] = 0;
 			output[5] = 0;
