@@ -8,8 +8,8 @@ public class BotSpawn : MonoBehaviour, IBotSpawn
 	public float X{ get; set;}
 	public float Z{ get; set;}
 
-	private GameObject Bot;
-	private IList<GameObject> Bots;
+	private GameObject BotPrefab;
+	public IList<GameObject> Bots;
 	private float SpawnTime;
 	private static int BotsToSpawn = 1;
 	private int BotsKilled = 0;
@@ -34,11 +34,11 @@ public class BotSpawn : MonoBehaviour, IBotSpawn
 
 	public void StartSpawning(){
 		Bots = new List<GameObject>();
-		Bot = Resources.Load ("BotPrefab") as GameObject;
+		BotPrefab = Resources.Load ("BotPrefab") as GameObject;
 		SpawnTime = 3f;
 		//bot.GetComponent<BotMovement> ().waypoints = spawnPoints;
 		//bm.waypoints = spawnPoints;
-		//player = (GameObject)Instantiate(a, spawnPoints.position, spawnPoints.rotation);
+		//player = (GameObject)Instantiate(a, spawnPoints.position, spawnPoints.rotation);		SpawnPlayer ();
 		InvokeRepeating ("Spawn", 0, SpawnTime);
 	}
 
@@ -46,7 +46,7 @@ public class BotSpawn : MonoBehaviour, IBotSpawn
 	{
 		if(Bots.Count < BotsToSpawn){
 			Vector3 spawnPosition = GenerateSpawnPoint ();
-			GameObject b = Instantiate (Bot, spawnPosition, new Quaternion(0, 180, 0, 0)) as GameObject;
+			GameObject b = Instantiate (BotPrefab, spawnPosition, new Quaternion(0, 180, 0, 0)) as GameObject;
 			b.GetComponent<BotVitals> ().bs = this;
 			//b.GetComponent<BotMovement> ().waypoints = spawnPoints;
 			Bots.Add (b);

@@ -5,18 +5,18 @@
 	<outputs>6</outputs>
 
 	<parallelAgents>5</parallelAgents>
-	<TrialCount>1</TrialCount>
+	<TrialCount>10</TrialCount>
 	<TrialDuration>20</TrialDuration>
 	<StoppingFitness>99999</StoppingFitness>
 
-	<PopulationSize>50</PopulationSize>
-	<SpecieCount>5</SpecieCount>
+	<PopulationSize>100</PopulationSize>
+	<SpecieCount>15</SpecieCount>
 	<Activation>
 	<Scheme>Acyclic</Scheme>
 	</Activation>
 	<ComplexityRegulationStrategy>Absolute</ComplexityRegulationStrategy>
 	<ComplexityThreshold>1000</ComplexityThreshold>
-	<PersistNGenerations>2</PersistNGenerations>
+	<PersistNGenerations>10</PersistNGenerations>
 	<Description>
 	</Description>
 </Config>

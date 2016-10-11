@@ -32,6 +32,7 @@ public class NEATArena : MonoBehaviour{
 		CreateArena (x, z, WallHeight, WallThickness);
 		CreateLight ();
 		SetSpawnPoints (x, z);
+
 		SpawnPlayer ();
 		SpawnEnemies ();
 	}
@@ -142,7 +143,14 @@ public class NEATArena : MonoBehaviour{
 	}
 
 	public float GetFitness(){
-		return BotSpawn.GetFitness ();
+		//const/const / rad
+		float k = 15;
+		float c = 2;
+		float angle = Vector3.Angle (PlayerSpawn.Player.transform.forward, BotSpawn.Bots[0].transform.position - PlayerSpawn.Player.transform.position) * Mathf.Deg2Rad;
+
+		float fitness = k / (1 + (angle * c));
+
+		return fitness + BotSpawn.GetFitness ();
 	}
 
 	public void OnDestroy(){

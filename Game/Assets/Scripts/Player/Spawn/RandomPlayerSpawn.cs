@@ -54,11 +54,12 @@ public class PlayerSpawn : MonoBehaviour, IPlayerSpawn
 		float rX = Random.Range (-(X/2) + 1, X/2 - 1);
 		float y = Random.Range (1, 15);
 		float zOffset = -4;
+
 		/*
 		Vector3 scale = new Vector3 (0.3f, y + 1, 0.3f);
-
+		
 		Vector3 position = new Vector3 (rX, (SpawnPoints[0].position.y + y/2) - 0.5f, zOffset);
-
+		
 		spawnObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
 		spawnObject.transform.position = position;
 		spawnObject.transform.localScale = scale;
