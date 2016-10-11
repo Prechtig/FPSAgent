@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class PlayerSpawn : MonoBehaviour, IPlayerSpawn
+public class RandomPlayerSpawn : MonoBehaviour, IPlayerSpawn
 {
 	public GameObject Player{ get; set;}
 	public Transform[] SpawnPoints{ get; set;}

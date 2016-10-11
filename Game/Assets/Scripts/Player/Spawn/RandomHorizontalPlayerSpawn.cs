@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class DefaultHorizontalPlayerSpawn : MonoBehaviour, IPlayerSpawn
+public class RandomHorizontalPlayerSpawn : MonoBehaviour, IPlayerSpawn
 {
 	public GameObject Player{ get; set;}
 	public Transform[] SpawnPoints{ get; set;}

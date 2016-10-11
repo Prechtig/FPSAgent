@@ -11,8 +11,8 @@ public class NEATArena : MonoBehaviour{
 	public Transform[] PlayerSpawnPoints;
 	public Transform[] BotSpawnPoints;
 
-	private PlayerSpawn PlayerSpawn;
-	private BotSpawn BotSpawn;
+	private RandomHorizontalPlayerSpawn PlayerSpawn;
+	private RandomHorizontalBotSpawn BotSpawn;
 
 	private IList ArenaObjects;
 
@@ -127,7 +127,7 @@ public class NEATArena : MonoBehaviour{
 	}
 
 	public void SpawnPlayer(){
-		PlayerSpawn = gameObject.AddComponent<PlayerSpawn>();
+		PlayerSpawn = gameObject.AddComponent<RandomHorizontalPlayerSpawn>();
 		PlayerSpawn.X = x;
 		PlayerSpawn.Z = z;
 		PlayerSpawn.SpawnPoints = PlayerSpawnPoints;
@@ -135,7 +135,7 @@ public class NEATArena : MonoBehaviour{
 	}
 
 	public void SpawnEnemies(){
-		BotSpawn = gameObject.AddComponent<BotSpawn>();
+		BotSpawn = gameObject.AddComponent<RandomHorizontalBotSpawn> ();
 		BotSpawn.X = x;
 		BotSpawn.Z = z;
 		BotSpawn.SpawnPoints = BotSpawnPoints;
@@ -143,12 +143,16 @@ public class NEATArena : MonoBehaviour{
 	}
 
 	public float GetFitness(){
-		//const/const / rad
+		float fitness = 0f;
+
+		//New fitness function, does not work with the HorizontalBotSpawn
+		/*
 		float k = 15;
 		float c = 2;
 		float angle = Vector3.Angle (PlayerSpawn.Player.transform.forward, BotSpawn.Bots[0].transform.position - PlayerSpawn.Player.transform.position) * Mathf.Deg2Rad;
 
 		float fitness = k / (1 + (angle * c));
+		*/
 
 		return fitness + BotSpawn.GetFitness ();
 	}

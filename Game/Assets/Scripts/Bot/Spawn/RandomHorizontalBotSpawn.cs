@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class DefaultHorizontalBotSpawn : MonoBehaviour, IBotSpawn
+public class RandomHorizontalBotSpawn : MonoBehaviour, IBotSpawn
 {
 	public Transform[] SpawnPoints{ get; set;}
 	public float X{ get; set;}

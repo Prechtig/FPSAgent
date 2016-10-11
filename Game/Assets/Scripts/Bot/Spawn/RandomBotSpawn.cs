@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class BotSpawn : MonoBehaviour, IBotSpawn
+public class RandomBotSpawn : MonoBehaviour, IBotSpawn
 {
 	public Transform[] SpawnPoints{ get; set;}
 	public float X{ get; set;}
