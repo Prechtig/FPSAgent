@@ -2,10 +2,12 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class PlayerSpawn : MonoBehaviour
+public class RandomHorizontalPlayerSpawn : MonoBehaviour, IPlayerSpawn
 {
-	public GameObject player;
-	public Transform spawnPoints;
+	public GameObject Player{ get; set;}
+	public Transform[] SpawnPoints{ get; set;}
+	public float X{ get; set;}
+	public float Z{ get; set;}
 
 	private static Text _shots;
 
@@ -46,7 +48,7 @@ public class PlayerSpawn : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-	
+
 	}
 
 	public void SpawnPlayer()
@@ -57,9 +59,9 @@ public class PlayerSpawn : MonoBehaviour
 		*/
 		//Object[] obs = Resources.FindObjectsOfTypeAll(typeof(UnityEngine.Object));
 		Object a = Resources.Load ("Player");
-		player = (GameObject)Instantiate(a, spawnPoints.position, spawnPoints.rotation);
+		Player = (GameObject)Instantiate(a, SpawnPoints[0].position, SpawnPoints[0].rotation);
 		//HUD.worldCamera = player.GetComponentInChildren<Camera> ();
-		player.GetComponentInChildren<NEATWeapon> ().ShotsLeftText = ShotsLeftText;
+		Player.GetComponentInChildren<NEATWeapon> ().ShotsLeftText = ShotsLeftText;
 		//Instantiate (GameObject., spawnPoints.position, spawnPoints.rotation);
 	}
 

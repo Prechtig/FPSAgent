@@ -9,7 +9,7 @@ public class DatabaseWriter {
 
 	public static string server = "mydb.itu.dk";
 	public static string userID = "tadmin";
-	public static string password = "proword";
+	public static string password = "";
 	public static string database = "TrainingDB";
 
 	public static MySqlConnection connection;

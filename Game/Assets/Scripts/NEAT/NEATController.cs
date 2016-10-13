@@ -49,12 +49,12 @@ public class NEATController : UnitController {
 			outputArr.CopyTo (output, 0);
 
 			/*
-			output[0] = 0.1;
+			output[0] = 0;
 			output[1] = 0;
-			output[2] = 0.1;
+			output[2] = 0;
 			output[3] = 0;
-			output[4] = 1;
-			output[5] = 1;
+			output[4] = 0;
+			output[5] = 0;
 			*/
 
 
@@ -73,7 +73,12 @@ public class NEATController : UnitController {
 			rotationX = Mathf.Clamp (rotationX, -90, 90);
 
 			rotationY += mouseX * sensitivityX * Time.deltaTime;
-			rotationY = Mathf.Clamp (rotationY, -90, 90);
+			//rotationY = Mathf.Clamp (rotationY, -90, 90);
+			if (rotationY > 180) {
+				rotationY -= 360;
+			} else if (rotationY < -180) {
+				rotationY += 360;
+			}
 
 			transform.localEulerAngles = new Vector3(rotationX, rotationY, transform.localEulerAngles.z);
 

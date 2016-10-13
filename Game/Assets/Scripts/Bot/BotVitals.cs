@@ -5,11 +5,11 @@ public class BotVitals : MonoBehaviour
 {
 	public GameObject obj;
 	public float hitPoints;
-	public Rigidbody wep;
+	//public Rigidbody wep;
 	public Transform hitCam;
 	public Transform hitWep;
 	public static int botsAlive;
-	public BotSpawn bs;
+	public IBotSpawn bs;
 	public static readonly float MAX_HITPOINTS = 100;
 
 	void Start()
@@ -17,8 +17,8 @@ public class BotVitals : MonoBehaviour
 		hitPoints = MAX_HITPOINTS;
 		Rigidbody[] bodies = obj.GetComponentsInChildren<Rigidbody>();
 		Collider[] collies = obj.GetComponentsInChildren<Collider>();
-		wep.useGravity = false;
-		wep.isKinematic = true;
+		//wep.useGravity = false;
+		//wep.isKinematic = true;
 		foreach (Rigidbody body in bodies)
 		{
 			body.useGravity = false;
@@ -77,12 +77,12 @@ public class BotVitals : MonoBehaviour
 		//{
 			//coll.isTrigger = false;
 		//}
-		wep.useGravity = true;
-		wep.isKinematic = false;
-		wep.transform.parent = null;
+		//wep.useGravity = true;
+		//wep.isKinematic = false;
+		//wep.transform.parent = null;
 		obj.transform.parent = null;
 		bs.KillBot (this.gameObject);
-		Destroy (wep.gameObject);
+		//Destroy (wep.gameObject);
 		//Destroy (wep); //Destroy(wep, 10);
 		Destroy (obj); //Destroy(obj, 10);
 		Destroy (this.gameObject);

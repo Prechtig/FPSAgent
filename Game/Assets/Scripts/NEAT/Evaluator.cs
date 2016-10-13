@@ -11,6 +11,8 @@ public class Evaluator : IPhenomeEvaluator<IBlackBox> {
 	Optimizer optimizer;
 	FitnessInfo fitness;
 
+	public static int RunCount = 0;
+
 	Dictionary<IBlackBox, FitnessInfo> dict = new Dictionary<IBlackBox, FitnessInfo>();
 
 	public ulong EvaluationCount
@@ -30,16 +32,18 @@ public class Evaluator : IPhenomeEvaluator<IBlackBox> {
 
 	public IEnumerator Evaluate(IBlackBox box)
 	{
-		if (optimizer != null)
-		{
-			optimizer.Evaluate(box);
-			yield return new WaitForSeconds(optimizer.TrialDuration);
-			optimizer.StopEvaluation(box);
-			float fit = optimizer.GetFitness(box);
+		if (optimizer != null) {
+			optimizer.Evaluate (box);
+			yield return new WaitForSeconds (optimizer.TrialDuration);
+			optimizer.StopEvaluation (box);
+			float fit = optimizer.GetFitness (box);
 
-			FitnessInfo fitness = new FitnessInfo(fit, fit);
-			dict.Add(box, fitness);
+			FitnessInfo fitness = new FitnessInfo (fit, fit);
+			dict.Add (box, fitness);
+		} else {
+			Debug.Log ("test");
 		}
+		RunCount--;
 	}
 
 	public void Reset()

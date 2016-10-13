@@ -59,9 +59,6 @@ namespace SharpNEAT.Core
             {
                 NEATArena.ResetYOffset();
                 _phenomeEvaluator.Reset();
-
-
-
                 dict = new Dictionary<TGenome, TPhenome>();
                 foreach (TGenome genome in genomeList)
                 {
