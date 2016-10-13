@@ -35,12 +35,13 @@ public class Utility : MonoBehaviour {
 
     public static float GetDistance(Vector3 A, Vector3 B)
     {
-        if (A != null && B != null)
-        {
+		//This outcomment as unity said the if clause is always true
+        //if (A != null && B != null) 
+        //{
             Vector2 a = new Vector2(A.x, A.z);
             Vector2 b = new Vector2(B.x, B.z);
             return Vector2.Distance(a, b);
-        }
+        /*}
         else
         {
             if (A == null)
@@ -51,7 +52,7 @@ public class Utility : MonoBehaviour {
             {
                 throw new ArgumentNullException("GameObject B is null");
             }
-        } 
+        } */
     }
 
     public static float GetDistance(GameObject A, GameObject B)
@@ -73,7 +74,7 @@ public class Utility : MonoBehaviour {
                 throw new ArgumentNullException("GameObject B is null");
             }
         }
-        return 0.0f;
+        //return 0.0f;
     }
 
     /// <summary>

@@ -88,7 +88,6 @@ public class Optimizer : MonoBehaviour {
 	void Update()
 	{
 		//  evaluationStartTime += Time.deltaTime;
-		//Persisted = false;
 
 		timeLeft -= Time.deltaTime;
 		accum += Time.timeScale / Time.deltaTime;
@@ -143,7 +142,6 @@ public class Optimizer : MonoBehaviour {
 		_ea.UpdateEvent += new EventHandler(ea_UpdateEvent);
 		var evoSpeed = 25;
 		Started = true;
-		//   Time.fixedDeltaTime = 0.045f;
 		Time.timeScale = evoSpeed;
 		_ea.StartContinue();
 		EARunning = true;
@@ -219,7 +217,6 @@ public class Optimizer : MonoBehaviour {
 
 	public void Evaluate(IBlackBox box)
 	{
-		
 		//Time.timeScale = 1;
 		NEATArena arena = gameObject.AddComponent<NEATArena>();
 		arena.wallPrefab = wallPrefab;
@@ -287,6 +284,7 @@ public class Optimizer : MonoBehaviour {
 	void OnGUI()
 	{
 		if (EARunning) {
+			//StopEA not imlemented
 			/*if (GUI.Button(new Rect(10, 60, 100, 40), "Stop EA"))
 			{
 				StopEA();
@@ -316,7 +314,7 @@ public class Optimizer : MonoBehaviour {
 			}
 		}
 
-		//Show current generation and max fitness from all generations
+		//Show current generation and max fitness from last generation
 		GUI.Button(new Rect(10, Screen.height - 70, 150, 60), string.Format("Current generation: {0}\nMax fitness: {1:0.00}", Generation, Fitness));
 	}
 

@@ -9,13 +9,6 @@ public class BotMovement : MonoBehaviour {
 	public float moveSpeed = 2;
 	// Use this for initialization
 	void Start () {
-		/*GameObject[] ways = GameObject.FindGameObjectsWithTag ("Waypoint");
-
-		waypoints = new Transform[ways.Length];
-		for (int i = 0; i < waypoints.Length; i++) {
-			waypoints [i] = ways [i].transform;
-		}
-		*/
 		currentWaypoint = 0;
 	}
 	
@@ -23,7 +16,7 @@ public class BotMovement : MonoBehaviour {
 	void Update () {
 		float step =  moveSpeed * Time.deltaTime;
 		if (Vector3.Distance(transform.position, waypoints[currentWaypoint].position) < 0.5) {
-			// At waypoint so stop moving
+			// At waypoint so stops moving
 			GetComponent<Rigidbody> ().velocity = new Vector3 (0, 0, 0);
 			if (currentWaypoint == waypoints.Length - 1) {
 				currentWaypoint = 0;

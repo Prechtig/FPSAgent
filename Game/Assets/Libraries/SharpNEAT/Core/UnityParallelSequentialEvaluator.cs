@@ -51,11 +51,6 @@ namespace SharpNEAT.Core
 		//The one we use, Mikkel
 		private IEnumerator evaluateList (IList<TGenome> genomeList)
 		{
-			/* Generation timer
-			System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch ();
-			sw.Start ();
-			*/
-
 			Dictionary<TGenome, TPhenome> dict = new Dictionary<TGenome, TPhenome> ();
 			Dictionary<TGenome, FitnessInfo[]> fitnessDict = new Dictionary<TGenome, FitnessInfo[]> ();
 			_optimizer.CheckPersistPopulation(); //Persist population
@@ -113,9 +108,6 @@ namespace SharpNEAT.Core
 						}
 					}
 				}
-
-				//yield return new WaitForSeconds (_optimizer.TrialDuration);
-
 				foreach (TGenome genome in dict.Keys) {
 					TPhenome phenome = dict [genome];
 					if (phenome != null) {
@@ -147,17 +139,6 @@ namespace SharpNEAT.Core
 					genome.EvaluationInfo.AuxFitnessArr = fitnessDict [genome] [0]._auxFitnessArr;
 				}
 			}
-
-			/* Generation timer
-			sw.Stop();
-			// Get the elapsed time as a TimeSpan value.
-			TimeSpan ts = sw.Elapsed;
-			// Format and display the TimeSpan value.
-			string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-				ts.Hours, ts.Minutes, ts.Seconds,
-				ts.Milliseconds / 10);
-			Debug.Log("Generation time " + elapsedTime);
-			*/
 		}
 
 		public void Reset ()

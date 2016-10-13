@@ -429,6 +429,7 @@ namespace SharpNeat.Genomes.Neat
         public static NeatGenomeParameters CreateSimplifyingParameters(NeatGenomeParameters copyFrom)
         {
             throw new NotSupportedException();
+			/*
             NeatGenomeParameters newParams = new NeatGenomeParameters(copyFrom);
             newParams._connectionWeightMutationProbability = 0.6;
             newParams._addNodeMutationProbability = 0.0;
@@ -447,6 +448,7 @@ namespace SharpNeat.Genomes.Neat
             // newParams._connectionMutationInfoList.Add(new ConnectionMutationInfo(0.333, ConnectionPerturbanceType.JiggleUniform, ConnectionSelectionType.Proportional, 0.01, 0, 0.05, 0.0));
             newParams._connectionMutationInfoList.Initialize();
             return newParams;
+            */
         }
 
         #endregion

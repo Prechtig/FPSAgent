@@ -231,7 +231,7 @@ namespace SharpNeat.Genomes.Neat
             xw.WriteAttributeString(__AttrFitness, genome.EvaluationInfo.Fitness.ToString("R", NumberFormatInfo.InvariantInfo));
 
             // Emit nodes.
-            StringBuilder sb = new StringBuilder();
+            //StringBuilder sb = new StringBuilder();
             xw.WriteStartElement(__ElemNodes);
             foreach(NeuronGene nGene in genome.NeuronGeneList)
             {
