@@ -4,7 +4,8 @@ using System.Collections;
 public class NEATArena : MonoBehaviour{
 	private float y;
 	private float x;
-	private float z;
+	private float z;		float k = 15;
+	float c = 2;
 	private float WallHeight;
 	private float WallThickness;
 
@@ -13,6 +14,8 @@ public class NEATArena : MonoBehaviour{
 
 	private RandomHorizontalPlayerSpawn PlayerSpawn;
 	private RandomHorizontalBotSpawn BotSpawn;
+	//private RandomPlayerSpawn PlayerSpawn;
+	//private RandomBotSpawn BotSpawn;
 
 	private IList ArenaObjects;
 
@@ -147,11 +150,15 @@ public class NEATArena : MonoBehaviour{
 
 		//New fitness function, does not work with the HorizontalBotSpawn
 		/*
-		float k = 15;
-		float c = 2;
-		float angle = Vector3.Angle (PlayerSpawn.Player.transform.forward, BotSpawn.Bots[0].transform.position - PlayerSpawn.Player.transform.position) * Mathf.Deg2Rad;
-
-		float fitness = k / (1 + (angle * c));
+		float angle = Mathf.PI;
+		float k = 15f;
+		float c = 2f;
+		try{
+			angle = Vector3.Angle (PlayerSpawn.Player.transform.forward, BotSpawn.Bots[0].transform.position - PlayerSpawn.Player.transform.position) * Mathf.Deg2Rad;
+		} catch (System.Exception e){
+			Debug.Log (e);
+		}
+		fitness = k / (1 + (angle * c));
 		*/
 
 		return fitness + BotSpawn.GetFitness ();
