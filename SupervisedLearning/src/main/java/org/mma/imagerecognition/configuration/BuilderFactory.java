@@ -24,6 +24,44 @@ public class BuilderFactory {
 		seed = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.seed"));
 	}
 	
+	public static Builder getShallowConvNet(int height, int width, int featureCount) {
+		Builder builder = new NeuralNetConfiguration.Builder()
+		.seed(seed)
+		.iterations(1)
+		.regularization(true)
+		.l2(l2)
+		.learningRate(learningRate)
+		.weightInit(WeightInit.XAVIER)
+		.activation("relu")
+		.optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
+		.updater(Updater.NESTEROVS).momentum(0.9)
+		.list()
+		.layer(0, new ConvolutionLayer.Builder(16, 16)
+				.nIn(3)
+				.stride(8, 8)
+				.nOut(20)
+				.padding(4,4)
+				.dropOut(0.5)
+				.activation("relu")
+				.build())
+		.layer(1,
+				new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
+				.kernelSize(2, 2)
+				.stride(2, 2)
+				.build())
+		.layer(6, new DenseLayer.Builder()
+				.nOut(100)
+				.activation("relu")
+				.build())
+		.layer(7, new OutputLayer.Builder(LossFunctions.LossFunction.SQUARED_LOSS)
+				.nOut(featureCount)
+				.activation("identity")
+				.build())
+		.backprop(true).pretrain(false)
+		.setInputType(InputType.convolutionalFlat(height, width, 3));
+		return builder;
+	}
+	
 	public static Builder getDeepConvNet(int height, int width, int featureCount) {
 		Builder builder = new NeuralNetConfiguration.Builder()
 		.seed(seed)
