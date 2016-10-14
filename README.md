@@ -5,18 +5,18 @@ To empower the Titans one must have a configuration file in `~/.ssh/config`.
 The contents of said file should have the following form
 ```
 Host hostAlias
-HostName hostIpAddress
-User userName
-Port portNumber
-IdentityFile path/to/privateKey
+  HostName hostIpAddress
+  User userName
+  Port portNumber
+  IdentityFile path/to/privateKey
 ```
 An example of such a file is given
 ```
 Host titan
-HostName 163.172.128.195
-User andreas
-Port 2222
-IdentityFile ~/.ssh/titan_rsa
+  HostName 163.172.128.195
+  User andreas
+  Port 2222
+  IdentityFile ~/.ssh/titan_rsa
 ```
 ## Getting the Titans to work
 To log on the server simply type `ssh titan` or whatever host-alias you chose.
@@ -37,19 +37,19 @@ The pom file needs to be changed in order to run with CUDA and the latest DL4J. 
 The following is a subsection of the pom file that needs to be changed.
 ```
 <properties>
-<nd4j.backend>nd4j-native-platform</nd4j.backend>
-<nd4j.version>0.6.0</nd4j.version>
-<dl4j.version>0.6.0</dl4j.version>
-<datavec.version>0.6.0</datavec.version>
+  <nd4j.backend>nd4j-native-platform</nd4j.backend>
+  <nd4j.version>0.6.0</nd4j.version>
+  <dl4j.version>0.6.0</dl4j.version>
+  <datavec.version>0.6.0</datavec.version>
 </properties>
 ```
 The above should be changed to
 ```
 <properties>
-<nd4j.backend>nd4j-cuda-7.5</nd4j.backend>
-<nd4j.version>0.6.1-SNAPSHOT</nd4j.version>
-<dl4j.version>0.6.1-SNAPSHOT</dl4j.version>
-<datavec.version>0.6.1-SNAPSHOT</datavec.version>
+  <nd4j.backend>nd4j-cuda-7.5</nd4j.backend>
+  <nd4j.version>0.6.1-SNAPSHOT</nd4j.version>
+  <dl4j.version>0.6.1-SNAPSHOT</dl4j.version>
+  <datavec.version>0.6.1-SNAPSHOT</datavec.version>
 </properties>
 ```
 
@@ -66,17 +66,17 @@ import ... more imports
 import org.nd4j.jita.conf.CudaEnvironment;
 
 public static void main(String[] args) throws IOException {
-DataTypeUtil.setDTypeForContext(DataBuffer.Type.FLOAT);
+  DataTypeUtil.setDTypeForContext(DataBuffer.Type.FLOAT);
 
-boolean sliEnabled = PropertiesReader.getProjectProperties().getProperty("training.sli").equals("true");
+  boolean sliEnabled = PropertiesReader.getProjectProperties().getProperty("training.sli").equals("true");
 
-CudaEnvironment.getInstance().getConfiguration()
-.setMaximumDeviceCacheableLength(GIGABYTE * 1)
-.setMaximumDeviceCache			(GIGABYTE * 12)
-.setMaximumHostCacheableLength	(GIGABYTE * 1)
-.setMaximumHostCache			(GIGABYTE * 16)
-.allowMultiGPU(sliEnabled);
-... more code
+  CudaEnvironment.getInstance().getConfiguration()
+    .setMaximumDeviceCacheableLength(GIGABYTE * 1)
+    .setMaximumDeviceCache			(GIGABYTE * 12)
+    .setMaximumHostCacheableLength	(GIGABYTE * 1)
+    .setMaximumHostCache			(GIGABYTE * 16)
+    .allowMultiGPU(sliEnabled);
+  ... more code
 ```
 
 ### To SLI or not to SLI
