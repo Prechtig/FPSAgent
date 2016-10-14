@@ -4,25 +4,26 @@ using System.Collections;
 public class NEATArena : MonoBehaviour{
 	private float y;
 	private float x;
-	private float z;		float k = 15;
-	float c = 2;
+	private float z;
 	private float WallHeight;
 	private float WallThickness;
 
 	public Transform[] PlayerSpawnPoints;
 	public Transform[] BotSpawnPoints;
 
-	private RandomHorizontalPlayerSpawn PlayerSpawn;
-	private RandomHorizontalBotSpawn BotSpawn;
-	//private RandomPlayerSpawn PlayerSpawn;
-	//private RandomBotSpawn BotSpawn;
+	//private RandomHorizontalPlayerSpawn PlayerSpawn;
+	//private RandomHorizontalBotSpawn BotSpawn;
+	private RandomPlayerSpawn PlayerSpawn;
+	private RandomBotSpawn BotSpawn;
 
 	private IList ArenaObjects;
 
 	private static int yOffset;
 	private static Object yOffsetLock = new Object();
 
-	public GameObject wallPrefab;
+	public GameObject WallPrefab;
+	private float RunningFitness = 0f;
+	private int RunningFitnessCount = 0;
 
 	public void Init() {
 		y = GetAndIncrementYOffset () * 100;
@@ -49,10 +50,17 @@ public class NEATArena : MonoBehaviour{
 	public static void ResetYOffset(){
 		yOffset = 0;
 	}
-
-	// Update is called once per frame
-	void Update () {
-		
+	
+	void FixedUpdate () {
+		if (BotSpawn.Bots.Count > 0) {
+			float angle = Mathf.PI;
+			float k = 100f;
+			float c = 2f;
+			
+			angle = Vector3.Angle (PlayerSpawn.Player.transform.forward, BotSpawn.Bots [0].transform.position - PlayerSpawn.Player.transform.position) * Mathf.Deg2Rad;
+			RunningFitness += k / (1 + (angle * c));
+			RunningFitnessCount++;
+		}
 	}
 
 	private void CreateArena(float x, float z, float wallHeight, float wallThickness) {
@@ -80,7 +88,7 @@ public class NEATArena : MonoBehaviour{
 
 	private void CreateCube(Vector3 position, Vector3 scale) {
 //		GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		GameObject cube = Instantiate(wallPrefab);
+		GameObject cube = Instantiate(WallPrefab);
 		cube.transform.position = position;
 		cube.transform.localScale = scale;
 
@@ -130,7 +138,7 @@ public class NEATArena : MonoBehaviour{
 	}
 
 	public void SpawnPlayer(){
-		PlayerSpawn = gameObject.AddComponent<RandomHorizontalPlayerSpawn>();
+		PlayerSpawn = gameObject.AddComponent<RandomPlayerSpawn>();
 		PlayerSpawn.X = x;
 		PlayerSpawn.Z = z;
 		PlayerSpawn.SpawnPoints = PlayerSpawnPoints;
@@ -138,7 +146,7 @@ public class NEATArena : MonoBehaviour{
 	}
 
 	public void SpawnEnemies(){
-		BotSpawn = gameObject.AddComponent<RandomHorizontalBotSpawn> ();
+		BotSpawn = gameObject.AddComponent<RandomBotSpawn> ();
 		BotSpawn.X = x;
 		BotSpawn.Z = z;
 		BotSpawn.SpawnPoints = BotSpawnPoints;
@@ -161,6 +169,7 @@ public class NEATArena : MonoBehaviour{
 		fitness = k / (1 + (angle * c));
 		*/
 
+		fitness += RunningFitness / RunningFitnessCount;
 		return fitness + BotSpawn.GetFitness ();
 	}
 
