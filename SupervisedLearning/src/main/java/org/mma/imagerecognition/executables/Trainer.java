@@ -10,6 +10,7 @@ import org.mma.imagerecognition.dataobjects.TrainingData;
 import org.mma.imagerecognition.iterator.DatabaseIterator;
 import org.mma.imagerecognition.iterator.FileSystemIterator;
 import org.mma.imagerecognition.tools.PropertiesReader;
+//import org.nd4j.jita.conf.CudaEnvironment;
 import org.nd4j.linalg.api.buffer.DataBuffer;
 import org.nd4j.linalg.api.buffer.util.DataTypeUtil;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
@@ -21,12 +22,14 @@ public class Trainer {
 	public static void main(String[] args) throws IOException {
 		DataTypeUtil.setDTypeForContext(DataBuffer.Type.FLOAT);
 		
+		boolean sliEnabled = PropertiesReader.getProjectProperties().getProperty("training.sli").equals("true");
+		
 //		CudaEnvironment.getInstance().getConfiguration()
-//			.allowMultiGPU(true)
 //		    .setMaximumDeviceCacheableLength(GIGABYTE * 1)
 //		    .setMaximumDeviceCache			(GIGABYTE * 12)
 //		    .setMaximumHostCacheableLength	(GIGABYTE * 1)
-//		    .setMaximumHostCache			(GIGABYTE * 16);
+//		    .setMaximumHostCache			(GIGABYTE * 16)
+//			.allowMultiGPU(sliEnabled);
 		
 		int batchSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.persistence.batchSize"));;
 		String trainingPersistenceType = PropertiesReader.getProjectProperties().getProperty("training.persistence.type");
@@ -54,7 +57,7 @@ public class Trainer {
 			trainIterator = new DatabaseIterator(batchSize, trainSize);
 		}
 		
-		if(PropertiesReader.getProjectProperties().getProperty("training.sli").equals("true")) {
+		if(sliEnabled) {
 			new ContinuousTraining().trainParallel(trainIterator, testIterator);
 		} else {
 			new ContinuousTraining().train(trainIterator, testIterator);
