@@ -25,10 +25,10 @@ To log on the server simply type `ssh titan` or whatever host-alias you chose.
 - `~/config/` contains the two property files
 - `~/nn` contains the runnable jar `cnn.jar`, the logs, models and trainingdata
 - `~/repo` contains our own repo, the repos needed to build DL4J and a `build.sh` file
-- `build.sh` builds the entire stack, i.e. javacpp -> libnd4j -> nd4j -> datavec -> dl4j -> SupervisedLearning. Everything except SupervisedLearning is build from the latest master commit of each branch.
-- `FPSAgent` contains a `build.sh` file and the `pom.xml`
-- `build.sh` builds SupervisedLearning and copies the compiled jar file to `~/nn/cnn.jar` as well as the `project.properties` to `~/config/project.properties`.
-- `pom.xml` needs alteration if pulled from master, e.g. enable CUDA. This is described in a later section.
+  - `build.sh` builds the entire stack, i.e. javacpp -> libnd4j -> nd4j -> datavec -> dl4j -> SupervisedLearning. Everything except SupervisedLearning is build from the latest master commit of each branch.
+  - `FPSAgent` contains a `build.sh` file and the `pom.xml`
+    - `build.sh` builds SupervisedLearning and copies the compiled jar file to `~/nn/cnn.jar` as well as the `project.properties` to `~/config/project.properties`.
+    - `pom.xml` needs alteration if pulled from master, e.g. enable CUDA. This is described in a later section.
 
 ### Using CUDA as backend
 #### Altering the pom.xml
