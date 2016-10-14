@@ -94,7 +94,9 @@ Do the following
 ```sh
 $ export CUDA_VISIBLE_DEVICES=1
 ```
-``BEWARE that this setting is specific to the running session, so the launch of training should be done in the same session!``
+```diff
+- BEWARE that this setting is specific to the running session, so the launch of training should be done in the same session!
+```
 
 ### Building the jar file
 To build only SupervisedLearning do
