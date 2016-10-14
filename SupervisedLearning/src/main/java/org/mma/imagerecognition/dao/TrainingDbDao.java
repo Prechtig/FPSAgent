@@ -11,18 +11,9 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import javax.sql.DataSource;
-
 import org.mma.imagerecognition.dataobjects.TrainingData;
-import org.mma.imagerecognition.tools.PropertiesReader;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
-
-public class TrainingDbDao {
-	private static final String DbName = "TrainingDB";
-	private static final String tableName = "trainingData";
-	private static final String databaseURL = "jdbc:mysql://mydb.itu.dk/" + DbName;
-	
+public class TrainingDbDao extends DbConnector {
 	private static final String GET_IMAGES = "SELECT * FROM " + tableName + " WHERE id IN ";
 	private static final String GET_WIDTH = "SELECT width FROM " + tableName + " LIMIT 1";
 	private static final String GET_HEIGHT = "SELECT height FROM " + tableName + " LIMIT 1";
@@ -33,8 +24,6 @@ public class TrainingDbDao {
 	private static final String GET_COLUMN_NAMES = "SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME =  '" + tableName + "'";
 	
 	private static int numberOfNonGroundTruthColumns = 4;
-	
-	private static DataSource pooledDataSource = setupC3P0();
 	
 	public static List<TrainingData> getImages(String indices) {
 		try (Connection conn = getConnection()) {
@@ -148,32 +137,6 @@ public class TrainingDbDao {
 			throw new IllegalStateException("Result was empty");
 		}
 		return result;
-	}
-	
-	private static Connection getConnection() {
-		try {
-			return pooledDataSource.getConnection();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.exit(0);
-		}
-		return null;
-	}
-	
-	private static DataSource setupC3P0() {
-		ComboPooledDataSource cpds = new ComboPooledDataSource();
-		cpds.setJdbcUrl(databaseURL);
-		cpds.setUser(PropertiesReader.getUserId());
-		cpds.setPassword(PropertiesReader.getPassword());
-		
-		cpds.setIdleConnectionTestPeriod(120);
-
-		cpds.setMinPoolSize(1);
-		cpds.setAcquireIncrement(5);
-		cpds.setMaxPoolSize(20);
-		cpds.setMaxStatements( 50 ); //Prepared Statement pooling
-		
-		return cpds;
 	}
 	
 	public static String getRandomIndices(int numberOfImages) {
