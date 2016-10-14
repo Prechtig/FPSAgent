@@ -219,7 +219,7 @@ public class Optimizer : MonoBehaviour {
 	{
 		//Time.timeScale = 1;
 		NEATArena arena = gameObject.AddComponent<NEATArena>();
-		arena.wallPrefab = wallPrefab;
+		arena.WallPrefab = wallPrefab;
 		arena.Init ();
 
 		GameObject obj = arena.GetPlayer ();
