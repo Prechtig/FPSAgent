@@ -39,7 +39,7 @@ public class Trainer {
 			System.exit(1);
 		}
 		if(trainingPersistenceType.equals("filesystem")) {
-			int maxNumberOfImagesToPersist = 7500;
+			int maxNumberOfImagesToPersist = 25000;
 			persistImagesToDisk(batchSize, maxNumberOfImagesToPersist);
 			persistMissingImages(maxNumberOfImagesToPersist);
 		}

@@ -24,7 +24,7 @@ public class ContinuousTraining implements Trainable {
 
 	@Override
 	public void train(DataSetIterator trainIterator, DataSetIterator testIterator) {
-		MultiLayerConfiguration configuration = BuilderFactory.getShallowConvNet(height, width, featureCount).build();
+		MultiLayerConfiguration configuration = BuilderFactory.getDeepConvNet(height, width, featureCount).build();
         MultiLayerNetwork model = new MultiLayerNetwork(configuration);
         model.init();
         

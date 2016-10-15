@@ -143,7 +143,7 @@ public class FileSystemDAO {
 		return Paths.get(MODELS_FOLDER);
 	}
 	
-	private static Path getContinuousFolder() {
+	public static Path getContinuousFolder() {
 		return getModelsFolder().resolve(CONTINUOUS_FOLDER);
 	}
 	

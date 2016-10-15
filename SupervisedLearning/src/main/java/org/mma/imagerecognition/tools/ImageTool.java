@@ -49,7 +49,10 @@ public class ImageTool {
 	}
 	
 	private static byte toByte(double d) {
-		double cutOff = 1.0;
+		double cutOff = 5.0;
+		if(d < 0.0) {
+			d = 0.0;
+		}
 		if(d > cutOff) {
 			d = cutOff;
 		}
