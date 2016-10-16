@@ -25,20 +25,23 @@ public class EqualDbDistribution extends DbConnector {
 			int imagesWithoutBots = imagesWithoutBotsRs.getInt(1);
 			System.out.println("There are " + imagesWithoutBots + " images without bots in the database");
 			
+			int rowsDeleted = 0;
 			if (imagesWithBots < imagesWithoutBots) {
 				// Delete images without bots
-				deleteImages(stmt, imagesWithoutBots - imagesWithBots, false);
+				rowsDeleted = deleteImages(stmt, imagesWithoutBots - imagesWithBots, false);
 			} else if (imagesWithoutBots < imagesWithBots) {
 				// Delete images with bots
-				deleteImages(stmt, imagesWithBots - imagesWithoutBots, true);
+				rowsDeleted = deleteImages(stmt, imagesWithBots - imagesWithoutBots, true);
 			}
-			reassignIds(stmt);
+			if(0 < rowsDeleted) {
+				reassignIds(stmt);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private static void deleteImages(Statement stmt, int count, boolean withBots) throws SQLException {
+	private static int deleteImages(Statement stmt, int count, boolean withBots) throws SQLException {
 		String withWithout = withBots ? "with" : "without";
 		System.out.println("Deleting " + count + " images " + withWithout + " bots");
 		
@@ -47,6 +50,7 @@ public class EqualDbDistribution extends DbConnector {
 		if(rowsDeleted != count) {
 			throw new RuntimeException("Could not delete " + count + " rows as requested. Only deleted " + rowsDeleted + " rows.");
 		}
+		return rowsDeleted;
 	}
 	
 	private static void reassignIds(Statement stmt) throws SQLException {
