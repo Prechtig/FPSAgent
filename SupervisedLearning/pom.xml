@@ -48,7 +48,7 @@
 				</descriptorRefs>
 				<archive>
 					<manifest>
-						<mainClass>org.mma.imagerecognition.controller.Controller</mainClass>
+						<mainClass>org.mma.imagerecognition.executables.Trainer</mainClass>
 						<!-- <mainClass>org.mma.imagerecognition.configuration.Evaluator</mainClass> -->
 					</manifest>
 				</archive>
