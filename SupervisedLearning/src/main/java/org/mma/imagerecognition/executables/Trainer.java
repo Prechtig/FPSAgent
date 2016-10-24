@@ -31,7 +31,7 @@ public class Trainer {
 //		    .setMaximumHostCache			(GIGABYTE * 16)
 //			.allowMultiGPU(sliEnabled);
 		
-		int batchSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.persistence.batchSize"));;
+		int batchSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.persistence.batchSize"));
 		String trainingPersistenceType = PropertiesReader.getProjectProperties().getProperty("training.persistence.type");
 		FileSystemDAO.createFolders();
 		if(trainingPersistenceType == null) {
@@ -39,9 +39,11 @@ public class Trainer {
 			System.exit(1);
 		}
 		if(trainingPersistenceType.equals("filesystem")) {
-			int maxNumberOfImagesToPersist = 25000;
+			int maxNumberOfImagesToPersist = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.persistence.maxImagesToPersist"));
 			persistImagesToDisk(batchSize, maxNumberOfImagesToPersist);
-			persistMissingImages(maxNumberOfImagesToPersist);
+			if(PropertiesReader.getProjectProperties().getProperty("training.persistence.checkIntegrity").equals("true")) {
+				persistMissingImages(maxNumberOfImagesToPersist);
+			}
 		}
 		
 		DataSetIterator trainIterator, testIterator;
