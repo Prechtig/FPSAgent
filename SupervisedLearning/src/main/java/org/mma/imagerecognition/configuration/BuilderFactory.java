@@ -67,7 +67,7 @@ public class BuilderFactory {
 		.regularization(true)
 		.l2(l2)
 		.learningRate(learningRate)
-		.weightInit(WeightInit.RELU)
+		.weightInit(WeightInit.XAVIER)
 		.activation("leakyrelu")
 		.optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
 		.updater(Updater.NESTEROVS).momentum(0.9)
