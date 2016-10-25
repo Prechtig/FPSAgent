@@ -20,9 +20,12 @@ public class Trainer {
 	private static final long GIGABYTE = 1024 * 1024 * 1024;
 	
 	public static void main(String[] args) throws IOException {
-		DataTypeUtil.setDTypeForContext(DataBuffer.Type.FLOAT);
-		
+		int testSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.testSize"));
+		int trainSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.trainSize"));
+		int batchSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.persistence.batchSize"));
 		boolean sliEnabled = PropertiesReader.getProjectProperties().getProperty("training.sli").equals("true");
+		String trainingPersistenceType = PropertiesReader.getProjectProperties().getProperty("training.persistence.type");
+		DataTypeUtil.setDTypeForContext(DataBuffer.Type.FLOAT);
 		
 //		CudaEnvironment.getInstance().getConfiguration()
 //		    .setMaximumDeviceCacheableLength(GIGABYTE * 1)
@@ -31,15 +34,13 @@ public class Trainer {
 //		    .setMaximumHostCache			(GIGABYTE * 16)
 //			.allowMultiGPU(sliEnabled);
 		
-		int batchSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.persistence.batchSize"));
-		String trainingPersistenceType = PropertiesReader.getProjectProperties().getProperty("training.persistence.type");
 		FileSystemDAO.createFolders();
 		if(trainingPersistenceType == null) {
 			System.out.println("Please specify the persistence type of training data");
 			System.exit(1);
 		}
 		if(trainingPersistenceType.equals("filesystem")) {
-			int maxNumberOfImagesToPersist = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.persistence.maxImagesToPersist"));
+			int maxNumberOfImagesToPersist = Math.max(testSize, trainSize);
 			persistImagesToDisk(batchSize, maxNumberOfImagesToPersist);
 			if(PropertiesReader.getProjectProperties().getProperty("training.persistence.checkIntegrity").equals("true")) {
 				persistMissingImages(maxNumberOfImagesToPersist);
@@ -47,10 +48,6 @@ public class Trainer {
 		}
 		
 		DataSetIterator trainIterator, testIterator;
-		
-		int testSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.testSize"));
-		int trainSize = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.trainSize"));
-		
 		if(trainingPersistenceType.equals("filesystem")) {
 			testIterator = new FileSystemIterator(batchSize, testSize);
 			trainIterator = new FileSystemIterator(batchSize, trainSize);
