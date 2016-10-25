@@ -26,6 +26,7 @@ public class FileSystemDAO {
 	private static final String CONTINUOUS_FOLDER = "continuous";
 	private static final String SAMPLES_FOLDER = "samples";
 	private static final String FEATURE_MAPS_FOLDER = "featuremaps";
+	public static final String MODEL_FILE_NAME = "model";
 	
 	static {
 		RNG.setSeed(Long.parseLong(PropertiesReader.getProjectProperties().getProperty("training.seed")));
@@ -109,6 +110,30 @@ public class FileSystemDAO {
 		}
 	}
 	
+	public static int findLatestModelId() {
+		if(!Files.exists(getContinuousFolder())) {
+			return 0;
+		}
+		try {
+			return Files.walk(getContinuousFolder())
+					.filter(Files::isRegularFile)
+					.map(file -> Integer.valueOf(file.getFileName().toString().replaceAll("\\D+","")))
+					.reduce(0, (curMax, cur) -> Math.max(curMax, cur));
+		} catch(IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+			return 0;
+		}
+	}
+	
+	public static Path getPathOfLatestModelFile() {
+		return getContinuousFolder().resolve(Paths.get(getModelFileName(findLatestModelId())));
+	}
+	
+	public static Path getPathOfLatestModelFile(int numeration) {
+		return getContinuousFolder().resolve(Paths.get(getModelFileName(numeration)));
+	}
+	
 	public static void createFolders() throws IOException {
 		Files.createDirectories(getFeatureMapsFolder());
 		Files.createDirectories(getSamplesFolder());
@@ -139,6 +164,14 @@ public class FileSystemDAO {
 		return Paths.get(TRAINING_DATA_FOLDER);
 	}
 	
+	public static Path getSamplesFolder() {
+		return Paths.get(SAMPLES_FOLDER);
+	}
+	
+	public static Path getFeatureMapsFolder() {
+		return Paths.get(FEATURE_MAPS_FOLDER);
+	}
+	
 	public static Path getModelsFolder() {
 		return Paths.get(MODELS_FOLDER);
 	}
@@ -146,13 +179,9 @@ public class FileSystemDAO {
 	public static Path getContinuousFolder() {
 		return getModelsFolder().resolve(CONTINUOUS_FOLDER);
 	}
-	
-	public static Path getSamplesFolder() {
-		return Paths.get(SAMPLES_FOLDER);
-	}
-	
-	public static Path getFeatureMapsFolder() {
-		return Paths.get(FEATURE_MAPS_FOLDER);
+
+	public static String getModelFileName(int numeration) {
+		return FileSystemDAO.MODEL_FILE_NAME + numeration +".bin";
 	}
 	
 	public static Path getFeatureMapsFolderForLayer(int layer) throws IOException {
