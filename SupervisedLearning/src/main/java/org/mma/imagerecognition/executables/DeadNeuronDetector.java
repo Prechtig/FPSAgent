@@ -16,6 +16,7 @@ import org.mma.imagerecognition.dao.FileSystemDAO;
 import org.mma.imagerecognition.dao.TrainingDbDao;
 import org.mma.imagerecognition.dataobjects.TrainingData;
 import org.mma.imagerecognition.tools.ImageTool;
+import org.mma.imagerecognition.tools.PropertiesReader;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 
@@ -43,7 +44,13 @@ public class DeadNeuronDetector {
 	
 	public static void getDeadNeurons(MultiLayerNetwork network, int sampleSize) {
 		Map<Integer, DeadMap> deadMaps = new HashMap<Integer, DeadMap>();
-		List<TrainingData> sample = TrainingDbDao.getRandomImages(sampleSize);
+		
+		List<TrainingData> sample;
+		if("database".equals(PropertiesReader.getProjectProperties().get("training.persistence.type"))) {
+			sample = TrainingDbDao.getRandomImages(sampleSize);
+		} else {
+			sample = FileSystemDAO.getRandomImages(sampleSize);
+		}
 
 		for (TrainingData traningData : sample) {
 			network.output(Nd4j.create(ImageTool.toScaledDoubles(traningData.getPixelData()), new int[] { 1, 3, traningData.getWidth(), traningData.getHeight() }), false);

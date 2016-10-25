@@ -25,7 +25,7 @@ public class ContinuousTraining implements Trainable {
 
 	@Override
 	public void train(DataSetIterator trainIterator, DataSetIterator testIterator) {
-		MultiLayerConfiguration configuration = BuilderFactory.getDeepConvNet(height, width, featureCount).build();
+		MultiLayerConfiguration configuration = BuilderFactory.getShallowConvNet(height, width, featureCount).build();
         MultiLayerNetwork model = new MultiLayerNetwork(configuration);
         model.init();
         
@@ -33,7 +33,7 @@ public class ContinuousTraining implements Trainable {
         
         for(int i = 1; i <= nEpochs; i++) {
             model.fit(trainIterator);
-            System.out.println("*** Completed epoch {} ***" + i);
+            System.out.println(String.format("*** Completed epoch %d ***", i));
             DeadNeuronDetector.getDeadNeurons(model, 100);
             try {
 				ModelSerializer.writeModel(model, modelFilePath + modelFileName + i +".bin", true);
@@ -61,7 +61,7 @@ public class ContinuousTraining implements Trainable {
 		
 		for(int i = 1; i <= nEpochs; i++) {
             wrapper.fit(trainIterator);
-            System.out.println("*** Completed epoch {} ***" + i);
+            System.out.println(String.format("*** Completed epoch %d ***", i));
             DeadNeuronDetector.getDeadNeurons(model, 100);
             try {
 				ModelSerializer.writeModel(model, modelFilePath + modelFileName + i +".bin", true);
