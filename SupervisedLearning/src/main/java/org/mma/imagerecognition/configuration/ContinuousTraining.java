@@ -20,7 +20,6 @@ public class ContinuousTraining implements Trainable {
 	
 	private MultiLayerNetwork model;
 	private MultiLayerConfiguration configuration;
-	private String modelFilePath;
 	private int height, width, featureCount, nEpochs;
 	private int latestEpoch = 0;
 	
