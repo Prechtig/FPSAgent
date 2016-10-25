@@ -22,6 +22,7 @@ public class ContinuousTraining implements Trainable {
 	private MultiLayerConfiguration configuration;
 	private int height, width, featureCount, nEpochs;
 	private int latestEpoch = 0;
+	private boolean outputDeadNeurons, saveModel;
 	
 	public ContinuousTraining() throws FileNotFoundException, IOException {
 		init();
@@ -32,13 +33,10 @@ public class ContinuousTraining implements Trainable {
         for(int i = latestEpoch+1; i <= nEpochs; i++) {
             model.fit(trainIterator);
             System.out.println("*** Completed epoch {} ***" + i);
-            try {
-				ModelSerializer.writeModel(model, FileSystemDAO.getPathOfLatestModelFile(i).toString(), true);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-            DeadNeuronDetector.getDeadNeurons(model, 100);
             testIterator.reset();
+            
+            saveModel(model, i);
+            outputDeadNeurons(model);
         }
 	}
 	
@@ -54,14 +52,27 @@ public class ContinuousTraining implements Trainable {
 		for(int i = latestEpoch; i <= nEpochs; i++) {
             wrapper.fit(trainIterator);
             System.out.println("*** Completed epoch {} ***" + i);
-            DeadNeuronDetector.getDeadNeurons(model, 100);
+            testIterator.reset();
+            
+            saveModel(model, i);
+            outputDeadNeurons(model);
+        }
+	}
+	
+	private void saveModel(MultiLayerNetwork model, int numeration) {
+        if(saveModel) {
             try {
-				ModelSerializer.writeModel(model, FileSystemDAO.getPathOfLatestModelFile(i).toString(), true);
+				ModelSerializer.writeModel(model, FileSystemDAO.getPathOfLatestModelFile(numeration).toString(), true);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-            testIterator.reset();
         }
+	}
+	
+	private void outputDeadNeurons(MultiLayerNetwork model) {
+		if(outputDeadNeurons) {
+			DeadNeuronDetector.getDeadNeurons(model, 100);
+		}
 	}
 	
 	private void init() throws FileNotFoundException, IOException {
@@ -70,6 +81,8 @@ public class ContinuousTraining implements Trainable {
 		height = Integer.parseInt(projectProperties.getProperty("training.image.height"));
 		featureCount = TrainingData.getFeatureCount();
         nEpochs = Integer.parseInt(projectProperties.getProperty("training.epochs"));
+        outputDeadNeurons = projectProperties.getProperty("training.outputDeadNeurons").equals("true");
+        saveModel = projectProperties.getProperty("training.saveModel").equals("true");
         initConfig();
         initNetwork();
 	}
