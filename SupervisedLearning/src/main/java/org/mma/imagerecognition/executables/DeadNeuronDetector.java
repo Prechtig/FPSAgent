@@ -40,16 +40,13 @@ public class DeadNeuronDetector {
 
 		getDeadNeurons(networkFile, sampleSize);
 	}
-
-	private static void getDeadNeurons(File networkFile, int sampleSize)
-			throws FileNotFoundException, IOException {
+	
+	public static void getDeadNeurons(MultiLayerNetwork network, int sampleSize) {
 		Map<Integer, DeadMap> deadMaps = new HashMap<Integer, DeadMap>();
-		MultiLayerNetwork network = ModelSerializer
-				.restoreMultiLayerNetwork(new FileInputStream(networkFile));
 		List<TrainingData> sample = TrainingDbDao.getRandomImages(sampleSize);
 
 		for (TrainingData traningData : sample) {
-			INDArray output = network.output(Nd4j.create(ImageTool.toScaledDoubles(traningData.getPixelData()), new int[] { 1, 3, traningData.getWidth(), traningData.getHeight() }), false);
+			network.output(Nd4j.create(ImageTool.toScaledDoubles(traningData.getPixelData()), new int[] { 1, 3, traningData.getWidth(), traningData.getHeight() }), false);
 
 			for (int currentLayer = 0; currentLayer < network.getnLayers(); currentLayer++) {
 				INDArray activations = network.getLayer(currentLayer).activate();
@@ -67,6 +64,11 @@ public class DeadNeuronDetector {
 		for (Entry<Integer, DeadMap> deadMap : deadMaps.entrySet()) {
 			System.out.println(deadMap.getValue().toString());
 		}
+	}
+
+	public static void getDeadNeurons(File networkFile, int sampleSize) throws FileNotFoundException, IOException {
+		MultiLayerNetwork network = ModelSerializer.restoreMultiLayerNetwork(new FileInputStream(networkFile));
+		getDeadNeurons(network, sampleSize);
 	}
 
 	private static class DeadMap {

@@ -10,6 +10,7 @@ import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.parallelism.ParallelWrapper;
 import org.deeplearning4j.util.ModelSerializer;
 import org.mma.imagerecognition.dataobjects.TrainingData;
+import org.mma.imagerecognition.executables.DeadNeuronDetector;
 import org.mma.imagerecognition.tools.PropertiesReader;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 
@@ -30,9 +31,10 @@ public class ContinuousTraining implements Trainable {
         
         model.setListeners(new ScoreIterationListener(1));
         
-        for( int i=0; i<nEpochs; i++ ) {
+        for(int i = 1; i <= nEpochs; i++) {
             model.fit(trainIterator);
             System.out.println("*** Completed epoch {} ***" + i);
+            DeadNeuronDetector.getDeadNeurons(model, 100);
             try {
 				ModelSerializer.writeModel(model, modelFilePath + modelFileName + i +".bin", true);
 			} catch (IOException e) {
@@ -57,9 +59,10 @@ public class ContinuousTraining implements Trainable {
 	        .useLegacyAveraging(true)
 	        .build();
 		
-		for( int i=0; i<nEpochs; i++ ) {
+		for(int i = 1; i <= nEpochs; i++) {
             wrapper.fit(trainIterator);
             System.out.println("*** Completed epoch {} ***" + i);
+            DeadNeuronDetector.getDeadNeurons(model, 100);
             try {
 				ModelSerializer.writeModel(model, modelFilePath + modelFileName + i +".bin", true);
 			} catch (IOException e) {
