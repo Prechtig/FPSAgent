@@ -20,6 +20,6 @@ public class IdReassinger extends DbConnector {
 		System.out.println("Deleting column id");
 		stmt.executeUpdate("ALTER TABLE " + tableName + " DROP COLUMN id");
 		System.out.println("Adding column id");
-		stmt.executeUpdate("ALTER TABLE " + tableName + " ADD id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY AUTO_INCREMENT");
+		stmt.executeUpdate("ALTER TABLE " + tableName + " ADD id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY AUTO_INCREMENT FIRST");
 	}
 }
