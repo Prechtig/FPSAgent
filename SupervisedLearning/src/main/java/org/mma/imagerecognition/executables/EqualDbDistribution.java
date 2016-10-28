@@ -34,7 +34,7 @@ public class EqualDbDistribution extends DbConnector {
 				rowsDeleted = deleteImages(stmt, imagesWithBots - imagesWithoutBots, true);
 			}
 			if(0 < rowsDeleted) {
-				reassignIds(stmt);
+				IdReassinger.reassignIds(stmt);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -51,12 +51,5 @@ public class EqualDbDistribution extends DbConnector {
 			throw new RuntimeException("Could not delete " + count + " rows as requested. Only deleted " + rowsDeleted + " rows.");
 		}
 		return rowsDeleted;
-	}
-	
-	private static void reassignIds(Statement stmt) throws SQLException {
-		System.out.println("Deleting column id");
-		stmt.executeUpdate("ALTER TABLE " + tableName + " DROP COLUMN id");
-		System.out.println("Adding column id");
-		stmt.executeUpdate("ALTER TABLE " + tableName + " ADD id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY AUTO_INCREMENT FIRST");
 	}
 }

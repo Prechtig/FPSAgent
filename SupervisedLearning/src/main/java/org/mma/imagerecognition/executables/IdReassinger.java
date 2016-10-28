@@ -16,7 +16,7 @@ public class IdReassinger extends DbConnector {
 		}
 	}
 	
-	private static void reassignIds(Statement stmt) throws SQLException {
+	public static void reassignIds(Statement stmt) throws SQLException {
 		System.out.println("Deleting column id");
 		stmt.executeUpdate("ALTER TABLE " + tableName + " DROP COLUMN id");
 		System.out.println("Adding column id");
