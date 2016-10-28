@@ -30,9 +30,9 @@ public class ContinuousTraining implements Trainable {
 
 	@Override
 	public void train(DataSetIterator trainIterator, DataSetIterator testIterator) {
-        for(int i = latestEpoch+1; i <= nEpochs; i++) {
+        for(int i = latestEpoch; i <= nEpochs; i++) {
             model.fit(trainIterator);
-            System.out.println("*** Completed epoch {} ***" + i);
+            System.out.println(String.format("*** Completed epoch %d ***", i));
             testIterator.reset();
             
             saveModel(model, i);
@@ -51,7 +51,7 @@ public class ContinuousTraining implements Trainable {
 		
 		for(int i = latestEpoch; i <= nEpochs; i++) {
             wrapper.fit(trainIterator);
-            System.out.println("*** Completed epoch {} ***" + i);
+            System.out.println(String.format("*** Completed epoch %d ***", i));
             testIterator.reset();
             
             saveModel(model, i);
@@ -88,7 +88,7 @@ public class ContinuousTraining implements Trainable {
 	}
 	
 	private void initConfig() {
-		configuration = BuilderFactory.getDeepConvNet(height, width, featureCount).build();
+		configuration = BuilderFactory.getShallowConvNet(height, width, featureCount).build();
 	}
 	
 	private void initNetwork() throws FileNotFoundException, IOException {
