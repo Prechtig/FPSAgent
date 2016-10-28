@@ -35,10 +35,13 @@ public class TrainingData {
 		featureDoubles = new double[numberOfBots * 4];
 		int featureCounter = 0;
 		for(int i = 1; i <= numberOfBots; i++) {
-			featureDoubles[featureCounter++] = ScaleTool.scaleAngle(rs.getDouble(getNumeratedKey(horizontalAngleKey, i)));
-			featureDoubles[featureCounter++] = ScaleTool.scaleAngle(rs.getDouble(getNumeratedKey(verticalAngleKey, i)));
+			double withinSightValue = rs.getDouble(getNumeratedKey(withinSightKey, i));
+			boolean withinSight = withinSightValue == 1d;
+			
+			featureDoubles[featureCounter++] = withinSight ? ScaleTool.scaleAngle(rs.getDouble(getNumeratedKey(horizontalAngleKey, i))) : 2d;
+			featureDoubles[featureCounter++] = withinSight ? ScaleTool.scaleAngle(rs.getDouble(getNumeratedKey(verticalAngleKey, i))) : 2d;
 			featureDoubles[featureCounter++] = ScaleTool.scaleDistance(rs.getDouble(getNumeratedKey(distanceKey, i)));
-			featureDoubles[featureCounter++] = rs.getDouble(getNumeratedKey(withinSightKey, i));
+			featureDoubles[featureCounter++] = withinSightValue;
 			
 			addFeature(rs, horizontalAngleKey, i);
 			addFeature(rs, verticalAngleKey, i);
