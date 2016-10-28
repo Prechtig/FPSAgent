@@ -9,6 +9,8 @@ import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -27,6 +29,7 @@ public class FileSystemDAO {
 	private static final String SAMPLES_FOLDER = "samples";
 	private static final String FEATURE_MAPS_FOLDER = "featuremaps";
 	public static final String MODEL_FILE_NAME = "model";
+	public static final Pattern modelIdPattern = Pattern.compile("^model(\\d+)\\.bin$");
 	
 	static {
 		RNG.setSeed(Long.parseLong(PropertiesReader.getProjectProperties().getProperty("training.seed")));
@@ -117,13 +120,21 @@ public class FileSystemDAO {
 		try {
 			return Files.walk(getContinuousFolder())
 					.filter(Files::isRegularFile)
-					.map(file -> Integer.valueOf(file.getFileName().toString().replaceAll("\\D+","")))
+					.map(file -> extractModelId(file.getFileName().toString()))
 					.reduce(0, (curMax, cur) -> Math.max(curMax, cur));
 		} catch(IOException e) {
 			e.printStackTrace();
 			System.exit(1);
 			return 0;
 		}
+	}
+	
+	public static int extractModelId(String fileName) {
+		Matcher matcher = modelIdPattern.matcher(fileName);
+		if(matcher.matches()) {
+			return Integer.parseInt(matcher.group(1));
+		}
+		return 0;
 	}
 	
 	public static Path getPathOfLatestModelFile() {
