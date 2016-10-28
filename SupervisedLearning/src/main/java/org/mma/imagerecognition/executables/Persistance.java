@@ -7,9 +7,9 @@ import org.mma.imagerecognition.dao.TrainingDbDao;
 import org.mma.imagerecognition.dataobjects.TrainingData;
 import org.mma.imagerecognition.tools.PropertiesReader;
 
-public class Downloader {
+public class Persistance {
 	
-	public static void download(int trainSize, int validationSize, int testSize, int batchSize, boolean checkIntegrity) {
+	public static void persist(int trainSize, int validationSize, int testSize, int batchSize, boolean checkIntegrity) {
 		int maxNumberOfImagesToPersist = trainSize + validationSize + testSize;
 		persistImagesToDisk(batchSize, maxNumberOfImagesToPersist);
 		if(PropertiesReader.getProjectProperties().getProperty("training.persistence.checkIntegrity").equals("true")) {

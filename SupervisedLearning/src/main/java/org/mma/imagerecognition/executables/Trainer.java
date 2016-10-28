@@ -40,7 +40,7 @@ public class Trainer {
 			System.exit(1);
 		}
 		if(trainingPersistenceType.equals("filesystem")) {
-			Downloader.download(trainSize, validationSize, testSize, batchSize, checkIntegrity);
+			Persistance.persist(trainSize, validationSize, testSize, batchSize, checkIntegrity);
 		}
 		
 		DataSetIterator trainIterator, testIterator;
