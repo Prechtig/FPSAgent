@@ -1,5 +1,7 @@
 package org.mma.imagerecognition.configuration;
 
+import java.util.Properties;
+
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration.Builder;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
@@ -19,9 +21,46 @@ public class BuilderFactory {
 	private static int seed = 0;
 	
 	static {
-		learningRate = Double.parseDouble(PropertiesReader.getProjectProperties().getProperty("training.learningRate"));
-		l2 = Double.parseDouble(PropertiesReader.getProjectProperties().getProperty("training.l2"));
-		seed = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.seed"));
+		Properties pp = PropertiesReader.getProjectProperties();
+		learningRate = Double.parseDouble(pp.getProperty("training.learningRate"));
+		l2 = Double.parseDouble(pp.getProperty("training.l2"));
+		seed = Integer.parseInt(pp.getProperty("training.seed"));
+	}
+	
+	public static Builder getVeryShallowConvNet(int height, int width, int featureCount) {
+		int layerId = 0;
+		
+		Builder builder = new NeuralNetConfiguration.Builder()
+		.seed(seed)
+		.iterations(1)
+		.regularization(false)
+		.l2(l2)
+		.learningRate(learningRate)
+		.weightInit(WeightInit.XAVIER)
+		.activation("leakyrelu")
+		.optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
+		.updater(Updater.NESTEROVS).momentum(0.9)
+		.list()
+		.layer(layerId++, new ConvolutionLayer.Builder(16, 16)
+				.nIn(3)
+				.stride(4, 4)
+				.nOut(40)
+				.padding(6,6)
+				.build())
+		.layer(layerId++,
+				new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
+				.kernelSize(2, 2)
+				.stride(2, 2)
+				.build())
+		.layer(layerId++, new DenseLayer.Builder()
+				.nOut(250)
+				.build())
+		.layer(layerId++, new OutputLayer.Builder(LossFunctions.LossFunction.SQUARED_LOSS)
+				.nOut(featureCount)
+				.build())
+		.backprop(true).pretrain(false)
+		.setInputType(InputType.convolutionalFlat(height, width, 3));
+		return builder;
 	}
 	
 	public static Builder getShallowConvNet(int height, int width, int featureCount) {
@@ -72,10 +111,12 @@ public class BuilderFactory {
 	}
 	
 	public static Builder getDeepConvNet(int height, int width, int featureCount) {
+		int layerId = 0;
+		
 		Builder builder = new NeuralNetConfiguration.Builder()
 		.seed(seed)
 		.iterations(1)
-		.regularization(true)
+		.regularization(false)
 		.l2(l2)
 		.learningRate(learningRate)
 		.weightInit(WeightInit.XAVIER)
@@ -83,45 +124,48 @@ public class BuilderFactory {
 		.optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
 		.updater(Updater.NESTEROVS).momentum(0.9)
 		.list()
-		.layer(0, new ConvolutionLayer.Builder(12, 12)
+		.layer(layerId++, new ConvolutionLayer.Builder(12, 12)
 				.nIn(3)
 				.stride(2, 2)
 				.nOut(20)
 				.padding(5,5)
-				.dropOut(0.5)
+//				.dropOut(0.5)
 				.build())
-		.layer(1,
+		.layer(layerId++,
 				new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
 				.kernelSize(2, 2)
 				.stride(2, 2)
 				.build())
-		.layer(2, new ConvolutionLayer.Builder(3, 3)
+		.layer(layerId++, new ConvolutionLayer.Builder(3, 3)
 				.nIn(20)
-				.stride(1, 1)
-				.nOut(60)
-				.padding(1,1)
-				.dropOut(0.5)
-				.build())
-		.layer(3,
-				new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
-				.kernelSize(2, 2)
-				.stride(2, 2)
-				.build())
-		.layer(4, new ConvolutionLayer.Builder(3, 3)
-				.nIn(60)
 				.stride(1, 1)
 				.nOut(40)
 				.padding(1,1)
-				.dropOut(0.5)
+//				.dropOut(0.5)
 				.build())
-		.layer(5, new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
+		.layer(layerId++,
+				new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
 				.kernelSize(2, 2)
 				.stride(2, 2)
 				.build())
-		.layer(6, new DenseLayer.Builder()
-				.nOut(200)
+		.layer(layerId++, new ConvolutionLayer.Builder(3, 3)
+				.nIn(40)
+				.stride(1, 1)
+				.nOut(40)
+				.padding(1,1)
+//				.dropOut(0.5)
 				.build())
-		.layer(7, new OutputLayer.Builder(LossFunctions.LossFunction.SQUARED_LOSS)
+		.layer(layerId++, new SubsamplingLayer.Builder(SubsamplingLayer.PoolingType.MAX)
+				.kernelSize(2, 2)
+				.stride(2, 2)
+				.build())
+		.layer(layerId++, new DenseLayer.Builder()
+				.nOut(100)
+				.build())
+		.layer(layerId++, new DenseLayer.Builder()
+				.nOut(100)
+				.build())
+		.layer(layerId++, new OutputLayer.Builder(LossFunctions.LossFunction.SQUARED_LOSS)
 				.nOut(featureCount)
 				.build())
 		.backprop(true).pretrain(false)

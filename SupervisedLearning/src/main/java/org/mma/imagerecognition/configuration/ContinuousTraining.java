@@ -88,7 +88,7 @@ public class ContinuousTraining implements Trainable {
 	}
 	
 	private void initConfig() {
-		configuration = BuilderFactory.getShallowConvNet(height, width, featureCount).build();
+		configuration = BuilderFactory.getVeryShallowConvNet(height, width, featureCount).build();
 	}
 	
 	private void initNetwork() throws FileNotFoundException, IOException {
