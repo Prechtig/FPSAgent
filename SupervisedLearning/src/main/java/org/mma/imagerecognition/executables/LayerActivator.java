@@ -53,7 +53,7 @@ public class LayerActivator {
 		}
 		
 		//Print dense layer and output layer activation
-		for(int currentLayer = convLayers; currentLayer < convLayers+2; currentLayer++) {
+		for(int currentLayer = convLayers; currentLayer < network.getLayers().length; currentLayer++) {
 			System.out.println("Output of layer: " + currentLayer);
 			System.out.println(Arrays.toString(INDArrayTool.toFlatDoubleArray(network.getLayer(currentLayer).activate())));
 		}
