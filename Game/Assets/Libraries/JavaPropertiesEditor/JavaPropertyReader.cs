@@ -57,10 +57,13 @@ namespace Kajabity.Tools.Java
         private const int STATE_value_ws = 9;
         private const int STATE_finish = 10;
 
+		#pragma warning disable 0414 //Disable unused warning
         private static string [] stateNames = new string[] 
         { "STATE_start", "STATE_comment", "STATE_key", "STATE_key_escape", "STATE_key_ws", 
             "STATE_before_separator", "STATE_after_separator", "STATE_value", "STATE_value_escape", 
-            "STATE_value_ws", "STATE_finish" };
+            "STATE_value_ws", "STATE_finish" 
+		};
+		#pragma warning restore 0414 //Restore unused warning
         
         private static readonly int [][] states = new int[][] {
             new int[]{//STATE_start

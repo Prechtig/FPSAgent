@@ -200,10 +200,12 @@ public class Weapon : MonoBehaviour
 	{
 		float w = crosshairFirstModeHorizontal.width;
 		float h = crosshairFirstModeHorizontal.height;
-		Rect position1 = new Rect ((Screen.width + w) / 2 + (spread * sizeMultiplier), (Screen.height - h) / 2, w, h);
-		Rect position2 = new Rect ((Screen.width - w) / 2, (Screen.height + h) / 2 + (spread * sizeMultiplier), w, h);
-		Rect position3 = new Rect ((Screen.width - w) / 2 - (spread * sizeMultiplier) - w, (Screen.height - h) / 2, w, h);
-		Rect position4 = new Rect ((Screen.width - w) / 2, (Screen.height - h) / 2 - (spread * sizeMultiplier) - h, w, h);
+		/*
+			Rect position1 = new Rect ((Screen.width + w) / 2 + (spread * sizeMultiplier), (Screen.height - h) / 2, w, h);
+			Rect position2 = new Rect ((Screen.width - w) / 2, (Screen.height + h) / 2 + (spread * sizeMultiplier), w, h);
+			Rect position3 = new Rect ((Screen.width - w) / 2 - (spread * sizeMultiplier) - w, (Screen.height - h) / 2, w, h);
+			Rect position4 = new Rect ((Screen.width - w) / 2, (Screen.height - h) / 2 - (spread * sizeMultiplier) - h, w, h);
+		*/
 	}
 
 	void CheckInput ()
@@ -232,8 +234,8 @@ public class Weapon : MonoBehaviour
 		//StartCoroutine(Kick3(camKB, new Vector3(-Random.Range(minKB, maxKB), Random.Range(minKBSide, maxKBSide), 0), 0.1f));
 		//StartCoroutine(Kick3(wepKB, new Vector3(-Random.Range(minKB, maxKB), Random.Range(minKBSide, maxKBSide), 0), 0.1f));
 
-		float actualSpread = Random.Range (-spread, spread);
-		Vector3 position = new Vector3 (bulletGo.position.x - actualSpread, bulletGo.position.y - actualSpread, bulletGo.position.z);
+		//float actualSpread = Random.Range (-spread, spread);
+		//Vector3 position = new Vector3 (bulletGo.position.x - actualSpread, bulletGo.position.y - actualSpread, bulletGo.position.z);
 
 		//Bullet spread
 		//Vector3 direction = gameObject.transform.TransformDirection(new Vector3(Random.Range(-0.01f, 0.01f) * spread, Random.Range(-0.01f, 0.01f) * spread, 1));
