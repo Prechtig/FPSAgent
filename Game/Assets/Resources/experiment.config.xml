@@ -4,19 +4,19 @@
 	<inputs>4</inputs>
 	<outputs>6</outputs>
 
-	<parallelAgents>5</parallelAgents>
-	<TrialCount>10</TrialCount>
-	<TrialDuration>20</TrialDuration>
+	<parallelAgents>1</parallelAgents>
+	<TrialCount>1</TrialCount>
+	<TrialDuration>99999</TrialDuration>
 	<StoppingFitness>99999</StoppingFitness>
 
-	<PopulationSize>100</PopulationSize>
-	<SpecieCount>15</SpecieCount>
+	<PopulationSize>1</PopulationSize>
+	<SpecieCount>1</SpecieCount>
 	<Activation>
 	<Scheme>Acyclic</Scheme>
 	</Activation>
 	<ComplexityRegulationStrategy>Absolute</ComplexityRegulationStrategy>
 	<ComplexityThreshold>1000</ComplexityThreshold>
-	<PersistNGenerations>10</PersistNGenerations>
+	<PersistNGenerations>9999</PersistNGenerations>
 	<Description>
 	</Description>
 </Config>

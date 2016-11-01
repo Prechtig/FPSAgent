@@ -29,8 +29,8 @@ public class RandomHorizontalBotSpawn : MonoBehaviour, IBotSpawn
 			b.GetComponent<BotVitals> ().bs = this;
 
 
-			BotMovement movement = b.AddComponent<BotMovement> ();
-			movement.waypoints = SpawnPoints;
+			//BotMovement movement = b.AddComponent<BotMovement> ();
+			//movement.waypoints = SpawnPoints;
 			Bots.Add (b);
 		}
 	}

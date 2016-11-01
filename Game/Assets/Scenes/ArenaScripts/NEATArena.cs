@@ -11,10 +11,10 @@ public class NEATArena : MonoBehaviour{
 	public Transform[] PlayerSpawnPoints;
 	public Transform[] BotSpawnPoints;
 
-	//private RandomHorizontalPlayerSpawn PlayerSpawn;
-	//private RandomHorizontalBotSpawn BotSpawn;
-	private RandomPlayerSpawn PlayerSpawn;
-	private RandomBotSpawn BotSpawn;
+	private RandomHorizontalPlayerSpawn PlayerSpawn;
+	private RandomHorizontalBotSpawn BotSpawn;
+	//private RandomPlayerSpawn PlayerSpawn;
+	//private RandomBotSpawn BotSpawn;
 
 	private IList ArenaObjects;
 
@@ -50,19 +50,7 @@ public class NEATArena : MonoBehaviour{
 	public static void ResetYOffset(){
 		yOffset = 0;
 	}
-	
-	void FixedUpdate () {
-		if (BotSpawn.Bots.Count > 0) {
-			float angle = Mathf.PI;
-			float k = 100f;
-			float c = 2f;
-			
-			angle = Vector3.Angle (PlayerSpawn.Player.transform.forward, BotSpawn.Bots [0].transform.position - PlayerSpawn.Player.transform.position) * Mathf.Deg2Rad;
-			//RunningFitness += k / (1 + (angle * c));
-			RunningFitness += k / (1 + (angle * angle));
-			RunningFitnessCount++;
-		}
-	}
+
 
 	private void CreateArena(float x, float z, float wallHeight, float wallThickness) {
 		// Create floor
@@ -139,7 +127,7 @@ public class NEATArena : MonoBehaviour{
 	}
 
 	public void SpawnPlayer(){
-		PlayerSpawn = gameObject.AddComponent<RandomPlayerSpawn>();
+		PlayerSpawn = gameObject.AddComponent<RandomHorizontalPlayerSpawn>();
 		PlayerSpawn.X = x;
 		PlayerSpawn.Z = z;
 		PlayerSpawn.SpawnPoints = PlayerSpawnPoints;
@@ -147,7 +135,7 @@ public class NEATArena : MonoBehaviour{
 	}
 
 	public void SpawnEnemies(){
-		BotSpawn = gameObject.AddComponent<RandomBotSpawn> ();
+		BotSpawn = gameObject.AddComponent<RandomHorizontalBotSpawn> ();
 		BotSpawn.X = x;
 		BotSpawn.Z = z;
 		BotSpawn.SpawnPoints = BotSpawnPoints;
@@ -170,7 +158,7 @@ public class NEATArena : MonoBehaviour{
 		fitness = k / (1 + (angle * c));
 		*/
 
-		fitness += RunningFitness / RunningFitnessCount;
+		//fitness += RunningFitness / RunningFitnessCount;
 		return fitness + BotSpawn.GetFitness ();
 	}
 

@@ -30,7 +30,7 @@ public class NEATController : UnitController {
 	// Update is called once per frame
 	void FixedUpdate()
 	{
-		if (IsRunning) {
+		if (false) {
 			ISignalArray inputArr = box.InputSignalArray;
 			float[] groundTruths = GroundTruth.CalculateGroundTruthsScaled (playerCam, 1);
 			inputArr.CopyFrom(groundTruths.Select(f => (double)f).ToArray(), 0);
@@ -44,14 +44,14 @@ public class NEATController : UnitController {
 			outputArr.CopyTo (output, 0);
 
 			//Set outputs
-			/*
+
 			output[0] = 0;
 			output[1] = 0;
 			output[2] = 0;
 			output[3] = 0;
 			output[4] = 0; //shooting
 			output[5] = 0;
-			*/
+
 
 
 			//Mouse movement
