@@ -8,7 +8,6 @@ import java.util.Properties;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
-import org.deeplearning4j.parallelism.ParallelWrapper;
 import org.deeplearning4j.util.ModelSerializer;
 import org.mma.imagerecognition.dao.FileSystemDAO;
 import org.mma.imagerecognition.dataobjects.TrainingData;
@@ -16,12 +15,11 @@ import org.mma.imagerecognition.executables.DeadNeuronDetector;
 import org.mma.imagerecognition.tools.PropertiesReader;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 
-public class ContinuousTraining implements Trainable {
+public abstract class ContinuousTraining implements Trainable {
 	
-	private MultiLayerNetwork model;
-	private MultiLayerConfiguration configuration;
-	private int height, width, featureCount, nEpochs;
-	private int latestEpoch = 0;
+	protected MultiLayerNetwork model;
+	protected MultiLayerConfiguration configuration;
+	protected int height, width, featureCount, nEpochs, latestEpoch = 0;
 	private boolean outputDeadNeurons, saveModel;
 	
 	public ContinuousTraining() throws FileNotFoundException, IOException {
@@ -40,26 +38,7 @@ public class ContinuousTraining implements Trainable {
         }
 	}
 	
-	public void trainParallel(DataSetIterator trainIterator, DataSetIterator testIterator) {
-		ParallelWrapper wrapper = new ParallelWrapper.Builder(model)
-	        .prefetchBuffer(4)
-	        .workers(4)
-	        .averagingFrequency(1)
-	        .reportScoreAfterAveraging(true)
-	        .useLegacyAveraging(true)
-	        .build();
-		
-		for(int i = latestEpoch; i <= nEpochs; i++) {
-            wrapper.fit(trainIterator);
-            System.out.println(String.format("*** Completed epoch %d ***", i));
-            testIterator.reset();
-            
-            saveModel(model, i);
-            outputDeadNeurons(model);
-        }
-	}
-	
-	private void saveModel(MultiLayerNetwork model, int numeration) {
+	protected void saveModel(MultiLayerNetwork model, int numeration) {
         if(saveModel) {
             try {
 				ModelSerializer.writeModel(model, FileSystemDAO.getPathOfLatestModelFile(numeration).toString(), true);
@@ -69,13 +48,13 @@ public class ContinuousTraining implements Trainable {
         }
 	}
 	
-	private void outputDeadNeurons(MultiLayerNetwork model) {
+	protected void outputDeadNeurons(MultiLayerNetwork model) {
 		if(outputDeadNeurons) {
 			DeadNeuronDetector.getDeadNeurons(model, 100);
 		}
 	}
 	
-	private void init() throws FileNotFoundException, IOException {
+	protected void init() throws FileNotFoundException, IOException {
 		Properties projectProperties = PropertiesReader.getProjectProperties();
 		width = Integer.parseInt(projectProperties.getProperty("training.image.width"));
 		height = Integer.parseInt(projectProperties.getProperty("training.image.height"));
@@ -87,11 +66,11 @@ public class ContinuousTraining implements Trainable {
         initNetwork();
 	}
 	
-	private void initConfig() {
+	protected void initConfig() {
 		configuration = BuilderFactory.getVeryShallowConvNet(height, width, featureCount).build();
 	}
 	
-	private void initNetwork() throws FileNotFoundException, IOException {
+	protected void initNetwork() throws FileNotFoundException, IOException {
 		if(PropertiesReader.getProjectProperties().getProperty("training.continueFromLatestModel").equals("true")) {
 			model = ModelSerializer.restoreMultiLayerNetwork(new FileInputStream(FileSystemDAO.getPathOfLatestModelFile().toString()));
 			latestEpoch = FileSystemDAO.findLatestModelId();

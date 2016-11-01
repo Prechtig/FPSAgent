@@ -18,8 +18,8 @@ public class PersistImages {
 	private static final int batchDownloadSize = 250;
 	
 	public static void main(String[] args) throws IOException {
-		int samples = 500;
-		int fromId = 45000;
+		int samples = 1000;
+		int fromId = 73075;
 		int toId = fromId + samples;
 		
 		FileSystemDAO.createFolders();
