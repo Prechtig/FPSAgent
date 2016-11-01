@@ -58,7 +58,7 @@ public class LayerActivator {
 			System.out.println(Arrays.toString(INDArrayTool.toFlatDoubleArray(network.getLayer(currentLayer).activate())));
 		}
 		
-		System.out.println(Arrays.toString(image.getFeatureDoubles()));
+		System.out.println(Arrays.toString(image.getFeatures()));
 	}
 	
 	private static void persistFeatureMap(INDArray featureMaps, int layer) throws IOException {

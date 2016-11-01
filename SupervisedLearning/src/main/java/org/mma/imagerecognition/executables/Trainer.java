@@ -1,5 +1,6 @@
 package org.mma.imagerecognition.executables;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.mma.imagerecognition.configuration.ContinuousParallelTraining;
@@ -17,65 +18,97 @@ import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 
 public class Trainer {
 	
-	@SuppressWarnings("unused")
-	private static final long GIGABYTE = 1024 * 1024 * 1024;
-	
+	private static int testSize, validationSize, trainSize, batchSize;
+	private static boolean checkIntegrity;
+	private static String trainingPersistenceType, trainingType;
+
 	public static void main(String[] args) throws IOException {
-		int testSize = intFromProperty("training.testSize");
-		int validationSize = intFromProperty("training.validationSize");
-		int trainSize = intFromProperty("training.trainSize");
-		int batchSize = intFromProperty("training.persistence.batchSize");
-		
-		boolean checkIntegrity = boolFromProperty("training.persistence.checkIntegrity");
-		@SuppressWarnings("unused")
-		boolean sliEnabled = boolFromProperty("training.sli");
-		
-		String trainingPersistenceType = stringFromProperty("training.persistence.type");
-		String trainingType = stringFromProperty("training.type");
-		
+		init();
+		doTrain();
+	}
+	
+	private static void configureND4J() {
 		DataTypeUtil.setDTypeForContext(DataBuffer.Type.FLOAT);
+		/*
+		final long GIGABYTE = 1024 * 1024 * 1024;
+		CudaEnvironment.getInstance().getConfiguration()
+	    .setMaximumDeviceCacheableLength(GIGABYTE * 1)
+	    .setMaximumDeviceCache			(GIGABYTE * 6)
+	    .setMaximumHostCacheableLength	(GIGABYTE * 1)
+	    .setMaximumHostCache			(GIGABYTE * 5)
+		.allowMultiGPU(boolFromProperty("training.sli"));
+		 */
+	}
+	
+	private static void doTrain() throws FileNotFoundException, IOException {
+		DataSetIterator trainIterator = getIterator(batchSize, trainSize);
+		DataSetIterator testIterator = getIterator(batchSize, testSize);
 		
-//		CudaEnvironment.getInstance().getConfiguration()
-//		    .setMaximumDeviceCacheableLength(GIGABYTE * 1)
-//		    .setMaximumDeviceCache			(GIGABYTE * 6)
-//		    .setMaximumHostCacheableLength	(GIGABYTE * 1)
-//		    .setMaximumHostCache			(GIGABYTE * 5)
-//			.allowMultiGPU(sliEnabled);
-		
-		FileSystemDAO.createFolders();
-		if(trainingPersistenceType == null) {
-			System.out.println("Please specify the persistence type of training data");
-			System.exit(1);
+		getTrainer().train(trainIterator, testIterator);
+	}
+	
+	private static DataSetIterator getIterator(int batchSize, int numExamples) {
+		switch (trainingPersistenceType) {
+		case "filesystem":
+			return new FileSystemIterator(batchSize, numExamples);
+		case "database":
+			return new DatabaseIterator(batchSize, numExamples);
+		default:
+			return null;
 		}
-		
-		Trainable trainer = null;
+	}
+	
+	private static Trainable getTrainer() throws FileNotFoundException, IOException {
 		switch (trainingType) {
 		case "parallel":
-			trainer = new ContinuousParallelTraining();
-			break;
+			return new ContinuousParallelTraining();
 		case "sequential":
-			trainer = new ContinuousSequentialTraining();
-			break;
+			return new ContinuousSequentialTraining();
 		case "early-stopping":
-			trainer = new EarlyStoppingTraining();
+			return new EarlyStoppingTraining();
 		default:
-			System.out.println("Please provide an option for \"training.type\" in the properties.");
-			System.out.println("Currently \"parallel\", \"sequential\" and \"early-stopping\" is supported");
-			System.exit(12321);
+			return null;
 		}
+	}
+	
+	private static void init() throws IOException {
+		configureND4J();
 		
-		DataSetIterator trainIterator, testIterator;
+		testSize = intFromProperty("training.testSize");
+		validationSize = intFromProperty("training.validationSize");
+		trainSize = intFromProperty("training.trainSize");
+		batchSize = intFromProperty("training.persistence.batchSize");
+		
+		checkIntegrity = boolFromProperty("training.persistence.checkIntegrity");
+		
+		trainingPersistenceType = stringFromProperty("training.persistence.type");
+		trainingType = stringFromProperty("training.type");
+		
+		checkProperties();
+		
+		FileSystemDAO.createFolders();
 		if(trainingPersistenceType.equals("filesystem")) {
 			FileSystemDAO.persist(trainSize, validationSize, testSize, batchSize, checkIntegrity);
-			
-			testIterator = new FileSystemIterator(batchSize, testSize);
-			trainIterator = new FileSystemIterator(batchSize, trainSize);
-		} else {
-			testIterator = new DatabaseIterator(batchSize, testSize);
-			trainIterator = new DatabaseIterator(batchSize, trainSize);
+		}
+	}
+	
+	private static void checkProperties() {
+		boolean exit = false;
+		
+		if(trainingPersistenceType == null) {
+			System.out.println("Please provide an option for \"training.persistence.type\" in the properties.");
+			System.out.println("Currently \"filesystem\" and \"database\" is supported");
+			exit = true;
+		}
+		if(trainingType == null) {
+			System.out.println("Please provide an option for \"training.type\" in the properties.");
+			System.out.println("Currently \"parallel\", \"sequential\" and \"early-stopping\" is supported");
+			exit = true;
 		}
 		
-		trainer.train(trainIterator, testIterator);
+		if(exit) {
+			System.exit(12321);
+		}
 	}
 	
 	private static int intFromProperty(String property) {

@@ -44,7 +44,7 @@ public class FileSystemIterator extends BaseIterator {
 	@Override
 	public int totalOutcomes() {
 		if(outputColumns == -1) {
-			outputColumns = FileSystemDAO.load(1).getFeatureDoubles().length;
+			outputColumns = FileSystemDAO.load(1).getFeatures().length;
 		}
 		return outputColumns;
 	}

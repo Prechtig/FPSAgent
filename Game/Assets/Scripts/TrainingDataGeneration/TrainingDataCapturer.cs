@@ -8,14 +8,11 @@ public class TrainingDataCapturer : MonoBehaviour
 	private static int saveInterval;
 	private int frameCounter = 0;
 
-	private static int bots;
-
 	private string cameraTag = "MainCamera";
 	private Camera playerCam;
 
 	static TrainingDataCapturer() {
 		JavaProperties projectProperties = PropertiesReader.GetPropertyFile (PropertyFile.Project);
-		bots = int.Parse (projectProperties.GetProperty ("game.bots"));
 		saveInterval = int.Parse(projectProperties.GetProperty("datageneration.screenshot.save.interval"));
 	}
 
@@ -41,9 +38,9 @@ public class TrainingDataCapturer : MonoBehaviour
 	}
 
 	public TrainingData CaptureTrainingData() {
-		float[] groundTruths = GroundTruth.CalculateGroundTruths (playerCam, bots);
+		float[] groundTruths = GroundTruth.CalculateGroundTruths (playerCam, 1);
 		Screenshot screenshot = ScreenSnapper.SnapScreenshot (playerCam);
-		return new TrainingData (bots, groundTruths, screenshot);
+		return new TrainingData (groundTruths, screenshot);
 	}
 
 	private bool IsCameraInitialized() {

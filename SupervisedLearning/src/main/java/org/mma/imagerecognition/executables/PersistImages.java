@@ -18,9 +18,9 @@ public class PersistImages {
 	private static final int batchDownloadSize = 250;
 	
 	public static void main(String[] args) throws IOException {
-		int samples = 1000;
-		int fromId = 73075;
-		int toId = fromId + samples;
+		int samples = 500;
+		int fromId = 1;
+		int toId = fromId + samples - 1;
 		
 		FileSystemDAO.createFolders();
 		for(int id = fromId; id <= toId; id += batchDownloadSize) {
@@ -48,7 +48,7 @@ public class PersistImages {
 	public static void saveImage(int id) {
 		try {
 		TrainingData td = FileSystemDAO.load(id);
-		if(td.getFeatureDoubles()[3] == 1d) {
+		if(td.isWithinSight()) {
 			ImageTool.printColoredPngImage(td.getPixelData(), td.getWidth(), new File(imagesWithBotsFolder + File.separator + td.getId() + ".png"));
 		} else {
 			ImageTool.printColoredPngImage(td.getPixelData(), td.getWidth(), new File(imagesWithoutBotsFolder + File.separator + td.getId() + ".png"));

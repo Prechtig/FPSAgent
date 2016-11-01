@@ -110,7 +110,7 @@ public class FileSystemDAO {
 		byte[] pixelData = td.getPixelData();
 		int width = td.getWidth();
 		int height = td.getHeight();
-		double[] features = td.getFeatureDoubles();
+		double[] features = td.getFeatures();
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append(id).append(System.lineSeparator());

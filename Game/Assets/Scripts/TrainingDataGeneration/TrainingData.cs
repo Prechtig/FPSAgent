@@ -3,18 +3,12 @@ using System.Collections;
 
 public class TrainingData {
 
-	private readonly int numberOfBots;
 	private readonly float[] groundTruths;
 	private readonly Screenshot screenshot;
 
-	public TrainingData(int numberOfBots, float[] groundTruths, Screenshot screenshot) {
-		this.numberOfBots = numberOfBots;
+	public TrainingData(float[] groundTruths, Screenshot screenshot) {
 		this.groundTruths = groundTruths;
 		this.screenshot = screenshot;
-	}
-
-	public int GetNumberOfBots() {
-		return numberOfBots;
 	}
 
 	public float[] GetGroundTruths() {
