@@ -75,7 +75,7 @@ public abstract class BaseIterator implements DataSetIterator {
 		for(int i = 0; i < trainingData.size(); i++) {
 			TrainingData td = trainingData.get(i);
 			pixelData[i] = ImageTool.toScaledDoubles(td.getPixelData());
-			groundTruthValues[i] = td.getFeatureDoubles();
+			groundTruthValues[i] = td.getFeatures();
 		}
 		return new DataSet(Nd4j.create(pixelData), Nd4j.create(groundTruthValues));
 	}

@@ -43,7 +43,7 @@ public class Evaluator {
 		TrainingData randomImage = TrainingDbDao.getImages("(" + imageId + ")").get(0);
 		
 		ImageTool.printColoredPngImage(randomImage.getPixelData(), randomImage.getWidth(), new File("image.png"));
-		System.out.println(Arrays.toString(randomImage.getFeatureDoubles()));
+		System.out.println(Arrays.toString(randomImage.getFeatures()));
 		System.out.println(Arrays.toString(INDArrayTool.toFlatDoubleArray(network.output(Nd4j.create(ImageTool.toScaledDoubles(randomImage.getPixelData()))))));
 	}
 	

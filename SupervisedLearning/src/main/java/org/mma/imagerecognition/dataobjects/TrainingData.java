@@ -2,28 +2,26 @@ package org.mma.imagerecognition.dataobjects;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.mma.imagerecognition.tools.PropertiesReader;
 import org.mma.imagerecognition.tools.ScaleTool;
 
 public class TrainingData {
-	private int height, width, id;
-	private byte[] pixelData;
-	private Map<String, Double> features = new HashMap<String, Double>();
-	private double[] featureDoubles;
+	private final int height, width, id;
+	private final byte[] pixelData;
+	private final double[] features;
+	private final double horizontalAngle, verticalAngle, distance;
+	private final boolean withinSight;
+	
+	private static final int horizontalAngleIndex = 0, verticalAngleIndex = 1, distanceIndex = 2, withinSightIndex = 3;
 	
 	public static final String horizontalAngleKey = "horizontalAngle";
 	public static final String verticalAngleKey = "verticalAngle";
 	public static final String distanceKey = "distance";
 	public static final String withinSightKey = "withinsight";
 	
-	public static final int numberOfBots = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("game.bots"));
-	
 	public static int getFeatureCount() {
-		int featuresPerBot = Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.featuresPerBot"));
-		return numberOfBots * featuresPerBot;
+		return Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.featuresPerBot"));
 	}
 	
 	public TrainingData(ResultSet rs) throws SQLException {
@@ -32,22 +30,17 @@ public class TrainingData {
 		height = rs.getInt("height");
 		width = rs.getInt("width");
 		
-		featureDoubles = new double[numberOfBots * 4];
-		int featureCounter = 0;
-		for(int i = 1; i <= numberOfBots; i++) {
-			double withinSightValue = rs.getDouble(getNumeratedKey(withinSightKey, i));
-			boolean withinSight = withinSightValue == 1d;
-			
-			featureDoubles[featureCounter++] = withinSight ? ScaleTool.scaleAngle(rs.getDouble(getNumeratedKey(horizontalAngleKey, i))) : 2d;
-			featureDoubles[featureCounter++] = withinSight ? ScaleTool.scaleAngle(rs.getDouble(getNumeratedKey(verticalAngleKey, i))) : 2d;
-			featureDoubles[featureCounter++] = ScaleTool.scaleDistance(rs.getDouble(getNumeratedKey(distanceKey, i)));
-			featureDoubles[featureCounter++] = withinSightValue;
-			
-			addFeature(rs, horizontalAngleKey, i);
-			addFeature(rs, verticalAngleKey, i);
-			addFeature(rs, distanceKey, i);
-			addFeature(rs, withinSightKey, i);
-		}
+		double withinSightValue = rs.getDouble(withinSightKey);
+		withinSight = withinSightValue == 1d;
+		horizontalAngle = withinSight ? ScaleTool.scaleAngle(rs.getDouble(horizontalAngleKey)) : 2d;
+		verticalAngle = withinSight ? ScaleTool.scaleAngle(rs.getDouble(verticalAngleKey)) : 2d;
+		distance = ScaleTool.scaleDistance(rs.getDouble(distanceKey));
+		
+		features = new double[4];
+		features[horizontalAngleIndex] = horizontalAngle;
+		features[verticalAngleIndex] = verticalAngle;
+		features[distanceIndex] = distance;
+		features[withinSightIndex] = withinSightValue;
 	}
 	
 	public TrainingData(int id, int width, int height, byte[] pixelData, double[] features) {
@@ -55,71 +48,46 @@ public class TrainingData {
 		this.width = width;
 		this.height = height;
 		this.pixelData = pixelData;
-		this.featureDoubles = features;
+		this.features = features;
+		horizontalAngle	= features[horizontalAngleIndex];
+		verticalAngle	= features[verticalAngleIndex];
+		distance		= features[distanceIndex];
+		withinSight		= features[withinSightIndex] == 1d;
 	}
 	
-	public double[] getFeatureDoubles() {
-		return featureDoubles;
+	public double[] getFeatures() {
+		return features;
 	}
 	
-	public double[] getFeatureForAllBots(String key) {
-		double[] values = new double[numberOfBots];
-		for(int i = 1; i <= numberOfBots; i++) {
-			values[i] = features.get(key + i);
-		}
-		return values;
-	}
-	
-	private void addFeature(ResultSet rs, String key, int suffix) throws SQLException {
-		String keyNumerated = getNumeratedKey(key, suffix);
-		features.put(keyNumerated, rs.getDouble(keyNumerated));
-	}
-	
-	private String getNumeratedKey(String key, int suffix) {
-		return key + suffix;
-	}
-	
-	public TrainingData() {
-		super();
-	}
-
 	public int getHeight() {
 		return height;
-	}
-
-	public void setHeight(int height) {
-		this.height = height;
 	}
 
 	public int getWidth() {
 		return width;
 	}
 
-	public void setWidth(int width) {
-		this.width = width;
-	}
-
 	public byte[] getPixelData() {
 		return pixelData;
 	}
 
-	public void setPixelData(byte[] pixelData) {
-		this.pixelData = pixelData;
-	}
-
-	public Map<String, Double> getFeatures() {
-		return features;
-	}
-
-	public void setFeatures(Map<String, Double> features) {
-		this.features = features;
-	}
-	
-	public void putFeature(String name, Double value) {
-		features.put(name, value);
-	}
-	
 	public int getId() {
 		return id;
+	}
+
+	public double getHorizontalAngle() {
+		return horizontalAngle;
+	}
+
+	public double getVerticalAngle() {
+		return verticalAngle;
+	}
+
+	public double getDistance() {
+		return distance;
+	}
+
+	public boolean isWithinSight() {
+		return withinSight;
 	}
 }
