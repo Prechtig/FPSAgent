@@ -88,90 +88,6 @@ public class ImageTool {
 		return result;
 	}
 	
-	/**
-	 * Converts a flattened array of pixel data into a 3D array of pixel data.
-	 * 
-	 * <pre>
-	 * For instance given three color channels (R, G, B) and a 2x2 image
-	 * the flattened array must be in the form of:
-	 * 	[R1, B1, G1, R2, B2, G2, R3, B3, G3, R4, B4, G4]
-	 * where the original image is
-	 * 	-----------
-	 * 	| P3 | P4 |
-	 * 	-----------
-	 * 	| P1 | P2 |
-	 * 	-----------
-	 * 
-	 * The resulting 3D array are of the form:
-	 * [] is a row of pixels
-	 * [][] is a specific pixel
-	 * [][][] is a specific color value
-	 * </pre>
-	 * @param flattened The flattened array of pixel data
-	 * @param width The width of the original image
-	 * @param colorChannels The number of color channels used per pixel
-	 * @return A 3D representation of the flattened pixel data
-	 */
-//	public static float[][][] convertFlattenedTo3D(byte[] flattened, int width, int colorChannels) {
-//		int height = calculateHeight(flattened.length, width, colorChannels);
-//		
-//		float[][][] result = new float[height][width][colorChannels];
-//		
-//		for(int row = 0; row < height; row++) {
-//			for(int pixel = 0; pixel < width; pixel++) {
-//				for(int colorChannel = 0; colorChannel < colorChannels; colorChannel++) {
-//					int index = (row * width * colorChannels) + (pixel * colorChannels) + colorChannel; 
-//					result[row][pixel][colorChannel] = flattened[index];
-//				}
-//			}
-//		}
-//		return result;
-//	}
-	
-//	private static int calculateHeight(int arrayLength, int width, int colorChannels) {
-//		return arrayLength / width / colorChannels;
-//	}
-	
-//	private static int calculateHeight(int arrayLength, int width) {
-//		return calculateHeight(arrayLength, width, 3);
-//	}
-	
-//	public static INDArray convertToINDArray(byte[] flattened, int width) {
-//		return Nd4j.create(toScaledDoubleStream(flattened).toArray());
-//	}
-	
-//	public static INDArray convertToINDArray(DoubleStream ds, int width) {
-//		double[] array = ds.toArray();
-//		int height = calculateHeight(array.length, width);
-//		return Nd4j.create(array, new int[] {width, height, 3}, 'c');
-//	}
-	
-//	public static INDArray convertToINDArray(double[][] values) {
-//		return Nd4j.create(values);
-//	}
-	
-//	public static INDArray convertToINDArray(int width, int height, double[][] values) {
-//		return Nd4j.create(flatten(values), new int[] {width, height, 3, values.length}, 'c');
-//	}
-	
-//	public static double[] flatten(double[][] values) {
-//		int arrLength = values[0].length;
-//		double[] result = new double[values.length * arrLength];
-//		for(int i = 0; i < values.length; i++) {
-//			System.arraycopy(values[i], 0, result, i * arrLength, arrLength);
-//		}
-//		return result;
-//	}
-
-//	public static Float[] mapToFloats(byte[] bs, Function<? super Byte, ? extends Float> mapper) {
-//		IntStream.range(0, bs.length).mapToDouble(i -> scale(bs[i])).toArray();
-//		return Bytes.asList(bs).parallelStream().map(mapper).toArray(Float[]::new);
-//	}
-	
-//	public static DoubleStream toScaledDoubleStream(byte[] bs) {
-//		return toDoubleStream(bs).map(d -> scale(d));
-//	}
-	
 	public static double[] toScaledDoubles(byte[] bs) {
 		final int channelLength = bs.length / 3;
 		
@@ -191,18 +107,6 @@ public class ImageTool {
 		System.arraycopy(b, 0, result, channelLength * 2, channelLength);
 		return result;
 	}
-	
-//	public static DoubleStream toDoubleStream(byte[] bs) {
-//		return DoubleStream.of(toDoubleArray(bs));
-//	}
-	
-//	public static double[] toDoubleArray(byte[] bs) {
-//		double[] ds = new double[bs.length];
-//		for(int i = 0; i < ds.length; i++) {
-//			ds[i] = toDouble(bs[i]);
-//		}
-//		return ds;
-//	}
 	
 	public static double scale(double d) {
 		return d / (double) 0xFF;
