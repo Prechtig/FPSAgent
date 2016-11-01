@@ -4,7 +4,8 @@ import java.io.IOException;
 
 import org.mma.imagerecognition.configuration.ContinuousParallelTraining;
 import org.mma.imagerecognition.configuration.ContinuousSequentialTraining;
-import org.mma.imagerecognition.configuration.ContinuousTraining;
+import org.mma.imagerecognition.configuration.EarlyStoppingTraining;
+import org.mma.imagerecognition.configuration.Trainable;
 import org.mma.imagerecognition.dao.FileSystemDAO;
 import org.mma.imagerecognition.iterator.DatabaseIterator;
 import org.mma.imagerecognition.iterator.FileSystemIterator;
@@ -47,7 +48,7 @@ public class Trainer {
 			System.exit(1);
 		}
 		
-		ContinuousTraining trainer = null;
+		Trainable trainer = null;
 		switch (trainingType) {
 		case "parallel":
 			trainer = new ContinuousParallelTraining();
@@ -55,15 +56,17 @@ public class Trainer {
 		case "sequential":
 			trainer = new ContinuousSequentialTraining();
 			break;
+		case "early-stopping":
+			trainer = new EarlyStoppingTraining();
 		default:
 			System.out.println("Please provide an option for \"training.type\" in the properties.");
-			System.out.println("Currently \"parallel\" and \"sequential\" is supported");
+			System.out.println("Currently \"parallel\", \"sequential\" and \"early-stopping\" is supported");
 			System.exit(12321);
 		}
 		
 		DataSetIterator trainIterator, testIterator;
 		if(trainingPersistenceType.equals("filesystem")) {
-			Persistance.persist(trainSize, validationSize, testSize, batchSize, checkIntegrity);
+			FileSystemDAO.persist(trainSize, validationSize, testSize, batchSize, checkIntegrity);
 			
 			testIterator = new FileSystemIterator(batchSize, testSize);
 			trainIterator = new FileSystemIterator(batchSize, trainSize);
