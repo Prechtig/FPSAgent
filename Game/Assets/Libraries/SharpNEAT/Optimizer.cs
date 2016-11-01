@@ -236,7 +236,13 @@ public class Optimizer : MonoBehaviour {
 		UnitController ct = ControllerMap[box];
 		NEATArena nt = ArenaMap [box];
 
-		FitnessMap.Add (box, nt.GetFitness ());
+		if (!RunBestNetwork) {
+			if (FitnessMap.ContainsKey (box)) {
+				FitnessMap [box] = nt.GetFitness ();
+			} else {
+				FitnessMap.Add (box, nt.GetFitness ());
+			}
+		}
 
 		ControllerMap.Remove (box);
 		ArenaMap.Remove (box);
@@ -251,6 +257,8 @@ public class Optimizer : MonoBehaviour {
 
 			NeatGenome genome = null;
 			string champFileLoadPath = Application.persistentDataPath + string.Format ("/{0}/{1}.champ.xml", Generation - 1, "FPSAgent");
+			//string champFileLoadPath = Application.persistentDataPath + string.Format ("/{0}/{1}.champ.xml", 248, "FPSAgent");
+
 			// Try to load the genome from the XML document.
 			try {
 				using (XmlReader xr = XmlReader.Create (champFileLoadPath))

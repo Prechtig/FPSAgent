@@ -62,7 +62,6 @@ namespace SharpNEAT.Core
 			}
 			for (int i = 0; i < _optimizer.Trials; i++) {
 				_phenomeEvaluator.Reset ();
-
 				dict = new Dictionary<TGenome, TPhenome> ();
 				foreach (TGenome genome in genomeList) {
 					//Run best netowork
