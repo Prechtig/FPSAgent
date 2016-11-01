@@ -87,8 +87,20 @@ public class Experiment : INeatExperiment
 
 		_eaParams = new NeatEvolutionAlgorithmParameters();
 		_eaParams.SpecieCount = _specieCount;
+		_eaParams.OffspringAsexualProportion = 0.75;
+		_eaParams.OffspringSexualProportion = 0.25;
+		_eaParams.InterspeciesMatingProportion = 0.001;
+		_eaParams.BestFitnessMovingAverageHistoryLength = 30;
+		_eaParams.ComplexityMovingAverageHistoryLength = 30;
+		_eaParams.MeanSpecieChampFitnessMovingAverageHistoryLength = 30;
+
 		_neatGenomeParams = new NeatGenomeParameters();
-		_neatGenomeParams.FeedforwardOnly = _activationScheme.AcyclicNetwork;
+		_neatGenomeParams.FeedforwardOnly = _activationScheme.AcyclicNetwork; //Is it correct that the network is feed forwrd?
+		_neatGenomeParams.DisjointExcessGenesRecombinedProbability = 0.25;
+		_neatGenomeParams.ConnectionWeightMutationProbability = 0.8d;
+		_neatGenomeParams.AddNodeMutationProbability = 0.03;
+		_neatGenomeParams.AddConnectionMutationProbability = 0.05;
+
 
 		_inputCount = input;
 		_outputCount = output;

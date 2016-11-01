@@ -49,10 +49,9 @@ public class NEATController : UnitController {
 			output[1] = 0;
 			output[2] = 0;
 			output[3] = 0;
-			output[4] = 1; //shooting
+			output[4] = 0; //shooting
 			output[5] = 0;
 			*/
-
 
 
 			//Mouse movement
@@ -76,7 +75,7 @@ public class NEATController : UnitController {
 			} else if (output [5] > reloadThreshold) {
 				weapon.Reload ();
 			}
-			}
+		}
 	}
 
 	public override void Stop()

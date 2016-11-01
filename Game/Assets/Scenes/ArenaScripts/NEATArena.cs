@@ -58,7 +58,8 @@ public class NEATArena : MonoBehaviour{
 			float c = 2f;
 			
 			angle = Vector3.Angle (PlayerSpawn.Player.transform.forward, BotSpawn.Bots [0].transform.position - PlayerSpawn.Player.transform.position) * Mathf.Deg2Rad;
-			RunningFitness += k / (1 + (angle * c));
+			//RunningFitness += k / (1 + (angle * c));
+			RunningFitness += k / (1 + (angle * angle));
 			RunningFitnessCount++;
 		}
 	}

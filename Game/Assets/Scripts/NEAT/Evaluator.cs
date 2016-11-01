@@ -36,10 +36,13 @@ public class Evaluator : IPhenomeEvaluator<IBlackBox> {
 			optimizer.Evaluate (box);
 			yield return new WaitForSeconds (optimizer.TrialDuration);
 			optimizer.StopEvaluation (box);
-			float fit = optimizer.GetFitness (box);
 
-			FitnessInfo fitness = new FitnessInfo (fit, fit);
-			dict.Add (box, fitness);
+			if (!optimizer.RunBestNetwork) {
+				float fit = optimizer.GetFitness (box);
+
+				FitnessInfo fitness = new FitnessInfo (fit, fit);
+				dict.Add (box, fitness);
+			}
 		} else {
 			Debug.Log ("test");
 		}
@@ -54,7 +57,6 @@ public class Evaluator : IPhenomeEvaluator<IBlackBox> {
 
 	public FitnessInfo GetLastFitness()
 	{
-
 		return this.fitness;
 	}
 
@@ -68,7 +70,6 @@ public class Evaluator : IPhenomeEvaluator<IBlackBox> {
 
 			return fit;
 		}
-
 		return FitnessInfo.Zero;
 	}
 }
