@@ -16,6 +16,7 @@ import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 
 public class Trainer {
 	
+	@SuppressWarnings("unused")
 	private static final long GIGABYTE = 1024 * 1024 * 1024;
 	
 	public static void main(String[] args) throws IOException {
@@ -25,6 +26,7 @@ public class Trainer {
 		int batchSize = intFromProperty("training.persistence.batchSize");
 		
 		boolean checkIntegrity = boolFromProperty("training.persistence.checkIntegrity");
+		@SuppressWarnings("unused")
 		boolean sliEnabled = boolFromProperty("training.sli");
 		
 		String trainingPersistenceType = stringFromProperty("training.persistence.type");

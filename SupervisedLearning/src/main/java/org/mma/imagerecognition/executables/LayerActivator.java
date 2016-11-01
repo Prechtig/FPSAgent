@@ -44,7 +44,7 @@ public class LayerActivator {
 		TrainingData image = TrainingDbDao.getImages(TrainingDbDao.getIndices(imageId, imageId)).get(0);
 		ImageTool.printColoredPngImage(image.getPixelData(), image.getWidth(), new File("image.png"));
 		
-		INDArray output = network.output(Nd4j.create(ImageTool.toScaledDoubles(image.getPixelData()), new int[] { 1, 3, image.getWidth(), image.getHeight()}), false);
+		network.output(Nd4j.create(ImageTool.toScaledDoubles(image.getPixelData()), new int[] { 1, 3, image.getWidth(), image.getHeight()}), false);
 		int convLayers = NNTool.numberOfConvolutionalLayers(network);
 		
 		//Save convolutional activations as images
@@ -62,7 +62,6 @@ public class LayerActivator {
 	}
 	
 	private static void persistFeatureMap(INDArray featureMaps, int layer) throws IOException {
-		featureMaps = featureMaps;
 		for(int featureMap = 0; featureMap < featureMaps.shape()[0]; featureMap++) {
 			ImageTool.printGreyScalePngImage(INDArrayTool.toFlatDoubleArray(featureMaps.slice(featureMap)), featureMaps.shape()[1], FileSystemDAO.getFeatureMapsFolderForLayer(layer).resolve("featureMap" + featureMap + ".png").toFile());
 		}
