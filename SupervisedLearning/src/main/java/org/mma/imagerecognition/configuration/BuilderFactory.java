@@ -56,6 +56,7 @@ public class BuilderFactory {
 				.nOut(250)
 				.build())
 		.layer(layerId++, new OutputLayer.Builder(LossFunctions.LossFunction.SQUARED_LOSS)
+				.activation("softmax")
 				.nOut(featureCount)
 				.build())
 		.backprop(true).pretrain(false)
@@ -313,5 +314,4 @@ public class BuilderFactory {
 		.backprop(true).pretrain(false)
 		.setInputType(InputType.convolutionalFlat(height, width, 3));
 		return builder;
-	}
 }
