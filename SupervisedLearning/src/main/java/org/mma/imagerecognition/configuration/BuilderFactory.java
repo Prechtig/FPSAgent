@@ -314,4 +314,5 @@ public class BuilderFactory {
 		.backprop(true).pretrain(false)
 		.setInputType(InputType.convolutionalFlat(height, width, 3));
 		return builder;
+	}
 }
