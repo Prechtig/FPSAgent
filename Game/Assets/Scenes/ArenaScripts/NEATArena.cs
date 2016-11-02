@@ -50,16 +50,18 @@ public class NEATArena : MonoBehaviour{
 	public static void ResetYOffset(){
 		yOffset = 0;
 	}
-	
+
 	void FixedUpdate () {
 		if (BotSpawn.Bots.Count > 0) {
 			float angle = Mathf.PI;
 			float k = 100f;
-			//float c = 2f;
-			
+			float c = 3f;
+
 			angle = Vector3.Angle (PlayerSpawn.Player.transform.forward, BotSpawn.Bots [0].transform.position - PlayerSpawn.Player.transform.position) * Mathf.Deg2Rad;
-			//RunningFitness += k / (1 + (angle * c));
-			RunningFitness += k / (1 + (angle * angle));
+			RunningFitness += k / (1 + (angle * c));
+
+			//RunningFitness += k / (1 + (angle * angle));
+			
 			RunningFitnessCount++;
 		}
 	}

@@ -53,7 +53,6 @@ namespace SharpNEAT.Core
 		{
 			Dictionary<TGenome, TPhenome> dict = new Dictionary<TGenome, TPhenome> ();
 			Dictionary<TGenome, FitnessInfo[]> fitnessDict = new Dictionary<TGenome, FitnessInfo[]> ();
-			_optimizer.CheckPersistPopulation(); //Persist population
 
 			int maxParallel = _optimizer.MaxParallel;
 			int parallel = 0;
@@ -138,6 +137,7 @@ namespace SharpNEAT.Core
 					genome.EvaluationInfo.AuxFitnessArr = fitnessDict [genome] [0]._auxFitnessArr;
 				}
 			}
+			_optimizer.CheckPersistPopulation(); //Persist population
 		}
 
 		public void Reset ()

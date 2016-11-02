@@ -37,7 +37,6 @@ public class Optimizer : MonoBehaviour {
 	private int frames;
 	private float updateInterval = 12;
 
-	private uint Generation;
 	private double Fitness;
 	private float PreviousTimeScale;
 	private int PersistNGenerations;
@@ -49,6 +48,7 @@ public class Optimizer : MonoBehaviour {
 
 	private bool AutomaticTimeScaleOn = true;
 	private bool Started = false;
+	private bool FirstUpdate = true;
 
 	public int Trials
 	{
@@ -149,15 +149,18 @@ public class Optimizer : MonoBehaviour {
 
 	void ea_UpdateEvent(object sender, EventArgs e)
 	{
-		if (Generation != 0 && _ea.CurrentGeneration != Generation) {
-			Utility.Log (string.Format ("gen={0:N0} bestFitness={1:N6}",
-				Generation, Fitness));
+		Fitness = _ea.Statistics._maxFitness;
+
+		if (!FirstUpdate) {
+			Utility.Log (string.Format ("gen={0:N0} bestFitness={1:N6}", _ea.CurrentGeneration, Fitness));
+		} else {
+			FirstUpdate = false;
 		}
 
-		Fitness = _ea.Statistics._maxFitness;
-		Generation = _ea.CurrentGeneration;
+		Utility.Log(string.Format("Moving average: {0}, N: {1}", _ea.Statistics._bestFitnessMA.Mean, _ea.Statistics._bestFitnessMA.Length));
+		Utility.Log ("maxSpecieSize=" + _ea.Statistics._maxSpecieSize + "\nChampion id: " + _ea.CurrentChampGenome.Id);
+		Debug.Log("Champions specie id: " + _ea.CurrentChampGenome.SpecieIdx);
 
-		//Utility.Log(string.Format("Moving average: {0}, N: {1}", _ea.Statistics._bestFitnessMA.Mean, _ea.Statistics._bestFitnessMA.Length));
 	}
 
 	void PauseUnpause()
@@ -178,24 +181,24 @@ public class Optimizer : MonoBehaviour {
 	/// Persists the population if it is the Nth generation specified in the xml config
 	/// </summary>
 	public void CheckPersistPopulation(){
-		if (_ea.CurrentGeneration - 1 != 0){ // || ((_ea.CurrentGeneration - 1) % PersistNGenerations == 0 && _ea.CurrentGeneration != 1)) {
+		if (_ea.CurrentGeneration != 0){ // || ((_ea.CurrentGeneration - 1) % PersistNGenerations == 0 && _ea.CurrentGeneration != 1)) {
 			PersistPopulation ();
 		}
 	}
 
 	public void PersistPopulation(){
-		string champFileSavePath = Application.persistentDataPath + string.Format ("/{0}/{1}.champ.xml", _ea.CurrentGeneration - 1, "FPSAgent");
-		string popFileSavePath = Application.persistentDataPath + string.Format ("/{0}/{1}.pop.xml", _ea.CurrentGeneration - 1, "FPSAgent");
+		string champFileSavePath = Application.persistentDataPath + string.Format ("/{0}/{1}.champ.xml", _ea.CurrentGeneration, "FPSAgent");
+		string popFileSavePath = Application.persistentDataPath + string.Format ("/{0}/{1}.pop.xml", _ea.CurrentGeneration, "FPSAgent");
 
 		XmlWriterSettings _xwSettings = new XmlWriterSettings ();
 		_xwSettings.Indent = true;
 		// Save genomes to xml file.        
-		DirectoryInfo dirInf = new DirectoryInfo (Application.persistentDataPath + string.Format ("/{0}", _ea.CurrentGeneration - 1));
+		DirectoryInfo dirInf = new DirectoryInfo (Application.persistentDataPath + string.Format ("/{0}", _ea.CurrentGeneration));
 		if (!dirInf.Exists) {
 			dirInf.Create ();
 		}
 
-		if (PersistNGenerations != 0 && (_ea.CurrentGeneration - 1 == 1 || ((_ea.CurrentGeneration - 1) % PersistNGenerations == 0 && _ea.CurrentGeneration != 1))) {
+		if (PersistNGenerations != 0 && (_ea.CurrentGeneration == 1 || ((_ea.CurrentGeneration) % PersistNGenerations == 0 && _ea.CurrentGeneration != 0))) {
 			using (XmlWriter xw = XmlWriter.Create (popFileSavePath, _xwSettings)) {
 				experiment.SavePopulation (xw, _ea.GenomeList);
 			}
@@ -208,7 +211,6 @@ public class Optimizer : MonoBehaviour {
 
 	public void StopEA()
 	{
-
 		if (_ea != null && _ea.RunState == SharpNeat.Core.RunState.Running)
 		{
 			_ea.Stop();
@@ -243,7 +245,6 @@ public class Optimizer : MonoBehaviour {
 				FitnessMap.Add (box, nt.GetFitness ());
 			}
 		}
-
 		ControllerMap.Remove (box);
 		ArenaMap.Remove (box);
 
@@ -252,11 +253,11 @@ public class Optimizer : MonoBehaviour {
 	}
 
 	public IBlackBox GetBestPhenome(){
-		if (Generation > 1) {
+		if (_ea.CurrentGeneration > 1) {
 			Time.timeScale = 1;
 
 			NeatGenome genome = null;
-			string champFileLoadPath = Application.persistentDataPath + string.Format ("/{0}/{1}.champ.xml", Generation - 1, "FPSAgent");
+			string champFileLoadPath = Application.persistentDataPath + string.Format ("/{0}/{1}.champ.xml", _ea.CurrentGeneration - 1, "FPSAgent");
 			//string champFileLoadPath = Application.persistentDataPath + string.Format ("/{0}/{1}.champ.xml", 248, "FPSAgent");
 
 			// Try to load the genome from the XML document.
@@ -304,7 +305,8 @@ public class Optimizer : MonoBehaviour {
 			{
 				RunBestNetwork = true;
 			}
-
+			//Show current generation and max fitness from last generation
+			GUI.Button(new Rect(10, Screen.height - 70, 150, 60), string.Format("Current generation: {0}\nMax fitness: {1:0.00}", _ea.CurrentGeneration - 1, Fitness));
 		} else {
 			if (!Started) {
 				if (GUI.Button (new Rect (10, 10, 100, 40), "Start EA")) {
@@ -321,9 +323,6 @@ public class Optimizer : MonoBehaviour {
 				}
 			}
 		}
-
-		//Show current generation and max fitness from last generation
-		GUI.Button(new Rect(10, Screen.height - 70, 150, 60), string.Format("Current generation: {0}\nMax fitness: {1:0.00}", Generation, Fitness));
 	}
 
 	private void InitFromConfig(XmlElement config) {

@@ -87,8 +87,8 @@ public class Experiment : INeatExperiment
 
 		_eaParams = new NeatEvolutionAlgorithmParameters();
 		_eaParams.SpecieCount = _specieCount;
-		_eaParams.OffspringAsexualProportion = 0.75;
-		_eaParams.OffspringSexualProportion = 0.25;
+		_eaParams.OffspringAsexualProportion = 0.30;
+		_eaParams.OffspringSexualProportion = 0.60;
 		_eaParams.InterspeciesMatingProportion = 0.001;
 		_eaParams.BestFitnessMovingAverageHistoryLength = 30;
 		_eaParams.ComplexityMovingAverageHistoryLength = 30;
@@ -172,9 +172,9 @@ public class Experiment : INeatExperiment
 
 	public NeatEvolutionAlgorithm<NeatGenome> CreateEvolutionAlgorithm(IGenomeFactory<NeatGenome> genomeFactory, List<NeatGenome> genomeList)
 	{
-		//IDistanceMetric distanceMetric = new ManhattanDistanceMetric(1.0, 0.0, 10.0);
-		//ISpeciationStrategy<NeatGenome> speciationStrategy = new KMeansClusteringStrategy<NeatGenome>(distanceMetric);
-		ISpeciationStrategy<NeatGenome> speciationStrategy = new RandomClusteringStrategy<NeatGenome>();
+		IDistanceMetric distanceMetric = new ManhattanDistanceMetric(1.0, 1.0, 0.4);
+		ISpeciationStrategy<NeatGenome> speciationStrategy = new KMeansClusteringStrategy<NeatGenome>(distanceMetric);
+		//ISpeciationStrategy<NeatGenome> speciationStrategy = new RandomClusteringStrategy<NeatGenome>();
 
 		IComplexityRegulationStrategy complexityRegulationStrategy = ExperimentUtils.CreateComplexityRegulationStrategy(_complexityRegulationStr, _complexityThreshold);
 

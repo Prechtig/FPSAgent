@@ -9,7 +9,7 @@
 	<TrialDuration>20</TrialDuration>
 	<StoppingFitness>99999</StoppingFitness>
 
-	<PopulationSize>100</PopulationSize>
+	<PopulationSize>100</PopulationSize>g
 	<SpecieCount>15</SpecieCount>
 	<Activation>
 	<Scheme>Acyclic</Scheme>
