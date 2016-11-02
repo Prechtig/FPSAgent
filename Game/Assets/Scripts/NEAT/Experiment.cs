@@ -87,8 +87,8 @@ public class Experiment : INeatExperiment
 
 		_eaParams = new NeatEvolutionAlgorithmParameters();
 		_eaParams.SpecieCount = _specieCount;
-		_eaParams.OffspringAsexualProportion = 0.75;
-		_eaParams.OffspringSexualProportion = 0.25;
+		_eaParams.OffspringAsexualProportion = 0.30;
+		_eaParams.OffspringSexualProportion = 0.60;
 		_eaParams.InterspeciesMatingProportion = 0.001;
 		_eaParams.BestFitnessMovingAverageHistoryLength = 30;
 		_eaParams.ComplexityMovingAverageHistoryLength = 30;
