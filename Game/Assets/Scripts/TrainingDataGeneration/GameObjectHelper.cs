@@ -24,9 +24,10 @@ public class GameObjectHelper
 	}
 
 	public static float HorizontalAngleTo (Transform viewer, Transform obj) {
-		float angle = Vector3.Angle (viewer.transform.forward, DirectionTo (viewer, obj));
+		Vector3 viewerForward = nullifyY (viewer.forward);
+		float angle = Vector3.Angle (viewerForward, HorizontalDirectionTo (viewer.position, obj.position));
 
-		switch (AngleDir (viewer.transform.forward, DirectionTo (viewer, obj), Vector3.up)) {
+		switch (AngleDir (viewerForward, HorizontalDirectionTo (viewer.position, obj.position), Vector3.up)) {
 		case Direction.Left:
 			return -angle;
 		case Direction.Right:
@@ -46,6 +47,10 @@ public class GameObjectHelper
 		return obj.position - viewer.position;
 	}
 
+	private static Vector3 HorizontalDirectionTo(Vector3 viewer, Vector3 obj) {
+		return nullifyY(obj) - nullifyY(viewer);
+	}
+
 	private static Direction AngleDir(Vector3 fwd, Vector3 targetDir, Vector3 up) {
 		Vector3 right = Vector3.Cross(up, fwd);        // right vector
 		float dir = Vector3.Dot(right, targetDir);
@@ -61,6 +66,10 @@ public class GameObjectHelper
 
 	public static float RadiansToDegree(double radians) {
 		return (float) (radians * 180 / Math.PI);
+	}
+
+	private static Vector3 nullifyY(Vector3 v) {
+		return new Vector3 (v.x, 0, v.z);
 	}
 
 	private enum Direction { Left, Right, Forward };

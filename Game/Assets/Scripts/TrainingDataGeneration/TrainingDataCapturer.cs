@@ -10,10 +10,13 @@ public class TrainingDataCapturer : MonoBehaviour
 
 	private string cameraTag = "MainCamera";
 	private Camera playerCam;
+	private static int width, height;
 
 	static TrainingDataCapturer() {
 		JavaProperties projectProperties = PropertiesReader.GetPropertyFile (PropertyFile.Project);
 		saveInterval = int.Parse(projectProperties.GetProperty("datageneration.screenshot.save.interval"));
+		width = int.Parse (projectProperties.GetProperty ("training.image.width"));
+		height = int.Parse (projectProperties.GetProperty ("training.image.height"));
 	}
 
 	// Use this for initialization
@@ -50,7 +53,13 @@ public class TrainingDataCapturer : MonoBehaviour
 	private void InitializeCamera() {
 		GameObject cam = GameObject.FindGameObjectWithTag (cameraTag);
 		if(cam != null) {
+			Screen.SetResolution (width, height, false);
 			playerCam = cam.GetComponent<Camera> ();
+			playerCam.rect = new Rect (0f, 0f, 1f, 1f);
+			playerCam.targetTexture = new RenderTexture (width, height, 24);
+			playerCam.aspect = 1f;
+			playerCam.nearClipPlane = 0.35f;
+			playerCam.farClipPlane = 1000f;
 		}
 	}
 }

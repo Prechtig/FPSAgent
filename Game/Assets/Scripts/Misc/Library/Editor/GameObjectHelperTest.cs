@@ -18,22 +18,22 @@ public class GameObjectHelperTest
 		viewer.transform.forward = Vector3.forward;
 
 		GameObject frontRight = GameObject.Instantiate (original);
-		frontRight.transform.position = new Vector3 (1, 0, 1);
+		frontRight.transform.position = new Vector3 (1, 1, 1);
 		angle = GameObjectHelper.HorizontalAngleTo (viewer.transform, frontRight.transform);
 		Assert.AreEqual (45d, (double) angle, delta);
 
 		GameObject frontLeft = GameObject.Instantiate (original);
-		frontLeft.transform.position = new Vector3 (-1, 0, 1);
+		frontLeft.transform.position = new Vector3 (-1, 2, 1);
 		angle = GameObjectHelper.HorizontalAngleTo (viewer.transform, frontLeft.transform);
 		Assert.AreEqual (-45d, (double) angle, delta);
 
 		GameObject backRight = GameObject.Instantiate (original);
-		backRight.transform.position = new Vector3 (1, 0, -1);
+		backRight.transform.position = new Vector3 (1, 3, -1);
 		angle = GameObjectHelper.HorizontalAngleTo (viewer.transform, backRight.transform);
 		Assert.AreEqual (135d, (double) angle, delta);
 
 		GameObject backLeft = GameObject.Instantiate (original);
-		backLeft.transform.position = new Vector3 (-1, 0, -1);
+		backLeft.transform.position = new Vector3 (-1, 4, -1);
 		angle = GameObjectHelper.HorizontalAngleTo (viewer.transform, backLeft.transform);
 		Assert.AreEqual (-135d, (double) angle, delta);
 	}
@@ -51,14 +51,14 @@ public class GameObjectHelperTest
 
 		a = 1;
 		b = 2;
-		other.transform.position = new Vector3 (a, 0, b);
+		other.transform.position = new Vector3 (a, 1, b);
 		calculatedAngle = GameObjectHelper.HorizontalAngleTo (viewer.transform, other.transform);
 		trueAngle = GameObjectHelper.RadiansToDegree(Math.Atan (a / b));
 		Assert.AreEqual (trueAngle, calculatedAngle, delta);
 
 		a = 2;
 		b = 1;
-		other.transform.position = new Vector3 (a, 0, b);
+		other.transform.position = new Vector3 (a, -1, b);
 		calculatedAngle = GameObjectHelper.HorizontalAngleTo (viewer.transform, other.transform);
 		trueAngle = GameObjectHelper.RadiansToDegree(Math.Atan (a / b));
 		Assert.AreEqual (trueAngle, calculatedAngle, delta);
