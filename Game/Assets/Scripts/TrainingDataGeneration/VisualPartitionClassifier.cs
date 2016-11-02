@@ -43,7 +43,7 @@ namespace Assets.Scripts.TrainingDataGeneration
             }
 
             this.partitions = partitions;
-            g = 0.5 / Math.Tanh(fovAngle / 2);
+            g = 0.5 / Math.Tan(fromDegreesToRadians(fovAngle / 2));
             l = new double[partitions.Length];
             //Sets length of l for each inceptionLevel
             for (int i = 0; i < partitions.Length; i++)
@@ -80,6 +80,11 @@ namespace Assets.Scripts.TrainingDataGeneration
             return angleInRadians * 180 / Math.PI;
         }
 
+        private double fromDegreesToRadians(double angleInDegrees)
+        {
+            return angleInDegrees * Math.PI / 180;
+        }
+
         public PartitionId GetVisualPartition(double horizontalAngle, double verticalAngle)
         {
             return GetVisualPartition(0, toNonNegativeAngle(horizontalAngle), toNonNegativeAngle(verticalAngle), fovAngle);
@@ -104,12 +109,12 @@ namespace Assets.Scripts.TrainingDataGeneration
             //If it is in the middle and it is possible to go deeper in the inception
             if(x == splitAngles.Length && y == splitAngles.Length && inceptionLevel < partitions.Length - 1)
             {
-                return GetVisualPartition(inceptionLevel + 1, horizontalAngle, verticalAngle, GetInceptionFov(inceptionLevel));
+                double inceptionFov = GetInceptionFov(inceptionLevel);
+                return GetVisualPartition(inceptionLevel + 1, GetAngleRelativeToInceptionFov(horizontalAngle, inceptionFov, currentFov), GetAngleRelativeToInceptionFov(verticalAngle, inceptionFov, currentFov), inceptionFov);
             } else
             {
                 return new PartitionId(inceptionLevel, x, y);
             }
-            
         }
 
         private int GetPartitionCoordinate(double angle, double[] splitAngles, double currentFovAngle, int inceptionLevel)
@@ -145,6 +150,11 @@ namespace Assets.Scripts.TrainingDataGeneration
             {
                 return currentFovAngle;
             }
+        }
+
+        private double GetAngleRelativeToInceptionFov(double angle, double inceptionFov, double currentFov)
+        {
+            return angle - (currentFov / 2 - inceptionFov / 2);
         }
 
         private double GetInceptionFov(int inceptionLevel)
