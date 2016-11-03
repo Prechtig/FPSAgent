@@ -56,7 +56,7 @@ public class TrainingData {
 		this.distance = distance;
 		this.withinSight = withinSight;
 		
-		partitionId = VisualPartitionClassifier.GetInstance().GetVisualPartition(horizontalAngle, verticalAngle);
+		partitionId = withinSight ? VisualPartitionClassifier.GetInstance().GetVisualPartition(horizontalAngle, verticalAngle) : null;
 		this.features = calculateFeatures();
 	}
 	
@@ -79,32 +79,12 @@ public class TrainingData {
 		
 		double[] result = new double[numberOfPartitions + 1];
 		// Default to last index
-		int index = calculateFeatureIndexFromPartitionId();
+		int index = numberOfPartitions;
+		if(withinSight) {
+			index = VisualPartitionClassifier.GetInstance().calculateFeatureIndexFromPartitionId(partitionId);
+		}
 		result[index] = 1d;
 		return result;
-	}
-	
-	public int calculateFeatureIndexFromPartitionId() {
-		if(!isWithinSight()) {
-			return VisualPartitionClassifier.GetInstance().getNumberOfPartitions();
-		}
-		
-		int inceptionLevel = partitionId.InceptionLevel;
-		int[] partitions = VisualPartitionClassifier.GetInstance().getPartitions();
-		int index = 0;
-		
-		// Move index according to inception level
-		for(int i = 0; i < inceptionLevel; i++) {
-			index += (partitions[i]*partitions[i]) -1;
-		}
-		
-		// Move index according to y
-		index += partitionId.Y * partitions[inceptionLevel];
-		
-		// Move index according to x
-		index += partitionId.X;
-		
-		return index;
 	}
 	
 	public double[] getFeatures() {

@@ -188,4 +188,36 @@ public class VisualPartitionClassifier
     public int getNumberOfPartitions() {
     	return numberOfPartitions;
     }
+    
+	public int calculateFeatureIndexFromPartitionId(PartitionId partitionId) {
+		int inceptionLevel = partitionId.InceptionLevel;
+		int index = 0;
+		
+		// Move index according to inception level
+		for(int i = 0; i < inceptionLevel; i++) {
+			index += (partitions[i]*partitions[i]) -1;
+		}
+		
+		// Move index according to y
+		index += partitionId.Y * partitions[inceptionLevel];
+		
+		// Move index according to x
+		index += partitionId.X;
+		
+		// If we're past the midpoint in the current inception level, subtract 1
+		if((partitions[inceptionLevel]*partitions[inceptionLevel]-1) / 2 + previous(inceptionLevel) <= index
+				&& inceptionLevel < (partitions.length-1) // Do not subtract one if we're in the innermost
+				) {
+			index -= 1;
+		}
+		return index;
+	}
+	
+	private int previous(int i) {
+		if(i == 0) {
+			return 0;
+		} else {
+			return partitions[i]*partitions[i] - 1 + previous(i-1);
+		}
+	}
 }
