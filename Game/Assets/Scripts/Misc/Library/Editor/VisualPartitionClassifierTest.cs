@@ -9,6 +9,20 @@ using Assets.Scripts.TrainingDataGeneration;
 class VisualPartitionClassifierTest
 {
     [Test]
+    public void TestInitializeFromProperties()
+    {
+        VisualPartitionClassifier.GetInstance().InitializeFromProperties();
+    }
+
+    [Test]
+    public void TestOutsideFovInput()
+    {
+        VisualPartitionClassifier.GetInstance().Initialize(90, 3);
+        PartitionId partitionId = VisualPartitionClassifier.GetInstance().GetVisualPartition(-45.1, -45.0);
+        Assert.IsTrue(partitionId == null);
+    }
+
+    [Test]
     public void TestSimplePartitioning()
     {
         VisualPartitionClassifier.GetInstance().Initialize(90, 3);
@@ -142,5 +156,4 @@ class VisualPartitionClassifierTest
         Assert.AreEqual(4, partitionId10.Y);
         Assert.AreEqual(0, partitionId10.InceptionLevel);
     }
-
 }

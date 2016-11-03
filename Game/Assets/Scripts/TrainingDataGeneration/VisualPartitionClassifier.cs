@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Kajabity.Tools.Java;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,10 +21,29 @@ namespace Assets.Scripts.TrainingDataGeneration
             return instance;
         }
 
+        public void InitializeFromProperties()
+        {
+            JavaProperties projectProperties = PropertiesReader.GetPropertyFile(PropertyFile.Project);
+
+            SetViewport(double.Parse(projectProperties.GetProperty("topology.fov")));
+            SetPartitions(parseCSV(projectProperties.GetProperty("topology.partitions")));
+        }
+
         public void Initialize(double fovAngle, params int[] partitions)
         {
             SetViewport(fovAngle);
             SetPartitions(partitions);
+        }
+
+        private static int[] parseCSV(String CSV)
+        {
+            String[] split = CSV.Split(',');
+            int[] result = new int[split.Length];
+            for(int i = 0; i < split.Length; i++)
+            {
+                result[i] = int.Parse(split[i]);
+            }
+            return result;
         }
 
         private void SetViewport(double fovAngle)
@@ -43,7 +63,7 @@ namespace Assets.Scripts.TrainingDataGeneration
             }
 
             this.partitions = partitions;
-            g = 0.5 / Math.Tan(fromDegreesToRadians(fovAngle / 2));
+            g = 0.5 / Math.Tan(FromDegreesToRadians(fovAngle / 2));
             l = new double[partitions.Length];
             //Sets length of l for each inceptionLevel
             for (int i = 0; i < partitions.Length; i++)
@@ -63,34 +83,45 @@ namespace Assets.Scripts.TrainingDataGeneration
                 double[] splits = new double[numberOfSplits];
                 for (int j = 0; j < numberOfSplits; j++)
                 {
-                    splits[j] = getPartitionAngle(j, l[i]);
+                    splits[j] = GetPartitionAngle(j, l[i]);
                 }
                 
                 partitionAnglesForInceptionLevels.Add(i, splits);
             }
         }
 
-        private double getPartitionAngle(int i, double l)
+        private double GetPartitionAngle(int i, double l)
         {
-            return fromRadiansToDegrees(Math.Tanh(( (0.5+i)*l) / g ));
+            return FromRadiansToDegrees(Math.Tanh(( (0.5+i)*l) / g ));
         }
 
-        private double fromRadiansToDegrees(double angleInRadians)
+        private double FromRadiansToDegrees(double angleInRadians)
         {
             return angleInRadians * 180 / Math.PI;
         }
 
-        private double fromDegreesToRadians(double angleInDegrees)
+        private double FromDegreesToRadians(double angleInDegrees)
         {
             return angleInDegrees * Math.PI / 180;
         }
 
         public PartitionId GetVisualPartition(double horizontalAngle, double verticalAngle)
         {
-            return GetVisualPartition(0, toNonNegativeAngle(horizontalAngle), toNonNegativeAngle(verticalAngle), fovAngle);
+            double nonNegativeHorizontalAngle = ToNonNegativeAngle(horizontalAngle);
+            double nonNegativeVerticalAngle = ToNonNegativeAngle(verticalAngle);
+            if(IsOutsideFov(nonNegativeHorizontalAngle) || IsOutsideFov(nonNegativeVerticalAngle))
+            {
+                return null;
+            }
+            return GetVisualPartition(0, nonNegativeHorizontalAngle, nonNegativeVerticalAngle, fovAngle);
         }
 
-        private double toNonNegativeAngle(double angle)
+        private Boolean IsOutsideFov(double angle)
+        {
+            return angle < 0 || angle > fovAngle;
+        }
+
+        private double ToNonNegativeAngle(double angle)
         {
             return fovAngle / 2 + angle;
         }
@@ -159,7 +190,7 @@ namespace Assets.Scripts.TrainingDataGeneration
 
         private double GetInceptionFov(int inceptionLevel)
         {
-            return getPartitionAngle(0, l[inceptionLevel])*2;
+            return GetPartitionAngle(0, l[inceptionLevel])*2;
         }
     }
 }
