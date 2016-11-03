@@ -55,7 +55,7 @@ public class BuilderFactory {
 		.layer(layerId++, new DenseLayer.Builder()
 				.nOut(250)
 				.build())
-		.layer(layerId++, new OutputLayer.Builder(LossFunctions.LossFunction.SQUARED_LOSS)
+		.layer(layerId++, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
 				.activation("softmax")
 				.nOut(featureCount)
 				.build())
