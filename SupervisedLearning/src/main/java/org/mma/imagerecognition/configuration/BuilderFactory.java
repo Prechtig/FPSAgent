@@ -19,12 +19,14 @@ public class BuilderFactory {
 	private static double learningRate = 0.0;
 	private static double l2 = 0.0;
 	private static int seed = 0;
+	private static boolean regularization = false;
 	
 	static {
 		Properties pp = PropertiesReader.getProjectProperties();
 		learningRate = Double.parseDouble(pp.getProperty("training.learningRate"));
 		l2 = Double.parseDouble(pp.getProperty("training.l2"));
 		seed = Integer.parseInt(pp.getProperty("training.seed"));
+		regularization = Boolean.valueOf(pp.getProperty("training.regularization"));
 	}
 	
 	public static Builder getVeryShallowConvNet(int height, int width, int featureCount) {
@@ -33,7 +35,7 @@ public class BuilderFactory {
 		Builder builder = new NeuralNetConfiguration.Builder()
 		.seed(seed)
 		.iterations(1)
-		.regularization(false)
+		.regularization(regularization)
 		.l2(l2)
 		.learningRate(learningRate)
 		.weightInit(WeightInit.XAVIER)
@@ -68,7 +70,7 @@ public class BuilderFactory {
 		Builder builder = new NeuralNetConfiguration.Builder()
 		.seed(seed)
 		.iterations(1)
-		.regularization(true)
+		.regularization(regularization)
 		.l2(l2)
 		.learningRate(learningRate)
 		.weightInit(WeightInit.XAVIER)
@@ -117,7 +119,7 @@ public class BuilderFactory {
 		Builder builder = new NeuralNetConfiguration.Builder()
 		.seed(seed)
 		.iterations(1)
-		.regularization(false)
+		.regularization(regularization)
 		.l2(l2)
 		.learningRate(learningRate)
 		.weightInit(WeightInit.XAVIER)
@@ -178,7 +180,7 @@ public class BuilderFactory {
 		Builder builder = new NeuralNetConfiguration.Builder()
 		.seed(seed)
 		.iterations(1)
-		.regularization(true)
+		.regularization(regularization)
 		.l2(l2)
 		.learningRate(learningRate)
 		.weightInit(WeightInit.XAVIER)
@@ -237,7 +239,7 @@ public class BuilderFactory {
 		Builder builder = new NeuralNetConfiguration.Builder()
 		.seed(seed)
 		.iterations(1)
-		.regularization(true)
+		.regularization(regularization)
 		.l2(l2)
 		.learningRate(learningRate)
 		.weightInit(WeightInit.XAVIER)
