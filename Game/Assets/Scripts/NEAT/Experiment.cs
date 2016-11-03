@@ -88,7 +88,6 @@ public class Experiment : INeatExperiment
 		_complexityThreshold = XmlUtils.TryGetValueAsInt(xmlConfig, "ComplexityThreshold");
 		_description = XmlUtils.TryGetValueAsString(xmlConfig, "Description");
 
-
         _neatParameters = PropertiesReader.GetPropertyFile(PropertyFile.NEAT);
         _eaParams = new NeatEvolutionAlgorithmParameters();
         _eaParams.SpecieCount = _specieCount;
