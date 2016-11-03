@@ -49,7 +49,7 @@
 				<archive>
 					<manifest>
 						<mainClass>org.mma.imagerecognition.executables.Trainer</mainClass>
-						<!-- <mainClass>org.mma.imagerecognition.configuration.Evaluator</mainClass> -->
+						<!-- <mainClass>org.mma.imagerecognition.executables.Evaluator</mainClass> -->
 					</manifest>
 				</archive>
 			</configuration>

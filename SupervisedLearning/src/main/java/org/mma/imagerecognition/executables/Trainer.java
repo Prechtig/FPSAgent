@@ -124,7 +124,7 @@ public class Trainer {
 	}
 	
 	public static int lastTrainIndex() {
-		return testSize;
+		return trainSize;
 	}
 	
 	public static int lastValidationIndex() {

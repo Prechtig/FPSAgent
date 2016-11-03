@@ -33,8 +33,11 @@ public class Evaluator {
 		System.out.format("Hit rate: %f", accuracy);
 	}
 	
-	private static double getAccuracy(MultiLayerNetwork network) {
+	public static double getAccuracy(MultiLayerNetwork network) {
 		List<TrainingData> testSet = FileSystemDAO.load(Trainer.lastValidationIndex()+1, Trainer.lastTestIndex());
+		if(testSet.size() == 0) {
+			throw new IllegalArgumentException("Test set is empty");
+		}
 		int hits = 0, misses = 0;
 		
 		for(TrainingData td : testSet) {
