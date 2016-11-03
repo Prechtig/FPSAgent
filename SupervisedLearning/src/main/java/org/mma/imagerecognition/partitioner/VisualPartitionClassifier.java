@@ -2,6 +2,9 @@ package org.mma.imagerecognition.partitioner;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
+
+import org.mma.imagerecognition.tools.PropertiesReader;
 
 public class VisualPartitionClassifier
 {
@@ -12,7 +15,16 @@ public class VisualPartitionClassifier
     private double g;
     private double fovAngle;
     private Map<Integer, Double[]> partitionAnglesForInceptionLevels;
-
+	
+	static {
+		GetInstance().Initialize(Double.parseDouble(PropertiesReader.getProjectProperties().getProperty("topology.fov")), parseCSV(PropertiesReader.getProjectProperties().getProperty("topology.partitions")));
+	}
+	
+	private static int[] parseCSV(String CSV) {
+		String[] split = CSV.split(",");
+		return Stream.of(split).mapToInt(s -> Integer.parseInt(s)).toArray();
+	}
+    
     public static VisualPartitionClassifier GetInstance()
     {
         return instance;

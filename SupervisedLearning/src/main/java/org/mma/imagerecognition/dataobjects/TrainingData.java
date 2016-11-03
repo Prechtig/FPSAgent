@@ -3,6 +3,8 @@ package org.mma.imagerecognition.dataobjects;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.mma.imagerecognition.partitioner.PartitionId;
+import org.mma.imagerecognition.partitioner.VisualPartitionClassifier;
 import org.mma.imagerecognition.tools.PropertiesReader;
 import org.mma.imagerecognition.tools.ScaleTool;
 
@@ -12,6 +14,7 @@ public class TrainingData {
 	private final double[] features;
 	private final double horizontalAngle, verticalAngle, distance;
 	private final boolean withinSight;
+	private final PartitionId partitionId;
 	
 	private static final int horizontalAngleIndex = 0, verticalAngleIndex = 1, distanceIndex = 2, withinSightIndex = 3;
 	
@@ -41,6 +44,8 @@ public class TrainingData {
 		features[verticalAngleIndex] = verticalAngle;
 		features[distanceIndex] = distance;
 		features[withinSightIndex] = withinSightValue;
+		
+		partitionId = VisualPartitionClassifier.GetInstance().GetVisualPartition(horizontalAngle, verticalAngle);
 	}
 	
 	public TrainingData(int id, int width, int height, byte[] pixelData, double[] features) {
@@ -53,6 +58,8 @@ public class TrainingData {
 		verticalAngle	= features[verticalAngleIndex];
 		distance		= features[distanceIndex];
 		withinSight		= features[withinSightIndex] == 1d;
+		
+		partitionId = VisualPartitionClassifier.GetInstance().GetVisualPartition(horizontalAngle, verticalAngle);
 	}
 	
 	public double[] getFeatures() {
@@ -89,5 +96,9 @@ public class TrainingData {
 
 	public boolean isWithinSight() {
 		return withinSight;
+	}
+
+	public PartitionId getPartitionId() {
+		return partitionId;
 	}
 }
