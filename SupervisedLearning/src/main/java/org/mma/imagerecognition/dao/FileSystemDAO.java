@@ -134,6 +134,10 @@ public class FileSystemDAO {
 		}
 	}
 	
+	public static List<TrainingData> load(int idFromInclusive, int idToInclusive) {
+		return load(IntStream.rangeClosed(idFromInclusive, idToInclusive).boxed());
+	}
+	
 	public static List<TrainingData> load(List<Integer> ids) {
 		return load(ids.parallelStream());
 	}
@@ -209,7 +213,7 @@ public class FileSystemDAO {
 		return getContinuousFolder().resolve(Paths.get(getModelFileName(findLatestModelId())));
 	}
 	
-	public static Path getPathOfLatestModelFile(int numeration) {
+	public static Path getPathOfModelFile(int numeration) {
 		return getContinuousFolder().resolve(Paths.get(getModelFileName(numeration)));
 	}
 	

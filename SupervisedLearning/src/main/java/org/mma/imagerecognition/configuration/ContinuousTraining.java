@@ -41,7 +41,7 @@ public abstract class ContinuousTraining implements Trainable {
 	protected void saveModel(MultiLayerNetwork model, int numeration) {
         if(saveModel) {
             try {
-				ModelSerializer.writeModel(model, FileSystemDAO.getPathOfLatestModelFile(numeration).toString(), true);
+				ModelSerializer.writeModel(model, FileSystemDAO.getPathOfModelFile(numeration).toString(), true);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

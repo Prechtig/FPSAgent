@@ -71,7 +71,7 @@ public class Trainer {
 		}
 	}
 	
-	private static void init() throws IOException {
+	public static void init() throws IOException {
 		configureND4J();
 		
 		testSize = intFromProperty("training.testSize");
@@ -121,5 +121,17 @@ public class Trainer {
 	
 	private static String stringFromProperty(String property) {
 		return PropertiesReader.getProjectProperties().getProperty(property);
+	}
+	
+	public static int lastTrainIndex() {
+		return testSize;
+	}
+	
+	public static int lastValidationIndex() {
+		return lastTrainIndex()+validationSize;
+	}
+	
+	public static int lastTestIndex() {
+		return lastValidationIndex() + testSize;
 	}
 }

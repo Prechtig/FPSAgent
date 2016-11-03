@@ -1,5 +1,7 @@
 package org.mma.imagerecognition.tools;
 
+import java.util.Arrays;
+
 import org.deeplearning4j.nn.api.Layer;
 import org.deeplearning4j.nn.layers.convolution.ConvolutionLayer;
 import org.deeplearning4j.nn.layers.convolution.subsampling.SubsamplingLayer;
@@ -14,5 +16,16 @@ public class NNTool {
 			}
 		}
 		return numberOfConvolutionalLayers;
+	}
+	
+	public static double[] toBinaryVector(double[] probabilityVector) {
+		double max = Arrays.stream(probabilityVector).reduce(0.0, (curMax, cur) -> Math.max(curMax, cur));
+		int maxProbabilityIndex = 0;
+		for(int i = 0; i < probabilityVector.length; i++) {
+			if(probabilityVector[i] == max) maxProbabilityIndex = i;
+		}
+		double[] result = new double[probabilityVector.length];
+		result[maxProbabilityIndex] = 1d;
+		return result;
 	}
 }
