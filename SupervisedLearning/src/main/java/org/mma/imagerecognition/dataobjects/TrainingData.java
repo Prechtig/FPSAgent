@@ -5,7 +5,6 @@ import java.sql.SQLException;
 
 import org.mma.imagerecognition.partitioner.PartitionId;
 import org.mma.imagerecognition.partitioner.VisualPartitionClassifier;
-import org.mma.imagerecognition.tools.ScaleTool;
 
 public class TrainingData {
 	private final int height, width, id;
@@ -34,9 +33,9 @@ public class TrainingData {
 		
 		double withinSightValue = rs.getDouble(withinSightKey);
 		withinSight = withinSightValue == 1d;
-		horizontalAngle = withinSight ? ScaleTool.scaleAngle(rs.getDouble(horizontalAngleKey)) : 2d;
-		verticalAngle = withinSight ? ScaleTool.scaleAngle(rs.getDouble(verticalAngleKey)) : 2d;
-		distance = ScaleTool.scaleDistance(rs.getDouble(distanceKey));
+		horizontalAngle = withinSight ? rs.getDouble(horizontalAngleKey) : 0d;
+		verticalAngle = withinSight ? rs.getDouble(verticalAngleKey) : 0d;
+		distance = rs.getDouble(distanceKey);
 		
 		if(withinSight) {
 			partitionId = VisualPartitionClassifier.GetInstance().GetVisualPartition(horizontalAngle, verticalAngle);
@@ -80,15 +79,16 @@ public class TrainingData {
 		
 		double[] result = new double[numberOfPartitions + 1];
 		// Default to last index
-		int index = numberOfPartitions;
-		if(withinSight) {
-			index = calculateFeatureIndexFromPartitionId();
-		}
+		int index = calculateFeatureIndexFromPartitionId();
 		result[index] = 1d;
 		return result;
 	}
 	
-	private int calculateFeatureIndexFromPartitionId() {
+	public int calculateFeatureIndexFromPartitionId() {
+		if(!isWithinSight()) {
+			return VisualPartitionClassifier.GetInstance().getNumberOfPartitions();
+		}
+		
 		int inceptionLevel = partitionId.InceptionLevel;
 		int[] partitions = VisualPartitionClassifier.GetInstance().getPartitions();
 		int index = 0;
