@@ -5,7 +5,6 @@ import java.sql.SQLException;
 
 import org.mma.imagerecognition.partitioner.PartitionId;
 import org.mma.imagerecognition.partitioner.VisualPartitionClassifier;
-import org.mma.imagerecognition.tools.PropertiesReader;
 import org.mma.imagerecognition.tools.ScaleTool;
 
 public class TrainingData {
