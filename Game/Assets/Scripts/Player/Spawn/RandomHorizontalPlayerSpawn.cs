@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class RandomHorizontalPlayerSpawn : MonoBehaviour, IPlayerSpawn
 {
 	public GameObject Player{ get; set;}
+	public NEATArena Arena { get; set; }
 	public Transform[] SpawnPoints{ get; set;}
 	public float X{ get; set;}
 	public float Z{ get; set;}

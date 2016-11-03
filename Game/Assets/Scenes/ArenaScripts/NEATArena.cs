@@ -14,7 +14,7 @@ public class NEATArena : MonoBehaviour{
 	//private RandomHorizontalPlayerSpawn PlayerSpawn;
 	//private RandomHorizontalBotSpawn BotSpawn;
 	private RandomPlayerSpawn PlayerSpawn;
-	private RandomBotSpawn BotSpawn;
+	public RandomBotSpawn BotSpawn;
 
 	private IList ArenaObjects;
 
@@ -54,7 +54,7 @@ public class NEATArena : MonoBehaviour{
 	void FixedUpdate () {
 		if (BotSpawn.Bots.Count > 0) {
 			float angle = Mathf.PI;
-			float k = 100f;
+			float k = 75f;
 			float c = 3f;
 
 			angle = Vector3.Angle (PlayerSpawn.Player.transform.forward, BotSpawn.Bots [0].transform.position - PlayerSpawn.Player.transform.position) * Mathf.Deg2Rad;
@@ -145,6 +145,7 @@ public class NEATArena : MonoBehaviour{
 		PlayerSpawn.X = x;
 		PlayerSpawn.Z = z;
 		PlayerSpawn.SpawnPoints = PlayerSpawnPoints;
+		PlayerSpawn.Arena = this;
 		PlayerSpawn.SpawnPlayer ();
 	}
 

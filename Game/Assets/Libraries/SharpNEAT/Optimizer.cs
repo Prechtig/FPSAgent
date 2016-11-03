@@ -9,6 +9,7 @@ using System;
 using System.Xml;
 using System.IO;
 using SharpNeat.Domains;
+using Assets.Scripts.TrainingDataGeneration;
 
 public class Optimizer : MonoBehaviour {
 	public GameObject wallPrefab;
@@ -136,6 +137,8 @@ public class Optimizer : MonoBehaviour {
 	{
 		Utility.DebugLog = true;
 		Utility.Log("Starting FPS Agent experiment");
+
+		VisualPartitionClassifier.GetInstance ().InitializeFromProperties ();
 		FitnessMap = new Dictionary<IBlackBox, float> ();
 		//_ea = experiment.CreateEvolutionAlgorithm(popFileSavePath);
 		_ea = experiment.CreateEvolutionAlgorithm();
@@ -157,9 +160,9 @@ public class Optimizer : MonoBehaviour {
 			FirstUpdate = false;
 		}
 
-		Utility.Log(string.Format("Moving average: {0}, N: {1}", _ea.Statistics._bestFitnessMA.Mean, _ea.Statistics._bestFitnessMA.Length));
-		Utility.Log ("maxSpecieSize=" + _ea.Statistics._maxSpecieSize + "\nChampion id: " + _ea.CurrentChampGenome.Id);
-		Debug.Log("Champions specie id: " + _ea.CurrentChampGenome.SpecieIdx);
+		//Utility.Log(string.Format("Moving average: {0}, N: {1}", _ea.Statistics._bestFitnessMA.Mean, _ea.Statistics._bestFitnessMA.Length));
+		//Utility.Log ("maxSpecieSize=" + _ea.Statistics._maxSpecieSize + "\nChampion id: " + _ea.CurrentChampGenome.Id);
+		//Debug.Log("Champions specie id: " + _ea.CurrentChampGenome.SpecieIdx);
 
 	}
 
@@ -306,7 +309,7 @@ public class Optimizer : MonoBehaviour {
 				RunBestNetwork = true;
 			}
 			//Show current generation and max fitness from last generation
-			GUI.Button(new Rect(10, Screen.height - 70, 150, 60), string.Format("Current generation: {0}\nMax fitness: {1:0.00}", _ea.CurrentGeneration - 1, Fitness));
+			GUI.Button(new Rect(10, Screen.height - 70, 150, 60), string.Format("Current generation: {0}\nMax fitness: {1:0.00}", _ea.CurrentGeneration, Fitness));
 		} else {
 			if (!Started) {
 				if (GUI.Button (new Rect (10, 10, 100, 40), "Start EA")) {

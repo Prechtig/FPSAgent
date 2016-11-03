@@ -28,12 +28,14 @@ namespace Assets.Scripts.TrainingDataGeneration
 
             SetViewport(double.Parse(projectProperties.GetProperty("topology.fov")));
             SetPartitions(parseCSV(projectProperties.GetProperty("topology.partitions")));
+			SetNumberOfPartitions (partitions);
         }
 
         public void Initialize(double fovAngle, params int[] partitions)
         {
             SetViewport(fovAngle);
             SetPartitions(partitions);
+			SetNumberOfPartitions (partitions);
         }
 
         private static int[] parseCSV(String CSV)

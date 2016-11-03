@@ -20,10 +20,14 @@ public class NEATController : UnitController {
 	public float shootThreshold;
 	public float reloadThreshold;
 	public NEATWeapon weapon;
+	public NEATArena Arena;
 	private Camera playerCam;
+
+	private double[] EmptyDoubleArray;
 	// Use this for initialization
 	void Start () {
 		playerCam = gameObject.GetComponentInChildren<Camera> ();
+		EmptyDoubleArray = new double [box.InputCount];
 		//lookRoot = gameObject.transform.GetChild(2).GetChild(0);
 	}
 
@@ -32,8 +36,14 @@ public class NEATController : UnitController {
 	{
 		if (IsRunning) {
 			ISignalArray inputArr = box.InputSignalArray;
-			float[] groundTruths = GroundTruth.CalculateGroundTruthsScaled (playerCam, 1);
-			inputArr.CopyFrom(groundTruths.Select(f => (double)f).ToArray(), 0);
+			//float[] groundTruths = GroundTruth.CalculateGroundTruthsScaled (playerCam, 1);
+			//inputArr.CopyFrom(groundTruths.Select(f => (double)f).ToArray(), 0);
+
+			if (Arena.BotSpawn.Bots.Count == 0) {
+				inputArr.CopyFrom (EmptyDoubleArray, 0);
+			} else {	
+				inputArr.CopyFrom (GroundTruth.CalculateFeatures (playerCam, Arena.BotSpawn.Bots [0]), 0);
+			}
 
 			//Activate network
 			box.Activate ();
