@@ -110,15 +110,20 @@ public class FileSystemDAO {
 		byte[] pixelData = td.getPixelData();
 		int width = td.getWidth();
 		int height = td.getHeight();
-		double[] features = td.getFeatures();
+		
+		double horizontalAngle = td.getHorizontalAngle();
+		double verticalAngle = td.getVerticalAngle();
+		double distance = td.getDistance();
+		double withinSight = td.isWithinSight() ? 1d : 0d;
 		
 		StringBuilder sb = new StringBuilder();
-		sb.append(id).append(System.lineSeparator());
 		sb.append(width).append(System.lineSeparator());
 		sb.append(height).append(System.lineSeparator());
-		for(double feature : features) {
-			sb.append(feature).append(System.lineSeparator());
-		}
+		
+		sb.append(horizontalAngle).append(System.lineSeparator());
+		sb.append(verticalAngle).append(System.lineSeparator());
+		sb.append(distance).append(System.lineSeparator());
+		sb.append(withinSight).append(System.lineSeparator());
 		
 		try {
 			Files.write(getPixelDataPath(id), pixelData, StandardOpenOption.CREATE);
@@ -141,15 +146,18 @@ public class FileSystemDAO {
 		try {
 			byte[] pixelData = Files.readAllBytes(getPixelDataPath(id));
 			List<String> lines = Files.readAllLines(getFeaturePath(id));
-			int width = Integer.valueOf(lines.get(1));
-			int height = Integer.valueOf(lines.get(2));
 			
-			int offset = 3;
-			double[] features = new double[lines.size() - offset];
-			for(int i = offset; i < lines.size(); i++) {
-				features[i-offset] = Double.valueOf(lines.get(i)); 
-			}
-			return new TrainingData(id, width, height, pixelData, features);
+			int index = 0;
+			
+			int width = Integer.valueOf(lines.get(index++));
+			int height = Integer.valueOf(lines.get(index++));
+			
+			double horizontalAngle = Double.valueOf(lines.get(index++));
+			double verticalAngle = Double.valueOf(lines.get(index++));
+			double distance = Double.valueOf(lines.get(index++));
+			boolean withinSight = Double.valueOf(lines.get(index++)) == 1d;
+			
+			return new TrainingData(id, width, height, pixelData, horizontalAngle, verticalAngle, distance, withinSight);
 		} catch(IOException e) {
 			e.printStackTrace();
 			System.exit(31);

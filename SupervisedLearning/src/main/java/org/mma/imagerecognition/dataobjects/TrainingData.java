@@ -39,27 +39,73 @@ public class TrainingData {
 		verticalAngle = withinSight ? ScaleTool.scaleAngle(rs.getDouble(verticalAngleKey)) : 2d;
 		distance = ScaleTool.scaleDistance(rs.getDouble(distanceKey));
 		
-		features = new double[4];
-		features[horizontalAngleIndex] = horizontalAngle;
-		features[verticalAngleIndex] = verticalAngle;
-		features[distanceIndex] = distance;
-		features[withinSightIndex] = withinSightValue;
+		if(withinSight) {
+			partitionId = VisualPartitionClassifier.GetInstance().GetVisualPartition(horizontalAngle, verticalAngle);
+		} else {
+			partitionId = null;
+		}
 		
-		partitionId = VisualPartitionClassifier.GetInstance().GetVisualPartition(horizontalAngle, verticalAngle);
+		features = calculateFeatures();
 	}
 	
-	public TrainingData(int id, int width, int height, byte[] pixelData, double[] features) {
+	public TrainingData(int id, int width, int height, byte[] pixelData, double horizontalAngle, double verticalAngle, double distance, boolean withinSight) {
 		this.id = id;
 		this.width = width;
 		this.height = height;
 		this.pixelData = pixelData;
-		this.features = features;
-		horizontalAngle	= features[horizontalAngleIndex];
-		verticalAngle	= features[verticalAngleIndex];
-		distance		= features[distanceIndex];
-		withinSight		= features[withinSightIndex] == 1d;
+		this.horizontalAngle = horizontalAngle;
+		this.verticalAngle = verticalAngle;
+		this.distance = distance;
+		this.withinSight = withinSight;
 		
 		partitionId = VisualPartitionClassifier.GetInstance().GetVisualPartition(horizontalAngle, verticalAngle);
+		this.features = calculateFeatures();
+	}
+	
+//	public TrainingData(int id, int width, int height, byte[] pixelData, double[] features) {
+//		this.id = id;
+//		this.width = width;
+//		this.height = height;
+//		this.pixelData = pixelData;
+//		horizontalAngle	= features[horizontalAngleIndex];
+//		verticalAngle	= features[verticalAngleIndex];
+//		distance		= features[distanceIndex];
+//		withinSight		= features[withinSightIndex] == 1d;
+//		
+//		partitionId = VisualPartitionClassifier.GetInstance().GetVisualPartition(horizontalAngle, verticalAngle);
+//		this.features = calculateFeatures();
+//	}
+	
+	private double[] calculateFeatures() {
+		int numberOfPartitions = VisualPartitionClassifier.GetInstance().getNumberOfPartitions();
+		
+		double[] result = new double[numberOfPartitions + 1];
+		// Default to last index
+		int index = numberOfPartitions;
+		if(withinSight) {
+			index = calculateFeatureIndexFromPartitionId();
+		}
+		result[index] = 1d;
+		return result;
+	}
+	
+	private int calculateFeatureIndexFromPartitionId() {
+		int inceptionLevel = partitionId.InceptionLevel;
+		int[] partitions = VisualPartitionClassifier.GetInstance().getPartitions();
+		int index = 0;
+		
+		// Move index according to inception level
+		for(int i = 0; i < inceptionLevel; i++) {
+			index += (partitions[i]*partitions[i]) -1;
+		}
+		
+		// Move index according to y
+		index += partitionId.Y * partitions[inceptionLevel];
+		
+		// Move index according to x
+		index += partitionId.X;
+		
+		return index;
 	}
 	
 	public double[] getFeatures() {

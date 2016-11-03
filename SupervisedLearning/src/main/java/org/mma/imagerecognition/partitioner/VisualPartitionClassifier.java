@@ -10,6 +10,7 @@ public class VisualPartitionClassifier
 {
     private static VisualPartitionClassifier instance = new VisualPartitionClassifier();
 
+    private int numberOfPartitions;
     private int[] partitions;
     private Double[] l;
     private double g;
@@ -34,6 +35,15 @@ public class VisualPartitionClassifier
     {
         SetViewport(fovAngle);
         SetPartitions(partitions);
+        setNumberOfPartitions(partitions);
+    }
+    
+    private void setNumberOfPartitions(int... partitions) {
+    	int result = 0;
+    	for(int partition : partitions) {
+    		result += (partition*partition) - 1;
+    	}
+    	numberOfPartitions = result + 1;
     }
 
     private void SetViewport(double fovAngle)
@@ -169,5 +179,13 @@ public class VisualPartitionClassifier
     private double GetInceptionFov(int inceptionLevel)
     {
         return getPartitionAngle(0, l[inceptionLevel])*2;
+    }
+    
+    public int[] getPartitions() {
+    	return partitions;
+    }
+    
+    public int getNumberOfPartitions() {
+    	return numberOfPartitions;
     }
 }
