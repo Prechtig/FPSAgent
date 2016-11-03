@@ -5,8 +5,8 @@
 	<outputs>6</outputs>
 
 	<parallelAgents>5</parallelAgents>
-	<TrialCount>10</TrialCount>
-	<TrialDuration>20</TrialDuration>
+	<TrialCount>20</TrialCount>
+	<TrialDuration>10</TrialDuration>
 	<StoppingFitness>99999</StoppingFitness>
 
 	<PopulationSize>100</PopulationSize>g
@@ -16,7 +16,7 @@
 	</Activation>
 	<ComplexityRegulationStrategy>Absolute</ComplexityRegulationStrategy>
 	<ComplexityThreshold>1000</ComplexityThreshold>
-	<PersistNGenerations>10</PersistNGenerations>
+	<PersistNGenerations>1</PersistNGenerations>
 	<Description>
 	</Description>
 </Config>
