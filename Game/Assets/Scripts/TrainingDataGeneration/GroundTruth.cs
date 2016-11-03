@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using Assets.Scripts.TrainingDataGeneration;
 
 public class GroundTruth : MonoBehaviour
 {
@@ -54,5 +55,46 @@ public class GroundTruth : MonoBehaviour
 	private static double ScaleDistance(double distance) {
 		if (distance > MAX_DISTANCE) distance = MAX_DISTANCE;
 		return distance/MAX_DISTANCE;
+	}
+
+	public static double[] CalculateFeatures(Camera playerCam) {
+		GameObject bot = FindClosestBots (playerCam, 1).First();
+		bool withinSight = GameObjectHelper.IsObjectWithinSight (playerCam, bot);
+		double horizontalAngle = GameObjectHelper.HorizontalAngleTo (playerCam.transform, bot.transform);
+		double verticalAngle = GameObjectHelper.VerticalAngleTo (playerCam.transform, bot.transform);
+		return CalculateFeatures (horizontalAngle, verticalAngle, withinSight);
+	}
+
+	private static double[] CalculateFeatures(double horizontalAngle, double verticalAngle, bool withinSight) {
+		int numberOfPartitions = VisualPartitionClassifier.GetInstance ().GetNumberOfPartitions ();
+
+		double[] result = new double[numberOfPartitions + 1];
+		// Default to last index
+		int index = numberOfPartitions;
+		if(withinSight) {
+			index = CalculateFeatureIndexFromPartitionId(horizontalAngle, verticalAngle);
+		}
+		result[index] = 1d;
+		return result;
+	}
+
+	private static int CalculateFeatureIndexFromPartitionId(double horizontalAngle, double verticalAngle) {
+		PartitionId partitionId = VisualPartitionClassifier.GetInstance ().GetVisualPartition (horizontalAngle, verticalAngle);
+		int inceptionLevel = partitionId.InceptionLevel;
+		int[] partitions = VisualPartitionClassifier.GetInstance().GetPartitions();
+		int index = 0;
+
+		// Move index according to inception level
+		for(int i = 0; i < inceptionLevel; i++) {
+			index += (partitions[i]*partitions[i]) -1;
+		}
+
+		// Move index according to y
+		index += partitionId.Y * partitions[inceptionLevel];
+
+		// Move index according to x
+		index += partitionId.X;
+
+		return index;
 	}
 }

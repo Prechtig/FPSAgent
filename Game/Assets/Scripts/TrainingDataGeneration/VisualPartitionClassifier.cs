@@ -10,6 +10,7 @@ namespace Assets.Scripts.TrainingDataGeneration
     {
         private static VisualPartitionClassifier instance = new VisualPartitionClassifier();
 
+		private int numberOfPartitions;
         private int[] partitions;
         private double[] l;
         private double g;
@@ -45,6 +46,16 @@ namespace Assets.Scripts.TrainingDataGeneration
             }
             return result;
         }
+
+		private void SetNumberOfPartitions(params int[] partitions) {
+			int result = 0;
+
+
+			foreach(int partition in partitions) {
+				result += (partition*partition) - 1;
+			}
+			numberOfPartitions = result + 1;
+		}
 
         private void SetViewport(double fovAngle)
         {
@@ -192,5 +203,13 @@ namespace Assets.Scripts.TrainingDataGeneration
         {
             return GetPartitionAngle(0, l[inceptionLevel])*2;
         }
+
+		public int GetNumberOfPartitions() {
+			return numberOfPartitions;
+		}
+
+		public int[] GetPartitions() {
+			return partitions;
+		}
     }
 }
