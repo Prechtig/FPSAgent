@@ -24,7 +24,7 @@ public class TrainingData {
 	public static final String withinSightKey = "withinsight";
 	
 	public static int getFeatureCount() {
-		return Integer.parseInt(PropertiesReader.getProjectProperties().getProperty("training.featuresPerBot"));
+		return VisualPartitionClassifier.GetInstance().getNumberOfPartitions() + 1;
 	}
 	
 	public TrainingData(ResultSet rs) throws SQLException {
