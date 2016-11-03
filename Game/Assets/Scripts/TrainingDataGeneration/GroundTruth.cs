@@ -57,8 +57,8 @@ public class GroundTruth : MonoBehaviour
 		return distance/MAX_DISTANCE;
 	}
 
-	public static double[] CalculateFeatures(Camera playerCam) {
-		GameObject bot = FindClosestBots (playerCam, 1).First();
+	public static double[] CalculateFeatures(Camera playerCam, GameObject bot) {
+		//GameObject bot = FindClosestBots (playerCam, 1).First();
 		bool withinSight = GameObjectHelper.IsObjectWithinSight (playerCam, bot);
 		double horizontalAngle = GameObjectHelper.HorizontalAngleTo (playerCam.transform, bot.transform);
 		double verticalAngle = GameObjectHelper.VerticalAngleTo (playerCam.transform, bot.transform);
@@ -71,7 +71,8 @@ public class GroundTruth : MonoBehaviour
 		double[] result = new double[numberOfPartitions + 1];
 		// Default to last index
 		int index = numberOfPartitions;
-		if(withinSight) {
+		if(-33 < horizontalAngle && horizontalAngle < 33 &&
+			-33 < verticalAngle && verticalAngle < 33) {
 			index = CalculateFeatureIndexFromPartitionId(horizontalAngle, verticalAngle);
 		}
 		result[index] = 1d;

@@ -9,6 +9,7 @@ using System;
 using System.Xml;
 using System.IO;
 using SharpNeat.Domains;
+using Assets.Scripts.TrainingDataGeneration;
 
 public class Optimizer : MonoBehaviour {
 	public GameObject wallPrefab;
@@ -136,6 +137,8 @@ public class Optimizer : MonoBehaviour {
 	{
 		Utility.DebugLog = true;
 		Utility.Log("Starting FPS Agent experiment");
+
+		VisualPartitionClassifier.GetInstance ().InitializeFromProperties ();
 		FitnessMap = new Dictionary<IBlackBox, float> ();
 		//_ea = experiment.CreateEvolutionAlgorithm(popFileSavePath);
 		_ea = experiment.CreateEvolutionAlgorithm();

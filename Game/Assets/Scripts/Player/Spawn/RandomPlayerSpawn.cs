@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class RandomPlayerSpawn : MonoBehaviour, IPlayerSpawn
 {
 	public GameObject Player{ get; set;}
+	public NEATArena Arena { get; set;}
 	public Transform[] SpawnPoints{ get; set;}
 	public float X{ get; set;}
 	public float Z{ get; set;}
@@ -45,6 +46,7 @@ public class RandomPlayerSpawn : MonoBehaviour, IPlayerSpawn
 
 		Vector3 spawnPosition = GenerateSpawnPoint ();
 		Player = (GameObject)Instantiate(a, spawnPosition, SpawnPoints[0].rotation);
+		Player.GetComponentInChildren<NEATController> ().Arena = Arena;
 		//HUD.worldCamera = player.GetComponentInChildren<Camera> ();
 		Player.GetComponentInChildren<NEATWeapon> ().ShotsLeftText = ShotsLeftText;
 		//Instantiate (GameObject., spawnPoints.position, spawnPoints.rotation);

@@ -14,7 +14,7 @@ public class NEATArena : MonoBehaviour{
 	//private RandomHorizontalPlayerSpawn PlayerSpawn;
 	//private RandomHorizontalBotSpawn BotSpawn;
 	private RandomPlayerSpawn PlayerSpawn;
-	private RandomBotSpawn BotSpawn;
+	public RandomBotSpawn BotSpawn;
 
 	private IList ArenaObjects;
 
@@ -145,6 +145,7 @@ public class NEATArena : MonoBehaviour{
 		PlayerSpawn.X = x;
 		PlayerSpawn.Z = z;
 		PlayerSpawn.SpawnPoints = PlayerSpawnPoints;
+		PlayerSpawn.Arena = this;
 		PlayerSpawn.SpawnPlayer ();
 	}
 
