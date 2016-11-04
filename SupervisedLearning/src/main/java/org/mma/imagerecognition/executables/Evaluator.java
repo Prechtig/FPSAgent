@@ -27,13 +27,14 @@ public class Evaluator {
 		} else {
 			modelPath = FileSystemDAO.getPathOfModelFile(Integer.parseInt(args[0]));
 		}
-		
 		MultiLayerNetwork network = ModelSerializer.restoreMultiLayerNetwork(new FileInputStream(modelPath.toFile()));
+		System.out.format("Evaluating model %s \n", modelPath.toString());
 		double accuracy = getAccuracy(network);
-		System.out.format("Hit rate: %f", accuracy);
+		System.out.format("Hit rate: %f \n", accuracy);
 	}
 	
 	public static double getAccuracy(MultiLayerNetwork network) {
+//		List<TrainingData> testSet = TrainingDbDao.getTrainingData(60001, 60050);
 		List<TrainingData> testSet = FileSystemDAO.load(Trainer.lastValidationIndex()+1, Trainer.lastTestIndex());
 		if(testSet.size() == 0) {
 			throw new IllegalArgumentException("Test set is empty");
