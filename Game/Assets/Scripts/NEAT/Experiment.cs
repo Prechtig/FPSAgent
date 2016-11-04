@@ -13,6 +13,8 @@ using SharpNeat.DistanceMetrics;
 using SharpNeat.SpeciationStrategies;
 using SharpNEAT.Core;
 using UnityEngine;
+using Kajabity.Tools.Java;
+using System.IO;
 
 public class Experiment : INeatExperiment
 {
@@ -28,6 +30,7 @@ public class Experiment : INeatExperiment
 	Optimizer _optimizer;
 	int _inputCount;
 	int _outputCount;
+    JavaProperties _neatParameters;
 
 	public string Name
 	{
@@ -85,9 +88,35 @@ public class Experiment : INeatExperiment
 		_complexityThreshold = XmlUtils.TryGetValueAsInt(xmlConfig, "ComplexityThreshold");
 		_description = XmlUtils.TryGetValueAsString(xmlConfig, "Description");
 
-		_eaParams = new NeatEvolutionAlgorithmParameters();
+
+        _neatParameters = PropertiesReader.GetPropertyFile(PropertyFile.NEAT);
+        _eaParams = new NeatEvolutionAlgorithmParameters();
+        _eaParams.SpecieCount = _specieCount;
+        _eaParams.ElitismProportion = Double.Parse(_neatParameters.GetProperty("ElitismProportion"));
+        _eaParams.SelectionProportion = Double.Parse(_neatParameters.GetProperty("SelectionProportion"));
+        _eaParams.OffspringAsexualProportion = Double.Parse(_neatParameters.GetProperty("OffspringAsexualProportion"));
+        _eaParams.OffspringSexualProportion = Double.Parse(_neatParameters.GetProperty("OffspringSexualProportion"));
+        _eaParams.InterspeciesMatingProportion = Double.Parse(_neatParameters.GetProperty("InterspeciesMatingProportion"));
+        _eaParams.BestFitnessMovingAverageHistoryLength = Int32.Parse(_neatParameters.GetProperty("BestFitnessMovingAverageHistoryLength"));
+        _eaParams.ComplexityMovingAverageHistoryLength = Int32.Parse(_neatParameters.GetProperty("ComplexityMovingAverageHistoryLength"));
+        _eaParams.MeanSpecieChampFitnessMovingAverageHistoryLength = Int32.Parse(_neatParameters.GetProperty("MeanSpecieChampFitnessMovingAverageHistoryLength"));
+
+        _neatGenomeParams = new NeatGenomeParameters();
+        _neatGenomeParams.FeedforwardOnly = _activationScheme.AcyclicNetwork; //Is it correct that the network is feed forwrd?
+        _neatGenomeParams.ConnectionWeightRange = Double.Parse(_neatParameters.GetProperty("ConnectionWeightRange"));
+        _neatGenomeParams.InitialInterconnectionsProportion = Double.Parse(_neatParameters.GetProperty("InitialInterconnectionsProportion"));
+        _neatGenomeParams.DisjointExcessGenesRecombinedProbability = Double.Parse(_neatParameters.GetProperty("DisjointExcessGenesRecombinedProbability"));
+        _neatGenomeParams.ConnectionWeightMutationProbability = Double.Parse(_neatParameters.GetProperty("ConnectionWeightMutationProbability"));
+        _neatGenomeParams.AddNodeMutationProbability = Double.Parse(_neatParameters.GetProperty("AddNodeMutationProbability"));
+        _neatGenomeParams.AddConnectionMutationProbability = Double.Parse(_neatParameters.GetProperty("AddConnectionMutationProbability"));
+        _neatGenomeParams.DeleteConnectionMutationProbability = Double.Parse(_neatParameters.GetProperty("DeleteConnectionMutationProbability"));
+        _neatGenomeParams.NodeAuxStateMutationProbability = Double.Parse(_neatParameters.GetProperty("NodeAuxStateMutationProbability"));
+
+        /*
 		_eaParams.SpecieCount = _specieCount;
-		_eaParams.OffspringAsexualProportion = 0.25;
+        _eaParams.ElitismProportion = 0.2;
+        _eaParams.SelectionProportion = 0.2;
+        _eaParams.OffspringAsexualProportion = 0.25;
 		_eaParams.OffspringSexualProportion = 0.75;
 		_eaParams.InterspeciesMatingProportion = 0.001;
 		_eaParams.BestFitnessMovingAverageHistoryLength = 30;
@@ -95,14 +124,48 @@ public class Experiment : INeatExperiment
 		_eaParams.MeanSpecieChampFitnessMovingAverageHistoryLength = 30;
 
 		_neatGenomeParams = new NeatGenomeParameters();
-		_neatGenomeParams.FeedforwardOnly = _activationScheme.AcyclicNetwork; //Is it correct that the network is feed forwrd?
-		_neatGenomeParams.DisjointExcessGenesRecombinedProbability = 0.1;
-		_neatGenomeParams.ConnectionWeightMutationProbability = 1.8d;
-		_neatGenomeParams.AddNodeMutationProbability = 0.03;
-		_neatGenomeParams.AddConnectionMutationProbability = 0.05;
+        _neatGenomeParams.FeedforwardOnly = _activationScheme.AcyclicNetwork; //Is it correct that the network is feed forwrd?
+        _neatGenomeParams.ConnectionWeightRange = 5.0;
+        _neatGenomeParams.InitialInterconnectionsProportion = 1f;
+        _neatGenomeParams.DisjointExcessGenesRecombinedProbability = 0.1;
+        _neatGenomeParams.ConnectionWeightMutationProbability = 1.8d;
+        _neatGenomeParams.AddNodeMutationProbability = 0.03;
+        _neatGenomeParams.AddConnectionMutationProbability = 0.05;
+        _neatGenomeParams.DeleteConnectionMutationProbability = 0.004;
+        _neatGenomeParams.NodeAuxStateMutationProbability = 0.00;
+        */
 
 
-		_inputCount = input;
+        ///WRITING PROPERTY FILE
+        /*
+        JavaProperties props = new JavaProperties();
+        props.Add("ElitismProportion", 0.2);
+        props.Add("SelectionProportion", 0.2);
+        props.Add("OffspringAsexualProportion", 0.25);
+        props.Add("OffspringSexualProportion", 0.75);
+        props.Add("InterspeciesMatingProportion", 0.001);
+        props.Add("BestFitnessMovingAverageHistoryLength", 30);
+        props.Add("ComplexityMovingAverageHistoryLength", 30);
+        props.Add("MeanSpecieChampFitnessMovingAverageHistoryLength", 30);
+        props.Add("ConnectionWeightRange", 5.0);
+        props.Add("InitialInterconnectionsProportion", 1.0);
+        props.Add("DisjointExcessGenesRecombinedProbability", 0.1);
+        props.Add("ConnectionWeightMutationProbability", 1.8);
+        props.Add("AddNodeMutationProbability", 0.03);
+        props.Add("AddConnectionMutationProbability", 0.05);
+        props.Add("DeleteConnectionMutationProbability", 0.004);
+        props.Add("NodeAuxStateMutationProbability", 0.0);
+        props.Add("c1", 1);
+        props.Add("c2", 1);
+        props.Add("c3", 0.4);
+        JavaPropertyWriter jw = new JavaPropertyWriter(props);
+        using (FileStream fileStream = new FileStream("C:\\prop.properties", FileMode.Create, FileAccess.ReadWrite))
+        {
+            jw.Write(fileStream, "");
+        }
+        */
+
+        _inputCount = input;
 		_outputCount = output;
 	}
 
@@ -172,7 +235,10 @@ public class Experiment : INeatExperiment
 
 	public NeatEvolutionAlgorithm<NeatGenome> CreateEvolutionAlgorithm(IGenomeFactory<NeatGenome> genomeFactory, List<NeatGenome> genomeList)
 	{
-		IDistanceMetric distanceMetric = new ManhattanDistanceMetric(1.0, 1.0, 0.4);
+        double c1 = Double.Parse(_neatParameters.GetProperty("c1"));
+        double c2 = Double.Parse(_neatParameters.GetProperty("c2"));
+        double c3 = Double.Parse(_neatParameters.GetProperty("c3"));
+        IDistanceMetric distanceMetric = new ManhattanDistanceMetric(c1, c2, c3);
 		ISpeciationStrategy<NeatGenome> speciationStrategy = new KMeansClusteringStrategy<NeatGenome>(distanceMetric);
 		//ISpeciationStrategy<NeatGenome> speciationStrategy = new RandomClusteringStrategy<NeatGenome>();
 
