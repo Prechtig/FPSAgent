@@ -10,6 +10,7 @@ using System.Xml;
 using System.IO;
 using SharpNeat.Domains;
 using Assets.Scripts.TrainingDataGeneration;
+using Assets.Scripts;
 
 public class Optimizer : MonoBehaviour {
 	public GameObject wallPrefab;
@@ -51,6 +52,8 @@ public class Optimizer : MonoBehaviour {
 	private bool Started = false;
 	private bool FirstUpdate = true;
 
+    private string _resultSavePath;
+
 	public int Trials
 	{
 		get { return trials; }
@@ -71,18 +74,14 @@ public class Optimizer : MonoBehaviour {
 		XmlDocument xmlConfig = new XmlDocument();
 		TextAsset textAsset = (TextAsset)Resources.Load("experiment.config");
 		xmlConfig.LoadXml(textAsset.text);
-
 		InitFromConfig (xmlConfig.DocumentElement);
 
 
 		experiment.SetOptimizer(this);
-
 		experiment.Initialize("FPS Experiment", xmlConfig.DocumentElement, NUM_INPUTS, NUM_OUTPUTS);
 
-		//champFileSavePath = Application.persistentDataPath + string.Format("/{0}.champ.xml", "FPSAgent");
-		//popFileSavePath = Application.persistentDataPath + string.Format("/{0}.pop.xml", "FPSAgent");
-
-		print("Data save path: " + Application.persistentDataPath + string.Format("/GENERATION/"));
+        //champFileSavePath = Application.persistentDataPath + string.Format("/{0}.champ.xml", "FPSAgent");
+        //popFileSavePath = Application.persistentDataPath + string.Format("/{0}.pop.xml", "FPSAgent");
 	}
 
 	// Update is called once per frame
@@ -135,8 +134,25 @@ public class Optimizer : MonoBehaviour {
 
 	public void StartEA()
 	{
-		Utility.DebugLog = true;
-		Utility.Log("Starting FPS Agent experiment");
+        _resultSavePath = Application.persistentDataPath + "/" + DateTime.Now.ToString("dd-MM-yy--HH-mm") + "/";
+        print("Data save path: " + _resultSavePath);
+
+        Utility.DebugLog = true;
+        LocalLogger.Initialize(_resultSavePath);
+        //Copy Settings
+        string currentDir = Environment.CurrentDirectory;
+        File.Copy(currentDir + "\\Assets\\Resources\\experiment.config.xml", _resultSavePath + "experiment.config.xml", true);
+        File.Copy(PropertiesReader.GetPropertyFilePath(PropertyFile.Project), _resultSavePath + "project.properties", true);
+        File.Copy(PropertiesReader.GetPropertyFilePath(PropertyFile.NEAT), _resultSavePath + "neat.properties", true);
+
+        //Write parameters
+        //species
+        //genome params
+        //
+
+
+
+        Utility.Log("Starting FPS Agent experiment");
 
 		VisualPartitionClassifier.GetInstance ().InitializeFromProperties ();
 		FitnessMap = new Dictionary<IBlackBox, float> ();
@@ -156,7 +172,8 @@ public class Optimizer : MonoBehaviour {
 
 		if (!FirstUpdate) {
 			Utility.Log (string.Format ("gen={0:N0} bestFitness={1:N6}", _ea.CurrentGeneration, Fitness));
-		} else {
+            LocalLogger.Write (string.Format("gen={0:N0} bestFitness={1:N6}", _ea.CurrentGeneration, Fitness));
+        } else {
 			FirstUpdate = false;
 		}
 
@@ -190,13 +207,13 @@ public class Optimizer : MonoBehaviour {
 	}
 
 	public void PersistPopulation(){
-		string champFileSavePath = Application.persistentDataPath + string.Format ("/{0}/{1}.champ.xml", _ea.CurrentGeneration, "FPSAgent");
-		string popFileSavePath = Application.persistentDataPath + string.Format ("/{0}/{1}.pop.xml", _ea.CurrentGeneration, "FPSAgent");
+		string champFileSavePath = _resultSavePath + string.Format ("{0}/{1}.champ.xml", _ea.CurrentGeneration, "FPSAgent");
+		string popFileSavePath = _resultSavePath + string.Format ("{0}/{1}.pop.xml", _ea.CurrentGeneration, "FPSAgent");
 
 		XmlWriterSettings _xwSettings = new XmlWriterSettings ();
 		_xwSettings.Indent = true;
 		// Save genomes to xml file.        
-		DirectoryInfo dirInf = new DirectoryInfo (Application.persistentDataPath + string.Format ("/{0}", _ea.CurrentGeneration));
+		DirectoryInfo dirInf = new DirectoryInfo (_resultSavePath + string.Format ("{0}", _ea.CurrentGeneration));
 		if (!dirInf.Exists) {
 			dirInf.Create ();
 		}
@@ -260,11 +277,12 @@ public class Optimizer : MonoBehaviour {
 			Time.timeScale = 1;
 
 			NeatGenome genome = null;
-			string champFileLoadPath = Application.persistentDataPath + string.Format ("/{0}/{1}.champ.xml", _ea.CurrentGeneration - 1, "FPSAgent");
-			//string champFileLoadPath = Application.persistentDataPath + string.Format ("/{0}/{1}.champ.xml", 248, "FPSAgent");
+			string champFileLoadPath = _resultSavePath + string.Format ("{0}/{1}.champ.xml", _ea.CurrentGeneration - 1, "FPSAgent");
+            //string champFileLoadPath = _resultSavePath + string.Format ("{0}/{1}.champ.xml", 248, "FPSAgent");
 
-			// Try to load the genome from the XML document.
-			try {
+            // Try to load the genome from the XML document.
+            try
+            {
 				using (XmlReader xr = XmlReader.Create (champFileLoadPath))
 					genome = NeatGenomeXmlIO.ReadCompleteGenomeList (xr, false, (NeatGenomeFactory)experiment.CreateGenomeFactory ()) [0];
 			} catch (Exception e1) {
