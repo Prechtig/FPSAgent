@@ -4,13 +4,13 @@
 	<inputs>26</inputs>
 	<outputs>6</outputs>
 
-	<parallelAgents>10</parallelAgents>
-	<TrialCount>20</TrialCount>
+	<parallelAgents>1</parallelAgents>
+	<TrialCount>3</TrialCount>
 	<TrialDuration>15</TrialDuration>
 	<StoppingFitness>99999</StoppingFitness>
 
-	<PopulationSize>100</PopulationSize>
-	<SpecieCount>15</SpecieCount>
+	<PopulationSize>3</PopulationSize>
+	<SpecieCount>2</SpecieCount>
 	<Activation>
 	<Scheme>Acyclic</Scheme>
 	</Activation>

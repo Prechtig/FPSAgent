@@ -34,7 +34,12 @@ public class NEATController : UnitController {
 	// Update is called once per frame
 	void FixedUpdate()
 	{
-		if (IsRunning) {
+		if (Input.GetKey (KeyCode.Mouse0)) {
+			weapon.FireOneShot ();
+		} else if (Input.GetKeyDown (KeyCode.R)) {
+			weapon.Reload ();
+		}
+		if (!IsRunning) {
 			ISignalArray inputArr = box.InputSignalArray;
 			//float[] groundTruths = GroundTruth.CalculateGroundTruthsScaled (playerCam, 1);
 			//inputArr.CopyFrom(groundTruths.Select(f => (double)f).ToArray(), 0);

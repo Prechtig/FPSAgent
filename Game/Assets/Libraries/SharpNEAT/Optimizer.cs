@@ -154,7 +154,7 @@ public class Optimizer : MonoBehaviour {
 		//_ea = experiment.CreateEvolutionAlgorithm(popFileSavePath);
 		_ea = experiment.CreateEvolutionAlgorithm();
 		_ea.UpdateEvent += new EventHandler(ea_UpdateEvent);
-		var evoSpeed = 25;
+		var evoSpeed = 1;
 		Started = true;
 		Time.timeScale = evoSpeed;
 		_ea.StartContinue();
@@ -252,7 +252,7 @@ public class Optimizer : MonoBehaviour {
 	{
 		UnitController ct = ControllerMap[box];
 		NEATArena nt = ArenaMap [box];
-
+		Debug.Log (nt.GetFitness ());
 		if (!RunBestNetwork) {
 			if (FitnessMap.ContainsKey (box)) {
 				FitnessMap [box] = nt.GetFitness ();

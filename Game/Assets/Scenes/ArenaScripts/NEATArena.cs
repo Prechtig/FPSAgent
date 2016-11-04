@@ -24,6 +24,7 @@ public class NEATArena : MonoBehaviour{
 	public GameObject WallPrefab;
 	private float RunningFitness = 0f;
 	private int RunningFitnessCount = 0;
+	private NEATWeapon neatWeapon;
 
 	public void Init() {
 		y = GetAndIncrementYOffset () * 100;
@@ -51,17 +52,26 @@ public class NEATArena : MonoBehaviour{
 		yOffset = 0;
 	}
 
+
+
 	void FixedUpdate () {
 		if (BotSpawn.Bots.Count > 0) {
-			float angle = Mathf.PI;
+			float angle;
 			float k = 75f;
-			float c = 3f;
+			float c = 2f;
 
-			angle = Vector3.Angle (PlayerSpawn.Player.transform.forward, BotSpawn.Bots [0].transform.position - PlayerSpawn.Player.transform.position) * Mathf.Deg2Rad;
+			RaycastHit hit;
+			Vector3 direction = neatWeapon.gameObject.transform.TransformDirection (0, 0, 1);
+			if (Physics.Raycast (neatWeapon.bulletGo.position, direction, out hit, neatWeapon.range, neatWeapon.hitLayers) && hit.transform.tag == "Bot") {
+				angle = 0;
+			} else {
+				angle = Vector3.Angle (PlayerSpawn.Player.transform.forward, BotSpawn.Bots [0].transform.position - PlayerSpawn.Player.transform.position) * Mathf.Deg2Rad;
+			}
+
+
 			//RunningFitness += k / (1 + (angle * c));
 
-			RunningFitness += k / (1 + (angle * angle));
-			
+			RunningFitness += k / Mathf.Pow((1 + angle), c);
 			RunningFitnessCount++;
 		}
 	}
@@ -147,6 +157,7 @@ public class NEATArena : MonoBehaviour{
 		PlayerSpawn.SpawnPoints = PlayerSpawnPoints;
 		PlayerSpawn.Arena = this;
 		PlayerSpawn.SpawnPlayer ();
+		neatWeapon = PlayerSpawn.Player.GetComponentInChildren<NEATWeapon> ();
 	}
 
 	public void SpawnEnemies(){
