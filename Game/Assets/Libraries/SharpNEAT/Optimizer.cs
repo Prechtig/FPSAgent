@@ -139,17 +139,11 @@ public class Optimizer : MonoBehaviour {
 
         Utility.DebugLog = true;
         LocalLogger.Initialize(_resultSavePath);
-        //Copy Settings
+        //Copy Settings to result folder
         string currentDir = Environment.CurrentDirectory;
         File.Copy(currentDir + "\\Assets\\Resources\\experiment.config.xml", _resultSavePath + "experiment.config.xml", true);
         File.Copy(PropertiesReader.GetPropertyFilePath(PropertyFile.Project), _resultSavePath + "project.properties", true);
         File.Copy(PropertiesReader.GetPropertyFilePath(PropertyFile.NEAT), _resultSavePath + "neat.properties", true);
-
-        //Write parameters
-        //species
-        //genome params
-        //
-
 
 
         Utility.Log("Starting FPS Agent experiment");

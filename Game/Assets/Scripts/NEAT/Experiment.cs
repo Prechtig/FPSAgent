@@ -112,59 +112,6 @@ public class Experiment : INeatExperiment
         _neatGenomeParams.DeleteConnectionMutationProbability = Double.Parse(_neatParameters.GetProperty("DeleteConnectionMutationProbability"));
         _neatGenomeParams.NodeAuxStateMutationProbability = Double.Parse(_neatParameters.GetProperty("NodeAuxStateMutationProbability"));
 
-        /*
-		_eaParams.SpecieCount = _specieCount;
-        _eaParams.ElitismProportion = 0.2;
-        _eaParams.SelectionProportion = 0.2;
-        _eaParams.OffspringAsexualProportion = 0.25;
-		_eaParams.OffspringSexualProportion = 0.75;
-		_eaParams.InterspeciesMatingProportion = 0.001;
-		_eaParams.BestFitnessMovingAverageHistoryLength = 30;
-		_eaParams.ComplexityMovingAverageHistoryLength = 30;
-		_eaParams.MeanSpecieChampFitnessMovingAverageHistoryLength = 30;
-
-		_neatGenomeParams = new NeatGenomeParameters();
-        _neatGenomeParams.FeedforwardOnly = _activationScheme.AcyclicNetwork; //Is it correct that the network is feed forwrd?
-        _neatGenomeParams.ConnectionWeightRange = 5.0;
-        _neatGenomeParams.InitialInterconnectionsProportion = 1f;
-        _neatGenomeParams.DisjointExcessGenesRecombinedProbability = 0.1;
-        _neatGenomeParams.ConnectionWeightMutationProbability = 1.8d;
-        _neatGenomeParams.AddNodeMutationProbability = 0.03;
-        _neatGenomeParams.AddConnectionMutationProbability = 0.05;
-        _neatGenomeParams.DeleteConnectionMutationProbability = 0.004;
-        _neatGenomeParams.NodeAuxStateMutationProbability = 0.00;
-        */
-
-
-        ///WRITING PROPERTY FILE
-        /*
-        JavaProperties props = new JavaProperties();
-        props.Add("ElitismProportion", 0.2);
-        props.Add("SelectionProportion", 0.2);
-        props.Add("OffspringAsexualProportion", 0.25);
-        props.Add("OffspringSexualProportion", 0.75);
-        props.Add("InterspeciesMatingProportion", 0.001);
-        props.Add("BestFitnessMovingAverageHistoryLength", 30);
-        props.Add("ComplexityMovingAverageHistoryLength", 30);
-        props.Add("MeanSpecieChampFitnessMovingAverageHistoryLength", 30);
-        props.Add("ConnectionWeightRange", 5.0);
-        props.Add("InitialInterconnectionsProportion", 1.0);
-        props.Add("DisjointExcessGenesRecombinedProbability", 0.1);
-        props.Add("ConnectionWeightMutationProbability", 1.8);
-        props.Add("AddNodeMutationProbability", 0.03);
-        props.Add("AddConnectionMutationProbability", 0.05);
-        props.Add("DeleteConnectionMutationProbability", 0.004);
-        props.Add("NodeAuxStateMutationProbability", 0.0);
-        props.Add("c1", 1);
-        props.Add("c2", 1);
-        props.Add("c3", 0.4);
-        JavaPropertyWriter jw = new JavaPropertyWriter(props);
-        using (FileStream fileStream = new FileStream("C:\\prop.properties", FileMode.Create, FileAccess.ReadWrite))
-        {
-            jw.Write(fileStream, "");
-        }
-        */
-
         _inputCount = input;
 		_outputCount = output;
 	}
