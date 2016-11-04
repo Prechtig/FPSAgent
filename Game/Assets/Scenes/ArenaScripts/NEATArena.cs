@@ -52,30 +52,6 @@ public class NEATArena : MonoBehaviour{
 		yOffset = 0;
 	}
 
-
-
-	void FixedUpdate () {
-		if (BotSpawn.Bots.Count > 0) {
-			float angle;
-			float k = 75f;
-			float c = 2f;
-
-			RaycastHit hit;
-			Vector3 direction = neatWeapon.gameObject.transform.TransformDirection (0, 0, 1);
-			if (Physics.Raycast (neatWeapon.bulletGo.position, direction, out hit, neatWeapon.range, neatWeapon.hitLayers) && hit.transform.tag == "Bot") {
-				angle = 0;
-			} else {
-				angle = Vector3.Angle (PlayerSpawn.Player.transform.forward, BotSpawn.Bots [0].transform.position - PlayerSpawn.Player.transform.position) * Mathf.Deg2Rad;
-			}
-
-
-			//RunningFitness += k / (1 + (angle * c));
-
-			RunningFitness += k / Mathf.Pow((1 + angle), c);
-			RunningFitnessCount++;
-		}
-	}
-
 	private void CreateArena(float x, float z, float wallHeight, float wallThickness) {
 		// Create floor
 		CreateCube (x, 0.1f, z, 0, y, 0);
@@ -185,7 +161,8 @@ public class NEATArena : MonoBehaviour{
 		*/
 
 		fitness += RunningFitness / RunningFitnessCount;
-		return fitness + BotSpawn.GetFitness ();
+        //return fitness + BotSpawn.GetFitness ();
+        return 0.0f;
 	}
 
 	public void OnDestroy(){
