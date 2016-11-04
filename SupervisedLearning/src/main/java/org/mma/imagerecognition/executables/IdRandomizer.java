@@ -1,6 +1,7 @@
 package org.mma.imagerecognition.executables;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,13 +14,19 @@ import org.mma.imagerecognition.dao.DbConnector;
 
 public class IdRandomizer extends DbConnector {
 	
+	private static final int BATCH_SIZE = 50;
+	
+	private static Connection conn;
 	private static Statement stmt;
 	
 	public static void main(String[] args) {
 		try(Connection conn = getConnection();
 			Statement stmt = conn.createStatement()) {
+			conn.setAutoCommit(false);
+			IdRandomizer.conn = conn;
 			IdRandomizer.stmt = stmt;
 			randomizeIds();
+			conn.commit();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -29,20 +36,32 @@ public class IdRandomizer extends DbConnector {
 		copyIdColumn();
 		deleteUniqueIdConstraint();
 		int maxId = getMaxId();
+		long currentTimeMillis = System.currentTimeMillis();
 		updateIds(maxId);
+		long currentTimeMillis2 = System.currentTimeMillis();
+		System.out.println(String.format("Took %d", currentTimeMillis2 - currentTimeMillis));
 		addUniqueIdConstraint(maxId);
 	}
 	
-	private static void updateIds(int maxId) {
-		System.out.print("Updating ids... ");
+	private static void updateIds(int maxId) throws SQLException {
+		System.out.println("Updating ids... ");
+		PreparedStatement preparedStatement = conn.prepareStatement(String.format("UPDATE %s SET id = ? WHERE tmpId = ?", tableName));
+		
 		List<Integer> shuffledIndices = getShuffledIndices(maxId);
-		IntStream.rangeClosed(1, maxId).boxed().sequential().forEach(id -> updateId(id, shuffledIndices.get(id-1)));
+		IntStream.rangeClosed(1, maxId).boxed().sequential().forEach(id -> updateId(preparedStatement, id, shuffledIndices.get(id-1)));
 		System.out.println("DONE");
 	}
 	
-	private static void updateId(int oldId, int newId) {
+	private static void updateId(PreparedStatement preparedStatement, int oldId, int newId) {
 		try {
-			stmt.executeUpdate(String.format("UPDATE %s SET id = %d WHERE tmpId = %d", tableName, newId, oldId));
+			preparedStatement.setInt(1, newId);
+			preparedStatement.setInt(2, oldId);
+			preparedStatement.addBatch();
+			
+			if(oldId % BATCH_SIZE == 0) {
+				preparedStatement.executeBatch();
+				System.out.println(String.format("Changed % 8d ids", oldId));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -71,7 +90,7 @@ public class IdRandomizer extends DbConnector {
 	}
 	
 	private static int getMaxId() throws SQLException {
-		ResultSet rs = stmt.executeQuery(String.format("SELECT MAX(id) FROM %s", tableName));
+		ResultSet rs = stmt.executeQuery(String.format("SELECT MAX(tmpId) FROM %s", tableName));
 		rs.next();
 		return rs.getInt(1);
 	}
