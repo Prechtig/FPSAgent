@@ -134,14 +134,15 @@ public class Optimizer : MonoBehaviour {
 
 	public void StartEA()
 	{
-        _resultSavePath = Application.persistentDataPath + "/" + DateTime.Now.ToString("dd-MM-yy--HH-mm") + "/";
+		char dirSepChar = Path.DirectorySeparatorChar;
+		_resultSavePath = Application.persistentDataPath + dirSepChar + DateTime.Now.ToString("dd-MM-yy--HH-mm") + dirSepChar;
         print("Data save path: " + _resultSavePath);
 
         Utility.DebugLog = true;
         LocalLogger.Initialize(_resultSavePath);
         //Copy Settings to result folder
         string currentDir = Environment.CurrentDirectory;
-        File.Copy(currentDir + "\\Assets\\Resources\\experiment.config.xml", _resultSavePath + "experiment.config.xml", true);
+		File.Copy(currentDir + dirSepChar + "Assets" + dirSepChar + "Resources" + dirSepChar + "experiment.config.xml", _resultSavePath + "experiment.config.xml", true);
         File.Copy(PropertiesReader.GetPropertyFilePath(PropertyFile.Project), _resultSavePath + "project.properties", true);
         File.Copy(PropertiesReader.GetPropertyFilePath(PropertyFile.NEAT), _resultSavePath + "neat.properties", true);
 
