@@ -160,7 +160,7 @@ public class NEATArena : MonoBehaviour{
 		fitness = k / (1 + (angle * c));
 		*/
 
-		fitness += RunningFitness / RunningFitnessCount;
+		//fitness += RunningFitness / RunningFitnessCount;
         //return fitness + BotSpawn.GetFitness ();
         return 0.0f;
 	}
