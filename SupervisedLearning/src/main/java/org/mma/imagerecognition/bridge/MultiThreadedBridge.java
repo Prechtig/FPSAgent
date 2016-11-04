@@ -1,24 +1,38 @@
 package org.mma.imagerecognition.bridge;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteOrder;
 
+import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.deeplearning4j.util.ModelSerializer;
+import org.mma.imagerecognition.dao.FileSystemDAO;
 import org.mma.imagerecognition.tools.PropertiesReader;
-
-import java.io.IOException;
 
 public class MultiThreadedBridge implements Runnable {
 
-	protected int serverPort = 8080;
+	protected final int serverPort;
 	protected ServerSocket serverSocket = null;
 	protected boolean isStopped = false;
 	protected Thread runningThread = null;
 	protected final ByteOrder bridgeByteOrder;
+	protected final MultiLayerNetwork network;
 
-	public MultiThreadedBridge(int port) {
-		this.serverPort = port;
+	public MultiThreadedBridge(File networkFile) {
+		this.network = loadNetwork(networkFile);
+		this.serverPort = determinePort();
 		bridgeByteOrder = determineByteOrder();
+	}
+	
+	private MultiLayerNetwork loadNetwork(File networkFile) {
+		try {
+		return ModelSerializer.restoreMultiLayerNetwork(new FileInputStream(networkFile));
+		} catch (IOException e) {
+			throw new RuntimeException("Could not load network");
+		}
 	}
 
 	public void run() {
@@ -37,19 +51,19 @@ public class MultiThreadedBridge implements Runnable {
 				}
 				throw new RuntimeException("Error accepting client connection", e);
 			}
-			new Thread(new WorkerRunnable(clientSocket, bridgeByteOrder)).start();
+			new Thread(new WorkerRunnable(clientSocket, bridgeByteOrder, network)).start();
 		}
 		System.out.println("Server Stopped.");
 	}
 
 	private synchronized boolean isStopped() {
-		return this.isStopped;
+		return isStopped;
 	}
 
 	public synchronized void stop() {
 		this.isStopped = true;
 		try {
-			this.serverSocket.close();
+			serverSocket.close();
 		} catch (IOException e) {
 			throw new RuntimeException("Error closing server", e);
 		}
@@ -57,10 +71,18 @@ public class MultiThreadedBridge implements Runnable {
 
 	private void openServerSocket() {
 		try {
-			this.serverSocket = new ServerSocket(this.serverPort);
+			serverSocket = new ServerSocket(serverPort);
 		} catch (IOException e) {
-			throw new RuntimeException("Cannot open port 8080", e);
+			throw new RuntimeException(String.format("Cannot open port %d", serverPort), e);
 		}
+	}
+	
+	private static int determinePort() {
+		String port = PropertiesReader.getProjectProperties().getProperty("bridge.port");
+		if(port == null) {
+			throw new IllegalStateException("Please specify bridge.port in the project properties file.");
+		}
+		return Integer.parseInt(port);
 	}
 	
 	private static ByteOrder determineByteOrder() {
@@ -74,7 +96,7 @@ public class MultiThreadedBridge implements Runnable {
 	}
 	
 	public static void main(String[] args) {
-		MultiThreadedBridge server = new MultiThreadedBridge(4343);
+		MultiThreadedBridge server = new MultiThreadedBridge(FileSystemDAO.getPathOfLatestModelFile().toFile());
 		new Thread(server).start();
 
 		try {
