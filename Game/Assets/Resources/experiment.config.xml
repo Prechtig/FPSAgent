@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <Config>
-	<inputs>26</inputs>
+	<inputs>34</inputs>
 	<outputs>6</outputs>
 
-	<parallelAgents>10</parallelAgents>
+	<parallelAgents>5</parallelAgents>
 	<TrialCount>20</TrialCount>
 	<TrialDuration>15</TrialDuration>
 	<StoppingFitness>99999</StoppingFitness>
 
 	<PopulationSize>100</PopulationSize>
-	<SpecieCount>15</SpecieCount>
+	<SpecieCount>1</SpecieCount>
 	<Activation>
 	<Scheme>Acyclic</Scheme>
 	</Activation>
