@@ -15,7 +15,7 @@
 	<Scheme>Acyclic</Scheme>
 	</Activation>
 	<ComplexityRegulationStrategy>Absolute</ComplexityRegulationStrategy>
-	<ComplexityThreshold>1000</ComplexityThreshold>
+	<ComplexityThreshold>999999</ComplexityThreshold>
 	<PersistNGenerations>1</PersistNGenerations>
 	<Description>
 	</Description>
