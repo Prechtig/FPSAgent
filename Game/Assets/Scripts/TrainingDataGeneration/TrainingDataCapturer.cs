@@ -58,7 +58,7 @@ public class TrainingDataCapturer : MonoBehaviour
 			playerCam.rect = new Rect (0f, 0f, 1f, 1f);
 			playerCam.targetTexture = new RenderTexture (width, height, 24);
 			playerCam.aspect = 1f;
-			playerCam.nearClipPlane = 0.001f;
+			playerCam.nearClipPlane = 0.35f;
 			playerCam.farClipPlane = 1000f;
 
 		}
