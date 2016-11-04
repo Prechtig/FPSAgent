@@ -10,8 +10,10 @@ public class PropertiesReader
 
 	private static readonly string projectPropertiesLocation			= propertyFileFolder + "project.properties";
 	private static readonly string userCredentialsPropertiesLocation	= propertyFileFolder + "user_credentials.properties";
+    private static readonly string neatPropertiesLocation               = propertyFileFolder + "neat.properties";
 
-	private static readonly Dictionary<PropertyFile, JavaProperties> loadedProperties = new Dictionary<PropertyFile, JavaProperties>();
+
+    private static readonly Dictionary<PropertyFile, JavaProperties> loadedProperties = new Dictionary<PropertyFile, JavaProperties>();
 
 	private static JavaProperties LoadPropertyFile(string location) {
 		JavaProperties properties = new JavaProperties ();
@@ -22,9 +24,11 @@ public class PropertiesReader
 	private static JavaProperties LoadPropertyFile(PropertyFile pf) {
 		switch (pf) {
 		case PropertyFile.UserCredentials:
-			return LoadPropertyFile(userCredentialsPropertiesLocation);
+			return LoadPropertyFile (userCredentialsPropertiesLocation);
 		case PropertyFile.Project:
 			return LoadPropertyFile (projectPropertiesLocation);
+        case PropertyFile.NEAT:
+            return LoadPropertyFile (neatPropertiesLocation);
 		default:
 			throw new InvalidOperationException ();
 		}
@@ -39,9 +43,25 @@ public class PropertiesReader
 		}
 		return result;
 	}
+
+    public static string GetPropertyFilePath(PropertyFile pf)
+    {
+        switch (pf)
+        {
+            case PropertyFile.UserCredentials:
+                return userCredentialsPropertiesLocation;
+            case PropertyFile.Project:
+                return projectPropertiesLocation;
+            case PropertyFile.NEAT:
+                return neatPropertiesLocation;
+            default:
+                throw new InvalidOperationException();
+        }
+    }
 }
 
 public enum PropertyFile {
 	UserCredentials,
 	Project,
+    NEAT,
 }

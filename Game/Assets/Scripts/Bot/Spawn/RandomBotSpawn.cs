@@ -52,6 +52,10 @@ public class RandomBotSpawn : MonoBehaviour, IBotSpawn
 		foreach (GameObject b in Bots) {
 			fitness += BotVitals.MAX_HITPOINTS - b.GetComponent<BotVitals>().hitPoints;
 		}
+        /*if(fitness > 200)
+        {
+            Debug.Log("Fitness: " + fitness);
+        }*/
 		return fitness;
 	}
 

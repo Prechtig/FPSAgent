@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <Config>
-	<inputs>26</inputs>
+	<inputs>34</inputs>
 	<outputs>6</outputs>
 
 	<parallelAgents>5</parallelAgents>
 	<TrialCount>20</TrialCount>
-	<TrialDuration>10</TrialDuration>
+	<TrialDuration>15</TrialDuration>
 	<StoppingFitness>99999</StoppingFitness>
 
-	<PopulationSize>100</PopulationSize>g
-	<SpecieCount>15</SpecieCount>
+	<PopulationSize>100</PopulationSize>
+	<SpecieCount>1</SpecieCount>
 	<Activation>
 	<Scheme>Acyclic</Scheme>
 	</Activation>
 	<ComplexityRegulationStrategy>Absolute</ComplexityRegulationStrategy>
-	<ComplexityThreshold>1000</ComplexityThreshold>
+	<ComplexityThreshold>999999</ComplexityThreshold>
 	<PersistNGenerations>1</PersistNGenerations>
 	<Description>
 	</Description>
