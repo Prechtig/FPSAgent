@@ -62,40 +62,21 @@ public class GroundTruth : MonoBehaviour
 		bool withinSight = GameObjectHelper.IsObjectWithinSight (playerCam, bot);
 		double horizontalAngle = GameObjectHelper.HorizontalAngleTo (playerCam.transform, bot.transform);
 		double verticalAngle = GameObjectHelper.VerticalAngleTo (playerCam.transform, bot.transform);
-		return CalculateFeatures (horizontalAngle, verticalAngle, withinSight);
+		return CalculateFeatures (horizontalAngle, verticalAngle);
 	}
 
-	private static double[] CalculateFeatures(double horizontalAngle, double verticalAngle, bool withinSight) {
+	public static double[] CalculateFeatures(double horizontalAngle, double verticalAngle) {
 		int numberOfPartitions = VisualPartitionClassifier.GetInstance ().GetNumberOfPartitions ();
 
 		double[] result = new double[numberOfPartitions + 1];
 		// Default to last index
 		int index = numberOfPartitions;
-		if(-33 < horizontalAngle && horizontalAngle < 33 &&
-			-33 < verticalAngle && verticalAngle < 33) {
-			index = CalculateFeatureIndexFromPartitionId(horizontalAngle, verticalAngle);
-		}
-		result[index] = 1d;
-		return result;
-	}
-
-	private static int CalculateFeatureIndexFromPartitionId(double horizontalAngle, double verticalAngle) {
-		PartitionId partitionId = VisualPartitionClassifier.GetInstance ().GetVisualPartition (horizontalAngle, verticalAngle);
-		int inceptionLevel = partitionId.InceptionLevel;
-		int[] partitions = VisualPartitionClassifier.GetInstance().GetPartitions();
-		int index = 0;
-
-		// Move index according to inception level
-		for(int i = 0; i < inceptionLevel; i++) {
-			index += (partitions[i]*partitions[i]) -1;
-		}
-
-		// Move index according to y
-		index += partitionId.Y * partitions[inceptionLevel];
-
-		// Move index according to x
-		index += partitionId.X;
-
-		return index;
+        PartitionId partitionId = VisualPartitionClassifier.GetInstance().GetVisualPartition(horizontalAngle, verticalAngle);
+        if(partitionId != null)
+        {
+            index = VisualPartitionClassifier.GetInstance().CalculateFeatureIndexFromPartitionId(partitionId);
+        }
+        result[index] = 1d;
+        return result;
 	}
 }
