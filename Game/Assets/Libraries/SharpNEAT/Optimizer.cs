@@ -150,8 +150,8 @@ public class Optimizer : MonoBehaviour {
 
 		VisualPartitionClassifier.GetInstance ().InitializeFromProperties ();
 		FitnessMap = new Dictionary<IBlackBox, float> ();
-		_ea = experiment.CreateEvolutionAlgorithm("C:\\Users\\Mikkel\\AppData\\LocalLow\\DefaultCompany\\Game\\04-11-16--21-29\\371\\FPSAgent.pop.xml");
-		//_ea = experiment.CreateEvolutionAlgorithm();
+		//_ea = experiment.CreateEvolutionAlgorithm("C:\\Users\\Mikkel\\AppData\\LocalLow\\DefaultCompany\\Game\\04-11-16--21-29\\371\\FPSAgent.pop.xml");
+		_ea = experiment.CreateEvolutionAlgorithm();
 		_ea.UpdateEvent += new EventHandler(ea_UpdateEvent);
 		var evoSpeed = 1;
 		Started = true;
