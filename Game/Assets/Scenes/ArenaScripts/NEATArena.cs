@@ -117,6 +117,7 @@ public class NEATArena : MonoBehaviour{
 
 		ArenaObjects.Add (cube);
 	}
+		
 
 	private void CreateLight(){
 		Vector3 position = new Vector3 (0, 15 + y, 0);
