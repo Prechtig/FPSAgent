@@ -56,8 +56,8 @@ public class TrainingDataCapturer : MonoBehaviour
 			Screen.SetResolution (width, height, false);
 			playerCam = cam.GetComponent<Camera> ();
 			playerCam.rect = new Rect (0f, 0f, 1f, 1f);
-			playerCam.targetTexture = new RenderTexture (width, height, 24);
 			playerCam.aspect = 1f;
+			playerCam.fieldOfView = 65f;
 			playerCam.nearClipPlane = 0.35f;
 			playerCam.farClipPlane = 1000f;
 
