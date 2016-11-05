@@ -51,7 +51,7 @@ namespace SharpNEAT.Core
 		//The one we use, Mikkel
 		private IEnumerator evaluateList (IList<TGenome> genomeList)
 		{
-			Dictionary<TGenome, TPhenome> dict = new Dictionary<TGenome, TPhenome> ();
+            Dictionary<TGenome, TPhenome> dict = new Dictionary<TGenome, TPhenome> ();
 			Dictionary<TGenome, FitnessInfo[]> fitnessDict = new Dictionary<TGenome, FitnessInfo[]> ();
 
 			int maxParallel = _optimizer.MaxParallel;
@@ -137,10 +137,9 @@ namespace SharpNEAT.Core
 					genome.EvaluationInfo.AuxFitnessArr = fitnessDict [genome] [0]._auxFitnessArr;
 				}
 			}
-			_optimizer.CheckPersistPopulation(); //Persist population
-		}
+        }
 
-		public void Reset ()
+        public void Reset ()
 		{
 			_phenomeEvaluator.Reset ();
 		}
