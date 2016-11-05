@@ -17,22 +17,36 @@ public class GameObjectHelper
 	}
 
 	public static float VerticalAngleTo (Transform viewer, Transform obj) {
-		float botY = DirectionTo (viewer, obj).normalized.y;
-		float playerY = viewer.forward.normalized.y;
+		Vector3 viewerYZPlaneNormal = Vector3.Cross (viewer.forward, viewer.up);
+		Vector3 viewerToObj = DirectionTo (viewer, obj);
+		Vector3 viewerToObjOnViewerYZPlane = Vector3.ProjectOnPlane (viewerToObj, viewerYZPlaneNormal);
 
-		return RadiansToDegree(Math.Asin (botY) - Math.Asin (playerY));
+		float angle = Vector3.Angle (viewer.forward, viewerToObjOnViewerYZPlane);
+
+		switch(VerticalAngleDir(viewer.up, viewerToObj)) {
+		case VerticalDirection.Down:
+			return -angle;
+		case VerticalDirection.Up:
+			return angle;
+		case VerticalDirection.Forward:
+			return 0;
+		}
+		throw new InvalidOperationException ();
 	}
 
 	public static float HorizontalAngleTo (Transform viewer, Transform obj) {
-		Vector3 viewerForward = nullifyY (viewer.forward);
-		float angle = Vector3.Angle (viewerForward, HorizontalDirectionTo (viewer.position, obj.position));
+		Vector3 planeNormal = viewer.up;
+		Vector3 viewerToObj = DirectionTo(viewer, obj);
+		Vector3 viewerToObjOnViewerXZPlane = Vector3.ProjectOnPlane (viewerToObj, planeNormal);
 
-		switch (AngleDir (viewerForward, HorizontalDirectionTo (viewer.position, obj.position), Vector3.up)) {
-		case Direction.Left:
+		float angle = Vector3.Angle (viewer.forward, viewerToObjOnViewerXZPlane);
+
+		switch (HorizontalAngleDir (viewer.forward, DirectionTo (viewer, obj), viewer.up)) {
+		case HorizontalDirection.Left:
 			return -angle;
-		case Direction.Right:
+		case HorizontalDirection.Right:
 			return angle;
-		case Direction.Forward:
+		case HorizontalDirection.Forward:
 			return 0;
 		}
 		throw new InvalidOperationException ();
@@ -47,20 +61,28 @@ public class GameObjectHelper
 		return obj.position - viewer.position;
 	}
 
-	private static Vector3 HorizontalDirectionTo(Vector3 viewer, Vector3 obj) {
-		return nullifyY(obj) - nullifyY(viewer);
+	private static VerticalDirection VerticalAngleDir(Vector3 up, Vector3 targetDir) {
+		float dir = Vector3.Dot (up, targetDir);
+
+		if (dir > 0f) {
+			return VerticalDirection.Up;
+		} else if (dir < 0f) {
+			return VerticalDirection.Down;
+		} else {
+			return VerticalDirection.Forward;
+		}
 	}
 
-	private static Direction AngleDir(Vector3 fwd, Vector3 targetDir, Vector3 up) {
+	private static HorizontalDirection HorizontalAngleDir(Vector3 fwd, Vector3 targetDir, Vector3 up) {
 		Vector3 right = Vector3.Cross(up, fwd);        // right vector
 		float dir = Vector3.Dot(right, targetDir);
 
 		if (dir > 0f) {
-			return Direction.Right;
+			return HorizontalDirection.Right;
 		} else if (dir < 0f) {
-			return Direction.Left;
+			return HorizontalDirection.Left;
 		} else {
-			return Direction.Forward;
+			return HorizontalDirection.Forward;
 		}
 	}
 
@@ -68,9 +90,7 @@ public class GameObjectHelper
 		return (float) (radians * 180 / Math.PI);
 	}
 
-	private static Vector3 nullifyY(Vector3 v) {
-		return new Vector3 (v.x, 0, v.z);
-	}
+	private enum HorizontalDirection { Left, Right, Forward };
 
-	private enum Direction { Left, Right, Forward };
+	private enum VerticalDirection { Up, Down, Forward };
 }
