@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <Config>
-	<inputs>18</inputs>
+	<inputs>34</inputs>
 	<outputs>6</outputs>
 
-	<parallelAgents>5</parallelAgents>
+	<parallelAgents>10</parallelAgents>
 	<TrialCount>20</TrialCount>
 	<TrialDuration>15</TrialDuration>
 	<StoppingFitness>99999</StoppingFitness>
