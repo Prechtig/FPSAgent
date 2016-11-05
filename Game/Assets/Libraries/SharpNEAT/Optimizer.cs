@@ -135,7 +135,7 @@ public class Optimizer : MonoBehaviour {
 	public void StartEA()
 	{
 		char dirSepChar = Path.DirectorySeparatorChar;
-		_resultSavePath = Application.persistentDataPath + dirSepChar + DateTime.Now.ToString("dd-MM-yy--HH-mm") + dirSepChar;
+		_resultSavePath = Application.persistentDataPath + dirSepChar + DateTime.Now.ToString("dd-MM-yy--HH-mm-ss") + dirSepChar;
         print("Data save path: " + _resultSavePath);
 
         Utility.DebugLog = true;
@@ -145,7 +145,6 @@ public class Optimizer : MonoBehaviour {
 		File.Copy(currentDir + dirSepChar + "Assets" + dirSepChar + "Resources" + dirSepChar + "experiment.config.xml", _resultSavePath + "experiment.config.xml", true);
         File.Copy(PropertiesReader.GetPropertyFilePath(PropertyFile.Project), _resultSavePath + "project.properties", true);
         File.Copy(PropertiesReader.GetPropertyFilePath(PropertyFile.NEAT), _resultSavePath + "neat.properties", true);
-
 
         Utility.Log("Starting FPS Agent experiment");
 
