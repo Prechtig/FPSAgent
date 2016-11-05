@@ -21,7 +21,7 @@ public class Optimizer : MonoBehaviour {
 	bool EARunning;
 	//string popFileSavePath, champFileSavePath;
 
-	Experiment experiment;
+	static Experiment experiment;
 	static NeatEvolutionAlgorithm<NeatGenome> _ea;
 
 	public GameObject Unit;
@@ -41,18 +41,18 @@ public class Optimizer : MonoBehaviour {
 
 	private double Fitness;
 	private float PreviousTimeScale;
-	private int PersistNGenerations;
+	private static int PersistNGenerations;
 	//Persist populationprivate Boolean Persisted;
 
 	private int trials;
 	private float trialDuration;
 	private float stoppingFitness;
 
-	private bool AutomaticTimeScaleOn = true;
+	private bool AutomaticTimeScaleOn = false;
 	private bool Started = false;
 	private bool FirstUpdate = true;
 
-    private string _resultSavePath;
+    private static string _resultSavePath;
 
 	public int Trials
 	{
@@ -150,10 +150,10 @@ public class Optimizer : MonoBehaviour {
 
 		VisualPartitionClassifier.GetInstance ().InitializeFromProperties ();
 		FitnessMap = new Dictionary<IBlackBox, float> ();
-		//_ea = experiment.CreateEvolutionAlgorithm(popFileSavePath);
-		_ea = experiment.CreateEvolutionAlgorithm();
+		_ea = experiment.CreateEvolutionAlgorithm("C:\\Users\\Mikkel\\AppData\\LocalLow\\DefaultCompany\\Game\\04-11-16--21-29\\371\\FPSAgent.pop.xml");
+		//_ea = experiment.CreateEvolutionAlgorithm();
 		_ea.UpdateEvent += new EventHandler(ea_UpdateEvent);
-		var evoSpeed = 25;
+		var evoSpeed = 1;
 		Started = true;
 		Time.timeScale = evoSpeed;
 		_ea.StartContinue();
@@ -194,25 +194,19 @@ public class Optimizer : MonoBehaviour {
 	/// <summary>
 	/// Persists the population if it is the Nth generation specified in the xml config
 	/// </summary>
-	public void CheckPersistPopulation(){
-		if (_ea.CurrentGeneration != 0){ // || ((_ea.CurrentGeneration - 1) % PersistNGenerations == 0 && _ea.CurrentGeneration != 1)) {
-			PersistPopulation ();
-		}
-	}
-
-	public void PersistPopulation(){
-		string champFileSavePath = _resultSavePath + string.Format ("{0}/{1}.champ.xml", _ea.CurrentGeneration, "FPSAgent");
-		string popFileSavePath = _resultSavePath + string.Format ("{0}/{1}.pop.xml", _ea.CurrentGeneration, "FPSAgent");
+	public static void PersistPopulation(){
+		string champFileSavePath = _resultSavePath + string.Format ("{0}/{1}.champ.xml", _ea.CurrentGeneration - 1, "FPSAgent");
+		string popFileSavePath = _resultSavePath + string.Format ("{0}/{1}.pop.xml", _ea.CurrentGeneration - 1, "FPSAgent");
 
 		XmlWriterSettings _xwSettings = new XmlWriterSettings ();
 		_xwSettings.Indent = true;
 		// Save genomes to xml file.        
-		DirectoryInfo dirInf = new DirectoryInfo (_resultSavePath + string.Format ("{0}", _ea.CurrentGeneration));
+		DirectoryInfo dirInf = new DirectoryInfo (_resultSavePath + string.Format ("{0}", _ea.CurrentGeneration - 1));
 		if (!dirInf.Exists) {
 			dirInf.Create ();
 		}
 
-		if (PersistNGenerations != 0 && (_ea.CurrentGeneration == 1 || ((_ea.CurrentGeneration) % PersistNGenerations == 0 && _ea.CurrentGeneration != 0))) {
+		if (PersistNGenerations != 0 && (_ea.CurrentGeneration - 1 == 1 || ((_ea.CurrentGeneration - 1) % PersistNGenerations == 0 && _ea.CurrentGeneration - 1 != 0))) {
 			using (XmlWriter xw = XmlWriter.Create (popFileSavePath, _xwSettings)) {
 				experiment.SavePopulation (xw, _ea.GenomeList);
 			}

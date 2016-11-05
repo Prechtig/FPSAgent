@@ -254,10 +254,14 @@ namespace SharpNeat.EvolutionAlgorithms
             _prevUpdateGeneration = 0;
             _prevUpdateTimeTick = DateTime.Now.Ticks;
 
-            for (; ; )
+            for (;;)
             {
                 _currentGeneration++;
-              //  print("currentGeneration: " + _currentGeneration);
+                //  print("currentGeneration: " + _currentGeneration);
+                if (CurrentGeneration != 1)
+                {
+                    Optimizer.PersistPopulation();
+                }
                 yield return Coroutiner.StartCoroutine(PerformOneGeneration());
            //     print("Performed one generation");
                 if (UpdateTest())
