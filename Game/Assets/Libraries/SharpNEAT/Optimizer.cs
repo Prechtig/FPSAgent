@@ -14,6 +14,7 @@ using Assets.Scripts;
 
 public class Optimizer : MonoBehaviour {
 	public GameObject wallPrefab;
+	public GameObject floorPrefab;
 
 	private int NUM_INPUTS;
 	private int NUM_OUTPUTS;
@@ -230,6 +231,7 @@ public class Optimizer : MonoBehaviour {
 		//Time.timeScale = 1;
 		NEATArena arena = gameObject.AddComponent<NEATArena>();
 		arena.WallPrefab = wallPrefab;
+		arena.FloorPrefab = floorPrefab;
 		arena.Init ();
 
 		GameObject obj = arena.GetPlayer ();

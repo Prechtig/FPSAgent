@@ -22,6 +22,9 @@ public class NEATArena : MonoBehaviour{
 	private static Object yOffsetLock = new Object();
 
 	public GameObject WallPrefab;
+	public GameObject FloorPrefab;
+
+
 	private float RunningFitness = 0f;
 	private int RunningFitnessCount = 0;
 	private NEATWeapon neatWeapon;
@@ -78,7 +81,7 @@ public class NEATArena : MonoBehaviour{
 
 	private void CreateArena(float x, float z, float wallHeight, float wallThickness) {
 		// Create floor
-		CreateCube (x, 0.1f, z, 0, y, 0);
+		CreateCube (x, 0.1f, z, 0, y, 0, FloorPrefab);
 
 		// Create northern wall
 		CreateCube (x, wallHeight, wallThickness, 0, wallHeight/2 + y, z/2);
@@ -94,19 +97,27 @@ public class NEATArena : MonoBehaviour{
 	}
 
 	private void CreateCube(float sx, float sy, float sz, float px, float py, float pz) {
+		CreateCube (sx, sy, sz, px, py, pz, WallPrefab);
+	}
+
+	private void CreateCube(float sx, float sy, float sz, float px, float py, float pz, GameObject texturePrefab) {
 		Vector3 scale = new Vector3 (sx, sy, sz);
 		Vector3 position = new Vector3 (px, py, pz);
-		CreateCube (position, scale);
+		CreateCube (position, scale, texturePrefab);
 	}
 
 	private void CreateCube(Vector3 position, Vector3 scale) {
-		//		GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		GameObject cube = Instantiate(WallPrefab);
+		CreateCube (position, scale, WallPrefab);
+	}
+
+	private void CreateCube(Vector3 position, Vector3 scale, GameObject texturePrefab) {
+		GameObject cube = Instantiate(texturePrefab);
 		cube.transform.position = position;
 		cube.transform.localScale = scale;
 
 		ArenaObjects.Add (cube);
 	}
+		
 
 	private void CreateLight(){
 		Vector3 position = new Vector3 (0, 15 + y, 0);
