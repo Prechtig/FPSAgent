@@ -197,5 +197,6 @@ public class NEATArena : MonoBehaviour{
 		}
 		Destroy (BotSpawn);
 		Destroy (PlayerSpawn);
+        Resources.UnloadUnusedAssets();
 	}
 }
