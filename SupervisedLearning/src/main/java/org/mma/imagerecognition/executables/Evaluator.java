@@ -48,7 +48,7 @@ public class Evaluator {
 		int hits = 0, misses = 0;
 		
 		List<TrainingData> testSet;
-		for(int fromId = firstId; firstId <= lastId; firstId += BATCH_SIZE) {
+		for(int fromId = firstId; fromId <= lastId; fromId += BATCH_SIZE) {
 			int toId = Math.min(fromId + BATCH_SIZE, lastId);
 			testSet = FileSystemDAO.load(fromId, toId);
 			for(TrainingData td : testSet) {
