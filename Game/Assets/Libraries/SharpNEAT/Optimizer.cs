@@ -48,7 +48,7 @@ public class Optimizer : MonoBehaviour {
 	private float trialDuration;
 	private float stoppingFitness;
 
-	private bool AutomaticTimeScaleOn = true;
+	private bool AutomaticTimeScaleOn = false;
 	private bool Started = false;
 	private bool FirstUpdate = true;
 
