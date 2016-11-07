@@ -34,7 +34,7 @@ public class EqualDbDistribution extends DbConnector {
 				rowsDeleted = deleteImages(stmt, imagesWithBots - imagesWithoutBots, true);
 			}
 			if(0 < rowsDeleted) {
-				IdReassinger.reassignIds(stmt);
+				IdReassinger.reassignIds();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
