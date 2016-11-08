@@ -29,7 +29,8 @@ public class MultiThreadedBridge implements Runnable {
 	
 	private MultiLayerNetwork loadNetwork(File networkFile) {
 		try {
-		return ModelSerializer.restoreMultiLayerNetwork(new FileInputStream(networkFile));
+			System.out.println(String.format("Using model %s", networkFile.getAbsolutePath()));
+			return ModelSerializer.restoreMultiLayerNetwork(new FileInputStream(networkFile));
 		} catch (IOException e) {
 			throw new RuntimeException("Could not load network");
 		}
@@ -72,6 +73,7 @@ public class MultiThreadedBridge implements Runnable {
 	private void openServerSocket() {
 		try {
 			serverSocket = new ServerSocket(serverPort);
+			System.out.println(String.format("Server started on port %d", serverPort));
 		} catch (IOException e) {
 			throw new RuntimeException(String.format("Cannot open port %d", serverPort), e);
 		}
@@ -100,7 +102,7 @@ public class MultiThreadedBridge implements Runnable {
 		new Thread(server).start();
 
 		try {
-		    Thread.sleep(10 * 60 * 1000);
+		    Thread.sleep(30 * 60 * 1000);
 		} catch (InterruptedException e) {
 		    e.printStackTrace();
 		}

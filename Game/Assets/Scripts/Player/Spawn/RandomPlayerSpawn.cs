@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class RandomPlayerSpawn : MonoBehaviour, IPlayerSpawn
 {
+	private static readonly bool useCNN = "true".Equals (PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("game.neat.training.use.cnn"));
+	
 	public GameObject Player{ get; set;}
 	public NEATArena Arena { get; set;}
 	public Transform[] SpawnPoints{ get; set;}
@@ -42,7 +44,12 @@ public class RandomPlayerSpawn : MonoBehaviour, IPlayerSpawn
 		Instantiate (player, spawnPoints [random].position, spawnPoints [random].rotation);
 		*/
 		//Object[] obs = Resources.FindObjectsOfTypeAll(typeof(UnityEngine.Object));
-		Object a = Resources.Load ("Player");
+		Object a;
+		if (useCNN) {
+			a = Resources.Load ("CNNPlayer");
+		} else {
+			a = Resources.Load ("Player");
+		}
 
 		Vector3 spawnPosition = GenerateSpawnPoint ();
 		Player = (GameObject)Instantiate(a, spawnPosition, SpawnPoints[0].rotation);
