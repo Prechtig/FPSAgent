@@ -29,6 +29,8 @@ public class ScreenSnapper {
 
 		RenderTexture.active = currentRT;
 
-		return new Screenshot (tex.GetPixels32 (), width, height);
+		Color32[] colors = tex.GetPixels32 ();
+		Screenshot screenshot = new Screenshot (colors, width, height);
+		return screenshot;
 	}
 }

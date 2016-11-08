@@ -2,6 +2,7 @@
 using System.Collections;
 using SharpNeat.Phenomes;
 using System.Linq;
+using AssemblyCSharp;
 
 public class NEATController : UnitController {
 
@@ -21,28 +22,44 @@ public class NEATController : UnitController {
 	public float reloadThreshold;
 	public NEATWeapon weapon;
 	public NEATArena Arena;
+
 	private Camera playerCam;
+	private bool useCNN;
+	private int cnnFrameRefreshRate;
+	private int frameCounter = 0;
 
 	private double[] EmptyDoubleArray;
+
 	// Use this for initialization
 	void Start () {
 		playerCam = gameObject.GetComponentInChildren<Camera> ();
 		EmptyDoubleArray = new double [box.InputCount];
-		//lookRoot = gameObject.transform.GetChild(2).GetChild(0);
+		useCNN = "true".Equals(PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("game.neat.training.use.cnn"));
+		if(useCNN) {
+			cnnFrameRefreshRate = int.Parse (PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("game.neat.training.use.cnn.frameRefreshRate"));
+		}
 	}
 
 	// Update is called once per frame
 	void FixedUpdate()
 	{
-		if (IsRunning) {
+		if ((IsRunning && !useCNN) ||
+			(IsRunning && useCNN && frameCounter++ % cnnFrameRefreshRate == 0) ) {
 			ISignalArray inputArr = box.InputSignalArray;
-			//float[] groundTruths = GroundTruth.CalculateGroundTruthsScaled (playerCam, 1);
-			//inputArr.CopyFrom(groundTruths.Select(f => (double)f).ToArray(), 0);
 
-			if (Arena.BotSpawn.Bots.Count == 0) {
-				inputArr.CopyFrom (EmptyDoubleArray, 0);
-			} else {	
-				inputArr.CopyFrom (GroundTruth.CalculateFeatures (playerCam, Arena.BotSpawn.Bots [0]), 0);
+			if (useCNN) {
+				double[] fromCNN = GroundTruthCNN.CalculateFeatures (playerCam);
+				double[] result = ArrayTool.Binarize (fromCNN);
+
+				Debug.Log (ArrayTool.ToString(result));
+
+				inputArr.CopyFrom (result, 0);
+			} else {
+				if (Arena.BotSpawn.Bots.Count == 0) {
+					inputArr.CopyFrom (EmptyDoubleArray, 0);
+				} else {	
+					inputArr.CopyFrom (GroundTruth.CalculateFeatures (playerCam, Arena.BotSpawn.Bots [0]), 0);
+				}
 			}
 
 			//Activate network
@@ -52,17 +69,6 @@ public class NEATController : UnitController {
 
 			double[] output = new double[outputArr.Length];
 			outputArr.CopyTo (output, 0);
-
-			//Set outputs
-			/*
-			output[0] = 0;
-			output[1] = 0;
-			output[2] = 0;
-			output[3] = 0;
-			output[4] = 0; //shooting
-			output[5] = 0;
-			*/
-
 
 			//Mouse movement
 			mouseX = (float)(output [0] - output [1]);

@@ -48,7 +48,7 @@ public class Optimizer : MonoBehaviour {
 	private float trialDuration;
 	private float stoppingFitness;
 
-	private bool AutomaticTimeScaleOn = true;
+	private bool AutomaticTimeScaleOn = "true".Equals(PropertiesReader.GetPropertyFile(PropertyFile.Project).GetProperty("game.neat.training.automaticTimescale"));
 	private bool Started = false;
 	private bool FirstUpdate = true;
 
@@ -153,7 +153,7 @@ public class Optimizer : MonoBehaviour {
 		//_ea = experiment.CreateEvolutionAlgorithm("C:\\Users\\Mikkel\\AppData\\LocalLow\\DefaultCompany\\Game\\04-11-16--21-29\\371\\FPSAgent.pop.xml");
 		_ea = experiment.CreateEvolutionAlgorithm();
 		_ea.UpdateEvent += new EventHandler(ea_UpdateEvent);
-		var evoSpeed = 25;
+		var evoSpeed = int.Parse (PropertiesReader.GetPropertyFile(PropertyFile.Project).GetProperty("game.neat.training.evolutionSpeed"));
 		Started = true;
 		Time.timeScale = evoSpeed;
 		_ea.StartContinue();
