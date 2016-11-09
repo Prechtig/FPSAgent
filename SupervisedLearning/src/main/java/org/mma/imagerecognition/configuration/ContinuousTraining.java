@@ -8,6 +8,7 @@ import java.util.Properties;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
+import org.deeplearning4j.ui.weights.HistogramIterationListener;
 import org.deeplearning4j.util.ModelSerializer;
 import org.mma.imagerecognition.dao.FileSystemDAO;
 import org.mma.imagerecognition.dataobjects.TrainingData;
@@ -78,6 +79,7 @@ public abstract class ContinuousTraining implements Trainable {
 			model = new MultiLayerNetwork(configuration);
 	        model.init();
 		}
+		model.setListeners(new HistogramIterationListener(1));
 		model.setListeners(new ScoreIterationListener(1));
 	}
 }
