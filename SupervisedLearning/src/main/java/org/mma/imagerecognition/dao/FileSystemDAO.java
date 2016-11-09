@@ -175,7 +175,7 @@ public class FileSystemDAO {
 		}
 		try {
 			return Files.walk(getFeatureFolder())
-					.filter(Files::isRegularFile)
+					.filter(p -> isTrainingFile(p))
 					.map(file -> Integer.valueOf(file.getFileName().toString()))
 					.reduce(0, (curMax, cur) -> Math.max(curMax, cur));
 		} catch(IOException e) {
@@ -198,6 +198,15 @@ public class FileSystemDAO {
 			e.printStackTrace();
 			System.exit(1);
 			return 0;
+		}
+	}
+	
+	public static boolean isTrainingFile(Path path) {
+		try {
+			return Files.isRegularFile(path) && !Files.isHidden(path);
+		} catch(IOException e) {
+			e.printStackTrace();
+			return false;
 		}
 	}
 	
