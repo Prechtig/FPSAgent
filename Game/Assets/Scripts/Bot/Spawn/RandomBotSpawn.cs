@@ -23,8 +23,9 @@ public class RandomBotSpawn : MonoBehaviour, IBotSpawn
 	public void StartSpawning(){
 		Bots = new List<GameObject>();
 		BotPrefab = Resources.Load ("BotPrefab") as GameObject;
-		SpawnTime = 3f;
-		InvokeRepeating ("Spawn", 0, SpawnTime);
+		Spawn ();
+		//SpawnTime = 3f;
+		//InvokeRepeating ("Spawn", 0, SpawnTime);
 	}
 
 	void Spawn ()
@@ -62,6 +63,7 @@ public class RandomBotSpawn : MonoBehaviour, IBotSpawn
 	public void KillBot(GameObject b){
 		Bots.Remove (b);
 		BotsKilled++;
+		Spawn ();
 	}
 
 	public void OnDestroy(){
