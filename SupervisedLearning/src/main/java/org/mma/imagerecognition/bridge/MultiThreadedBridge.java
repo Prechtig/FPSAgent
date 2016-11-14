@@ -11,6 +11,7 @@ import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.util.ModelSerializer;
 import org.mma.imagerecognition.dao.FileSystemDAO;
 import org.mma.imagerecognition.tools.PropertiesReader;
+import org.nd4j.jita.conf.CudaEnvironment;
 
 public class MultiThreadedBridge implements Runnable {
 
@@ -22,6 +23,13 @@ public class MultiThreadedBridge implements Runnable {
 	protected final MultiLayerNetwork network;
 
 	public MultiThreadedBridge(File networkFile) {
+		final long GIGABYTE = 1024 * 1024 * 1024;
+		CudaEnvironment.getInstance().getConfiguration()
+	    .setMaximumDeviceCacheableLength(GIGABYTE * 1)
+	    .setMaximumDeviceCache			(GIGABYTE * 2)
+	    .setMaximumHostCacheableLength	(GIGABYTE * 1)
+	    .setMaximumHostCache			(GIGABYTE * 8);
+		
 		this.network = loadNetwork(networkFile);
 		this.serverPort = determinePort();
 		bridgeByteOrder = determineByteOrder();

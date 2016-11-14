@@ -11,6 +11,7 @@ import org.mma.imagerecognition.dao.FileSystemDAO;
 import org.mma.imagerecognition.iterator.DatabaseIterator;
 import org.mma.imagerecognition.iterator.FileSystemIterator;
 import org.mma.imagerecognition.tools.PropertiesReader;
+import org.nd4j.jita.conf.CudaEnvironment;
 //import org.nd4j.jita.conf.CudaEnvironment;
 import org.nd4j.linalg.api.buffer.DataBuffer;
 import org.nd4j.linalg.api.buffer.util.DataTypeUtil;
@@ -29,15 +30,12 @@ public class Trainer {
 	
 	private static void configureND4J() {
 		DataTypeUtil.setDTypeForContext(DataBuffer.Type.FLOAT);
-		/*
 		final long GIGABYTE = 1024 * 1024 * 1024;
 		CudaEnvironment.getInstance().getConfiguration()
 	    .setMaximumDeviceCacheableLength(GIGABYTE * 1)
-	    .setMaximumDeviceCache			(GIGABYTE * 6)
+	    .setMaximumDeviceCache			(1024*1024*1500)
 	    .setMaximumHostCacheableLength	(GIGABYTE * 1)
-	    .setMaximumHostCache			(GIGABYTE * 5)
-		.allowMultiGPU(boolFromProperty("training.sli"));
-		 */
+	    .setMaximumHostCache			(GIGABYTE * 6);
 	}
 	
 	private static void doTrain() throws FileNotFoundException, IOException {
