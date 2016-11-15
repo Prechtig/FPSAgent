@@ -7,8 +7,9 @@ public class RandomHorizontalBotSpawn : MonoBehaviour, IBotSpawn
 	public Transform[] SpawnPoints{ get; set;}
 	public float X{ get; set;}
 	public float Z{ get; set;}
+    public GameObject Player { get; set; }
 
-	private GameObject Bot;
+    private GameObject Bot;
 	private IList<GameObject> Bots;
 	private float SpawnTime;
 	private static int BotsToSpawn = 1;

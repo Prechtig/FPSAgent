@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
 public class NEATArena : MonoBehaviour{
 	private float y;
 	private float x;
@@ -33,19 +34,22 @@ public class NEATArena : MonoBehaviour{
 		y = GetAndIncrementYOffset () * 100;
 		x = 25;
 		z = 25;
-		WallHeight = 5;
+		WallHeight = 50;
 		WallThickness = 0.1f;
 		ArenaObjects = new ArrayList ();
 
 		CreateArena (x, z, WallHeight, WallThickness);
+        
 		CreateLight ();
-		SetSpawnPoints (x, z);
+        //CreateCloseLight();
+
+        SetSpawnPoints (x, z);
 
 		SpawnPlayer ();
 		SpawnEnemies ();
 	}
 
-	private static float GetAndIncrementYOffset(){
+    private static float GetAndIncrementYOffset(){
 		lock(yOffsetLock){
 			return yOffset++;
 		}
@@ -54,8 +58,6 @@ public class NEATArena : MonoBehaviour{
 	public static void ResetYOffset(){
 		yOffset = 0;
 	}
-
-
 
 	void FixedUpdate () {
 		if (BotSpawn.Bots.Count > 0) {
@@ -71,9 +73,7 @@ public class NEATArena : MonoBehaviour{
 				angle = Vector3.Angle (PlayerSpawn.Player.transform.forward, BotSpawn.Bots [0].transform.position - PlayerSpawn.Player.transform.position) * Mathf.Deg2Rad;
 			}
 
-
 			//RunningFitness += k / (1 + (angle * c));
-
 			RunningFitness += k / Mathf.Pow((1 + angle), c);
 			RunningFitnessCount++;
 		}
@@ -117,7 +117,6 @@ public class NEATArena : MonoBehaviour{
 
 		ArenaObjects.Add (cube);
 	}
-		
 
 	private void CreateLight(){
 		Vector3 position = new Vector3 (0, 15 + y, 0);
@@ -132,9 +131,25 @@ public class NEATArena : MonoBehaviour{
 		obj.name = "Light";
 
 		ArenaObjects.Add (obj);
-	}
+    }
 
-	private void SetSpawnPoints(float x, float z){
+    private void CreateCloseLight()
+    {
+        Vector3 position = new Vector3(-((x/2)/2), 15 + y, z / 2 - 2);
+        GameObject obj = new GameObject();
+        obj.transform.position = position;
+        Light l = obj.AddComponent<Light>();
+        l.type = LightType.Point;
+        l.color = new Color(255 / 255.0f, 244 / 255.0f, 214 / 255.0f);
+        l.shadows = LightShadows.None;
+        l.range = 15;
+        l.intensity = 0;
+        obj.name = "Light";
+
+        ArenaObjects.Add(obj);
+    }
+
+    private void SetSpawnPoints(float x, float z){
 		PlayerSpawnPoints = new Transform[1];
 		GameObject tempSpawnObject = (new GameObject("SpawnObject"));
 		Transform a = tempSpawnObject.transform;
@@ -176,7 +191,9 @@ public class NEATArena : MonoBehaviour{
 		BotSpawn.X = x;
 		BotSpawn.Z = z;
 		BotSpawn.SpawnPoints = BotSpawnPoints;
-		BotSpawn.StartSpawning ();
+        BotSpawn.Player = PlayerSpawn.Player;
+
+        BotSpawn.StartSpawning ();
 	}
 
 	public float GetFitness(){
