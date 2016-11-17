@@ -179,6 +179,7 @@ public class BuilderFactory {
 				.build())
 		.layer(layerId++, new DenseLayer.Builder()
 				.nOut(40)
+				.dropOut(0.5)
 				.build())
 		.layer(layerId++, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
 				.activation("softmax")
