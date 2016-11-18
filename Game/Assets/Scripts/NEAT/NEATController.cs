@@ -50,6 +50,9 @@ public class NEATController : UnitController {
         {
             weapon.Reload();
         }
+		if (Input.GetKey (KeyCode.LeftArrow)) {
+			Cursor.lockState = CursorLockMode.Locked;
+		}
 
         if ((!IsRunning && !useCNN) ||
 			(IsRunning && useCNN && frameCounter++ % cnnFrameRefreshRate == 0)) {

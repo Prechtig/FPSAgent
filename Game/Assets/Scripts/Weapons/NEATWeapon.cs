@@ -153,7 +153,7 @@ public class NEATWeapon : MonoBehaviour
 			spreadTemp -= Time.deltaTime * spreadReturnTime;
         if (spreadTemp < 0)
             spreadTemp = 0;
-        Debug.Log("SpreadTemp: " + spread);
+        //Debug.Log("SpreadTemp: " + spread);
         /*
 		pivot = new Vector2 (Screen.width / 2, Screen.height / 2);
 		bulletsLeftRead = bulletsLeft;
@@ -254,7 +254,7 @@ public class NEATWeapon : MonoBehaviour
             {
                 spreadTemp = maximumSpread;
             }
-            Debug.Log("Temp: " + spreadTemp);
+            //Debug.Log("Temp: " + spreadTemp);
         }
 	}
 

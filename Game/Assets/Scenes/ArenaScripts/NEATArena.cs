@@ -40,8 +40,8 @@ public class NEATArena : MonoBehaviour{
 
 		CreateArena (x, z, WallHeight, WallThickness);
         
-		CreateLight ();
-        //CreateCloseLight();
+		//CreateLight ();
+        CreateCloseLight();
 
         SetSpawnPoints (x, z);
 
