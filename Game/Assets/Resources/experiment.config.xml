@@ -12,7 +12,8 @@
 	<PopulationSize>100</PopulationSize>
 	<SpecieCount>15</SpecieCount>
 	<Activation>
-	<Scheme>Acyclic</Scheme>
+	  <Scheme>Acyclic</Scheme>
+    <Iters>5</Iters>
 	</Activation>
 	<ComplexityRegulationStrategy>Absolute</ComplexityRegulationStrategy>
 	<ComplexityThreshold>999999</ComplexityThreshold>

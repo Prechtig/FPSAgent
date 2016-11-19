@@ -225,6 +225,7 @@ public class NEATArena : MonoBehaviour{
         BotSpawn.Player = PlayerSpawn.Player;
 
         BotSpawn.StartSpawning ();
+        PlayerSpawn.Player.transform.LookAt(BotSpawn.Bots[0].transform);
 	}
 
 	public float GetFitness(){

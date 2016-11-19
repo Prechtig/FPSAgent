@@ -52,8 +52,8 @@ public class RandomPlayerSpawn : MonoBehaviour, IPlayerSpawn
 		}
 
 		Vector3 spawnPosition = GenerateSpawnPoint ();
-		Player = (GameObject)Instantiate(a, spawnPosition, SpawnPoints[0].rotation);
-		Player.GetComponentInChildren<NEATController> ().Arena = Arena;
+        Player = (GameObject)Instantiate(a, spawnPosition, SpawnPoints[0].rotation);
+        Player.GetComponentInChildren<NEATController> ().Arena = Arena;
 		//HUD.worldCamera = player.GetComponentInChildren<Camera> ();
 		Player.GetComponentInChildren<NEATWeapon> ().ShotsLeftText = ShotsLeftText;
 		//Instantiate (GameObject., spawnPoints.position, spawnPoints.rotation);
