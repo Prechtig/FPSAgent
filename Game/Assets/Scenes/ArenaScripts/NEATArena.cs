@@ -226,7 +226,8 @@ public class NEATArena : MonoBehaviour{
 
         BotSpawn.StartSpawning ();
         PlayerSpawn.Player.transform.LookAt(BotSpawn.Bots[0].transform);
-	}
+        PlayerSpawn.Player.transform.eulerAngles = new Vector3(PlayerSpawn.Player.transform.eulerAngles.x + Random.Range(-20, 20), PlayerSpawn.Player.transform.eulerAngles.y + Random.Range(-20, 20));
+    }
 
 	public float GetFitness(){
 		float fitness = 0f;

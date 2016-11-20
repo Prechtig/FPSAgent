@@ -10,14 +10,14 @@
 	<StoppingFitness>99999</StoppingFitness>
 
 	<PopulationSize>100</PopulationSize>
-	<SpecieCount>15</SpecieCount>
+	<SpecieCount>1</SpecieCount>
 	<Activation>
-	  <Scheme>Acyclic</Scheme>
+    <Scheme>Acyclic</Scheme>
     <Iters>5</Iters>
 	</Activation>
 	<ComplexityRegulationStrategy>Absolute</ComplexityRegulationStrategy>
 	<ComplexityThreshold>999999</ComplexityThreshold>
-	<PersistNGenerations>0</PersistNGenerations>
+	<PersistNGenerations>1</PersistNGenerations>
 	<Description>
 	</Description>
 </Config>
