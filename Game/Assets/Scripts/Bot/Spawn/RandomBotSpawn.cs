@@ -39,7 +39,7 @@ public class RandomBotSpawn : MonoBehaviour, IBotSpawn
 		}
 	}
 
-	private Vector3 GenerateSpawnPoint(){
+	public Vector3 GenerateSpawnPoint(){
 		float rX = Random.Range (-(X/2) + 1, X/2 - 1);
 		float y = Random.Range (0, 15);
 		float zOffset = SpawnPoints[0].position.z;

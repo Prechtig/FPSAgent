@@ -11,8 +11,8 @@ public class NEATController : UnitController {
 
 	//Transform lookRoot;
 
-	float rotationX = 0;
-	float rotationY = 0;
+	public float rotationX = 0;
+	public float rotationY = 0;
 
 	public float sensitivityX;
 	public float sensitivityY;
@@ -69,6 +69,15 @@ public class NEATController : UnitController {
 
 			double[] output = new double[outputArr.Length];
 			outputArr.CopyTo (output, 0);
+
+			/*
+			output [0] = 0;
+			output [1] = 0;
+			output [2] = 0;
+			output [3] = 0;
+			output [4] = 1;
+			output [5] = 0;
+			*/
 
 			//Mouse movement
 			mouseX = (float)(output [0] - output [1]);
