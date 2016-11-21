@@ -7,8 +7,9 @@ public class RandomBotSpawn : MonoBehaviour, IBotSpawn
 	public Transform[] SpawnPoints{ get; set;}
 	public float X{ get; set;}
 	public float Z{ get; set;}
+    public GameObject Player { get; set; }
 
-	private GameObject BotPrefab;
+    private GameObject BotPrefab;
 	public IList<GameObject> Bots;
 	private float SpawnTime;
 	private static int BotsToSpawn = 1;
@@ -23,8 +24,9 @@ public class RandomBotSpawn : MonoBehaviour, IBotSpawn
 	public void StartSpawning(){
 		Bots = new List<GameObject>();
 		BotPrefab = Resources.Load ("BotPrefab") as GameObject;
-		SpawnTime = 3f;
-		InvokeRepeating ("Spawn", 0, SpawnTime);
+		Spawn ();
+		//SpawnTime = 3f;
+		//InvokeRepeating ("Spawn", 0, SpawnTime);
 	}
 
 	void Spawn ()
@@ -52,16 +54,13 @@ public class RandomBotSpawn : MonoBehaviour, IBotSpawn
 		foreach (GameObject b in Bots) {
 			fitness += BotVitals.MAX_HITPOINTS - b.GetComponent<BotVitals>().hitPoints;
 		}
-        /*if(fitness > 200)
-        {
-            Debug.Log("Fitness: " + fitness);
-        }*/
 		return fitness;
 	}
 
 	public void KillBot(GameObject b){
 		Bots.Remove (b);
 		BotsKilled++;
+		Spawn ();
 	}
 
 	public void OnDestroy(){
@@ -69,6 +68,6 @@ public class RandomBotSpawn : MonoBehaviour, IBotSpawn
 			Destroy (b);
 		}
 
-		CancelInvoke ();
+		//CancelInvoke ();
 	}
 }

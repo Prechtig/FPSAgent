@@ -2,10 +2,10 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class RandomPlayerSpawn : MonoBehaviour, IPlayerSpawn
+public class InSightRandomPlayerSpawn : MonoBehaviour, IPlayerSpawn
 {
 	private static readonly bool useCNN = "true".Equals (PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("game.neat.training.use.cnn"));
-	
+
 	public GameObject Player{ get; set;}
 	public NEATArena Arena { get; set;}
 	public Transform[] SpawnPoints{ get; set;}
@@ -52,8 +52,8 @@ public class RandomPlayerSpawn : MonoBehaviour, IPlayerSpawn
 		}
 
 		Vector3 spawnPosition = GenerateSpawnPoint ();
-        Player = (GameObject)Instantiate(a, spawnPosition, SpawnPoints[0].rotation);
-        Player.GetComponentInChildren<NEATController> ().Arena = Arena;
+		Player = (GameObject)Instantiate(a, spawnPosition, SpawnPoints[0].rotation);
+		Player.GetComponentInChildren<NEATController> ().Arena = Arena;
 		//HUD.worldCamera = player.GetComponentInChildren<Camera> ();
 		Player.GetComponentInChildren<NEATWeapon> ().ShotsLeftText = ShotsLeftText;
 		//Instantiate (GameObject., spawnPoints.position, spawnPoints.rotation);

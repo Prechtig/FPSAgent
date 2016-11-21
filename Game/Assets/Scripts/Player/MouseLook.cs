@@ -25,24 +25,25 @@ public class MouseLook : MonoBehaviour
 
     void Update()
 	{
-		mouseX = Input.GetAxis ("Mouse X");
-		mouseY = Input.GetAxis ("Mouse Y");
+		if (Cursor.lockState == CursorLockMode.Locked) {
+			mouseX = Input.GetAxis ("Mouse X");
+			mouseY = Input.GetAxis ("Mouse Y");
 
-		if (axes == RotationAxes.MouseXAndY) {
-			float rotationX = transform.localEulerAngles.y + mouseX * sensitivityX;
+			if (axes == RotationAxes.MouseXAndY) {
+				float rotationX = transform.localEulerAngles.y + mouseX * sensitivityX;
 
-			rotationY += mouseY * sensitivityY;
-			rotationY = Mathf.Clamp (rotationY, minimumY, maximumY);
+				rotationY += mouseY * sensitivityY;
+				rotationY = Mathf.Clamp (rotationY, minimumY, maximumY);
 
-			transform.localEulerAngles = new Vector3 (-rotationY, rotationX, 0);
-		} else if (axes == RotationAxes.MouseX) {
-			transform.Rotate (0, mouseX * sensitivityX, 0);
-		} else {
-			rotationY += mouseY * sensitivityY;
-			rotationY = Mathf.Clamp (rotationY, minimumY, maximumY);
+				transform.localEulerAngles = new Vector3 (-rotationY, rotationX, 0);
+			} else if (axes == RotationAxes.MouseX) {
+				transform.Rotate (0, mouseX * sensitivityX, 0);
+			} else {
+				rotationY += mouseY * sensitivityY;
+				rotationY = Mathf.Clamp (rotationY, minimumY, maximumY);
 
-			transform.localEulerAngles = new Vector3 (-rotationY, transform.localEulerAngles.y, 0);
-
+				transform.localEulerAngles = new Vector3 (-rotationY, transform.localEulerAngles.y, 0);
+			}
 		}
 	}
 

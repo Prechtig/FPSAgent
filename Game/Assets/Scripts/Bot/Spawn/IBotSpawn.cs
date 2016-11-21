@@ -6,6 +6,7 @@ public interface IBotSpawn
 	Transform[] SpawnPoints{ get; set; }
 	float X{ get; set; }
 	float Z{ get; set; }
+    GameObject Player { get; set; }
 
 	void StartSpawning();
 	float GetFitness();

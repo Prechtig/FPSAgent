@@ -140,15 +140,21 @@ public class NEATWeapon : MonoBehaviour
 
 	void Update ()
 	{
-		/*if (hitAlpha > 0)
+        /*if (hitAlpha > 0)
 			hitAlpha -= Time.deltaTime;
-		spread = Mathf.Clamp (spread, 0, maximumSpread);
+		
 		if (aiming)
-			spread = aimSpread;
-		else
-			spread = Mathf.Lerp (spread, spreadTemp + cv.velMag * 2, Time.deltaTime * 8);
-		if (spreadTemp > basicSpread)
+			spread = aimSpread;*/
+        spread = Mathf.Clamp(spread, 0, maximumSpread);
+        //Debug.Log("First: " + spread);
+        spread = Mathf.Lerp (spread, spreadTemp + cv.velMag * 2, Time.deltaTime * 8);
+        //Debug.Log("Secon: " + spread);
+        if (spreadTemp > basicSpread)
 			spreadTemp -= Time.deltaTime * spreadReturnTime;
+        if (spreadTemp < 0)
+            spreadTemp = 0;
+        //Debug.Log("SpreadTemp: " + spread);
+        /*
 		pivot = new Vector2 (Screen.width / 2, Screen.height / 2);
 		bulletsLeftRead = bulletsLeft;
 		bulletsPerMagRead = bulletsPerMag;
@@ -176,7 +182,7 @@ public class NEATWeapon : MonoBehaviour
 		if (!canAim)
 			aiming = false;
 		 */
-		ShotsLeftText.text = bulletsLeft + " / " + magsLeft;
+        ShotsLeftText.text = bulletsLeft + " / " + magsLeft;
 	}
 
 	/*
@@ -226,8 +232,8 @@ public class NEATWeapon : MonoBehaviour
 			//Vector3 position = new Vector3 (bulletGo.position.x - actualSpread, bulletGo.position.y - actualSpread, bulletGo.position.z);
 
 			//Bullet spread
-			//Vector3 direction = gameObject.transform.TransformDirection(new Vector3(Random.Range(-0.01f, 0.01f) * spread, Random.Range(-0.01f, 0.01f) * spread, 1));
-			Vector3 direction = gameObject.transform.TransformDirection (0, 0, 1);
+			Vector3 direction = gameObject.transform.TransformDirection(new Vector3(Random.Range(-0.01f, 0.01f) * spread, Random.Range(0, 0.01f) * spread * 3, 1));
+			//Vector3 direction = gameObject.transform.TransformDirection (0, 0, 1);
 
 
 			RaycastHit hit2;
@@ -235,7 +241,21 @@ public class NEATWeapon : MonoBehaviour
 				OnHit (hit2);
 			}
 			bulletsLeft--;
-		}
+            if (spreadTemp == 0)
+            {
+                spreadTemp += spreadAddPerShot;
+            }
+            else
+            {
+                spreadTemp *= spreadAddPerShot;
+            }
+
+            if (spreadTemp > maximumSpread)
+            {
+                spreadTemp = maximumSpread;
+            }
+            //Debug.Log("Temp: " + spreadTemp);
+        }
 	}
 
 	void DoHitMark ()
