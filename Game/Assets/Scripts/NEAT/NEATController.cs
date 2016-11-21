@@ -55,7 +55,7 @@ public class NEATController : UnitController {
 		}
 		*/
 
-        if ((!IsRunning && !useCNN) ||
+        if ((IsRunning && !useCNN) ||
 			(IsRunning && useCNN && frameCounter++ % cnnFrameRefreshRate == 0)) {
 			ISignalArray inputArr = box.InputSignalArray;
 
