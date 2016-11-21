@@ -43,6 +43,15 @@ public class NEATController : UnitController {
 	// Update is called once per frame
 	void FixedUpdate()
 	{
+		/*
+		if (Input.GetKey (KeyCode.Mouse0)) {
+			weapon.FireOneShot ();
+		}
+		if (Input.GetKey (KeyCode.LeftArrow)) {
+			Cursor.lockState = CursorLockMode.Locked;
+		}
+		*/
+
         if ((IsRunning && !useCNN) ||
 			(IsRunning && useCNN && frameCounter++ % cnnFrameRefreshRate == 0)) {
 			ISignalArray inputArr = box.InputSignalArray;
