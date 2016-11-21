@@ -223,9 +223,7 @@ public class NEATWeapon : MonoBehaviour
 		double exponent = System.Math.Pow(2.0, rng.Next(-126, 128));
 		return (float)(mantissa * exponent);
 		*/
-		float a = (float)(min + (rng.NextDouble() * (max - min)));
-		Debug.Log (a);
-		return a;
+		return (float)(min + (rng.NextDouble() * (max - min)));
 	}
 
 	public void FireOneShot ()
