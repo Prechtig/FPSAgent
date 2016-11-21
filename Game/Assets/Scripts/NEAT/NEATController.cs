@@ -47,12 +47,15 @@ public class NEATController : UnitController {
 		if (Input.GetKey (KeyCode.Mouse0)) {
 			weapon.FireOneShot ();
 		}
+		if (Input.GetKey (KeyCode.R)) {
+			weapon.Reload ();
+		}
 		if (Input.GetKey (KeyCode.LeftArrow)) {
 			Cursor.lockState = CursorLockMode.Locked;
 		}
 		*/
 
-        if ((IsRunning && !useCNN) ||
+        if ((!IsRunning && !useCNN) ||
 			(IsRunning && useCNN && frameCounter++ % cnnFrameRefreshRate == 0)) {
 			ISignalArray inputArr = box.InputSignalArray;
 
@@ -88,26 +91,30 @@ public class NEATController : UnitController {
 			output [5] = 0;
 			*/
 
-			//Mouse movement
-			mouseX = (float)(output [0] - output [1]);
-			mouseY = (float)(output [2] - output [3]);
-
-			rotationX += -mouseY * sensitivityY * Time.deltaTime;
-			rotationX = Mathf.Clamp (rotationX, -90, 90);
-
-			rotationY += mouseX * sensitivityX * Time.deltaTime;
-			//rotationY = Mathf.Clamp (rotationY, -90, 90);
-			if (rotationY > 180) {
-				rotationY -= 360;
-			} else if (rotationY < -180) {
-				rotationY += 360;
-			}
-			transform.localEulerAngles = new Vector3(rotationX, rotationY, transform.localEulerAngles.z);
 
 			if (output [4] > shootThreshold) {
 				weapon.FireOneShot ();
-			} else if (output [5] > reloadThreshold) {
-				weapon.Reload ();
+			} else {
+
+				//Mouse movement
+				mouseX = (float)(output [0] - output [1]);
+				mouseY = (float)(output [2] - output [3]);
+
+				rotationX += -mouseY * sensitivityY * Time.deltaTime;
+				rotationX = Mathf.Clamp (rotationX, -90, 90);
+
+				rotationY += mouseX * sensitivityX * Time.deltaTime;
+				//rotationY = Mathf.Clamp (rotationY, -90, 90);
+				if (rotationY > 180) {
+					rotationY -= 360;
+				} else if (rotationY < -180) {
+					rotationY += 360;
+				}
+				transform.localEulerAngles = new Vector3 (rotationX, rotationY, transform.localEulerAngles.z);
+
+				if (output [5] > reloadThreshold) {
+					weapon.Reload ();
+				}
 			}
 		}
 	}

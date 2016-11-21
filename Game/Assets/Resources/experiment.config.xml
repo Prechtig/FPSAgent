@@ -4,9 +4,9 @@
 	<inputs>34</inputs>
 	<outputs>6</outputs>
 
-	<parallelAgents>1</parallelAgents>
+	<parallelAgents>5</parallelAgents>
 	<TrialCount>20</TrialCount>
-	<TrialDuration>99999</TrialDuration>
+	<TrialDuration>15</TrialDuration>
 	<StoppingFitness>99999</StoppingFitness>
 
 	<PopulationSize>100</PopulationSize>
