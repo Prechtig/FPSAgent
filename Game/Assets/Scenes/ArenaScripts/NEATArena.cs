@@ -47,6 +47,8 @@ public class NEATArena : MonoBehaviour{
 
 		SpawnPlayer ();
 		SpawnEnemies ();
+
+		MoveEnemyWithinSight ();
 	}
 
     private static float GetAndIncrementYOffset(){
@@ -225,9 +227,16 @@ public class NEATArena : MonoBehaviour{
         BotSpawn.Player = PlayerSpawn.Player;
 
         BotSpawn.StartSpawning ();
-        PlayerSpawn.Player.transform.LookAt(BotSpawn.Bots[0].transform);
-        PlayerSpawn.Player.transform.eulerAngles = new Vector3(PlayerSpawn.Player.transform.eulerAngles.x + Random.Range(-20, 20), PlayerSpawn.Player.transform.eulerAngles.y + Random.Range(-20, 20));
     }
+
+	private void MoveEnemyWithinSight(){
+		Camera cam = GetPlayer ().GetComponentInChildren<Camera> ();
+		while(!GameObjectHelper.IsObjectWithinSight(cam, BotSpawn.Bots[0])){
+			BotSpawn.Bots [0].transform.position = BotSpawn.GenerateSpawnPoint ();
+		}
+		//GetPlayer ().transform.LookAt (BotSpawn.Bots [0].transform);
+		//GetPlayer ().transform.eulerAngles = new Vector3(PlayerSpawn.Player.transform.eulerAngles.x + 4, PlayerSpawn.Player.transform.eulerAngles.y);
+	}
 
 	public float GetFitness(){
 		float fitness = 0f;
