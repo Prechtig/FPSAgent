@@ -18,7 +18,7 @@ public class PersistImages {
 	private static final int batchDownloadSize = 250;
 	
 	public static void main(String[] args) throws IOException {
-		int samples = 100000;
+		int samples = 102;
 		int fromId = 1;
 		int toId = fromId + samples - 1;
 		
