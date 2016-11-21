@@ -151,9 +151,15 @@ public class Optimizer : MonoBehaviour {
 
 		VisualPartitionClassifier.GetInstance ().InitializeFromProperties ();
 		FitnessMap = new Dictionary<IBlackBox, float> ();
-		//_ea = experiment.CreateEvolutionAlgorithm("C:\\Users\\Mikkel\\AppData\\LocalLow\\DefaultCompany\\Game\\06-11-16--11-49-55\\303\\FPSAgent.pop");
-		_ea = experiment.CreateEvolutionAlgorithm();
-		_ea.UpdateEvent += new EventHandler(ea_UpdateEvent);
+        //_ea = experiment.CreateEvolutionAlgorithm("C:\\Users\\Mikkel\\AppData\\LocalLow\\DefaultCompany\\Game\\06-11-16--11-49-55\\303\\FPSAgent.pop"); //Windows?
+        /*
+        string folderName = "21-11-16--22-08-24";
+        string generationName = "1";
+        string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.champ.xml";
+        _ea = experiment.CreateEvolutionAlgorithm(location);
+        */
+        _ea = experiment.CreateEvolutionAlgorithm();
+        _ea.UpdateEvent += new EventHandler(ea_UpdateEvent);
 		var evoSpeed = int.Parse (PropertiesReader.GetPropertyFile(PropertyFile.Project).GetProperty("game.neat.training.evolutionSpeed"));
 		Started = true;
 		Time.timeScale = evoSpeed;
