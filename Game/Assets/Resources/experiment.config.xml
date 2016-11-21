@@ -6,7 +6,7 @@
 
 	<parallelAgents>5</parallelAgents>
 	<TrialCount>20</TrialCount>
-	<TrialDuration>15</TrialDuration>
+	<TrialDuration>8</TrialDuration>
 	<StoppingFitness>99999</StoppingFitness>
 
 	<PopulationSize>100</PopulationSize>
