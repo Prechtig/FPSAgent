@@ -22,7 +22,7 @@ namespace AssemblyCSharp
 		}
 
 		public static string ToString(double[] arr) {
-			return "[" + string.Join (", ", arr.Select (p => p.ToString ()).ToArray ()) + "]";
+			return "[" + string.Join (", ", arr.Select (p => p.ToString ("0.##")).ToArray ()) + "]";
 		}
 	}
 }

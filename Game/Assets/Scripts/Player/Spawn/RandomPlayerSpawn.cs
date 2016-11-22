@@ -61,7 +61,7 @@ public class RandomPlayerSpawn : MonoBehaviour, IPlayerSpawn
 
 	private Vector3 GenerateSpawnPoint(){
 		float rX = Random.Range (-(X/2) + 1, X/2 - 1);
-		float y = Random.Range (1, 15);
+		float y = Random.Range (1, 6);
 		float zOffset = -4;
 
 		/*

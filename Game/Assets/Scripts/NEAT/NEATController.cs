@@ -51,7 +51,8 @@ public class NEATController : UnitController {
 				double[] fromCNN = GroundTruthCNN.CalculateFeatures (playerCam);
 				double[] result = ArrayTool.Binarize (fromCNN);
 
-				Debug.Log (ArrayTool.ToString(result));
+                Debug.Log ("From CNN:  " + ArrayTool.ToString(fromCNN));
+                Debug.Log ("Binarized: " + ArrayTool.ToString(result));
 
 				inputArr.CopyFrom (result, 0);
 			} else {
