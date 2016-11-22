@@ -9,7 +9,7 @@ import java.nio.ByteOrder;
 
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.util.ModelSerializer;
-import org.mma.imagerecognition.dao.FileSystemDAO;
+
 import org.mma.imagerecognition.tools.PropertiesReader;
 
 public class MultiThreadedBridge implements Runnable {
@@ -98,7 +98,7 @@ public class MultiThreadedBridge implements Runnable {
 	}
 	
 	public static void main(String[] args) {
-		MultiThreadedBridge server = new MultiThreadedBridge(FileSystemDAO.getPathOfLatestModelFile().toFile());
+		MultiThreadedBridge server = new MultiThreadedBridge(new File("models/Shallow97%Acc.bin"));
 		new Thread(server).start();
 
 		try {
