@@ -33,9 +33,9 @@ public class Trainer {
 		final long GIGABYTE = 1024 * 1024 * 1024;
 		CudaEnvironment.getInstance().getConfiguration()
 	    .setMaximumDeviceCacheableLength(GIGABYTE * 1)
-	    .setMaximumDeviceCache			(GIGABYTE * 6)
+	    .setMaximumDeviceCache			(GIGABYTE * 12)
 	    .setMaximumHostCacheableLength	(GIGABYTE * 1)
-	    .setMaximumHostCache			(GIGABYTE * 5)
+	    .setMaximumHostCache			(GIGABYTE * 12)
 		.allowMultiGPU(boolFromProperty("training.sli"));
 		 */
 	}
