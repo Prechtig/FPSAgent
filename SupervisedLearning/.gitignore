@@ -2,7 +2,7 @@
 /target/
 
 # Saved networks folder
-models
+models/continuous
 samples
 featuremaps
 
