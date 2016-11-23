@@ -61,6 +61,7 @@ public class Evaluator {
 					misses++;
 				}
 			}
+			System.out.println(String.format("Evaluated %d images", toId-firstId));
 		}
 		
 		return ((double) hits) / ((double) lastId-firstId+1);
