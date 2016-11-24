@@ -150,7 +150,7 @@ public class Optimizer : MonoBehaviour {
         Utility.Log("Starting FPS Agent experiment");
 
 		VisualPartitionClassifier.GetInstance ().InitializeFromProperties ();
-		FitnessMap = new Dictionary<IBlackBox, float> ();
+
         //_ea = experiment.CreateEvolutionAlgorithm("C:\\Users\\Mikkel\\AppData\\LocalLow\\DefaultCompany\\Game\\06-11-16--11-49-55\\303\\FPSAgent.pop"); //Windows?
         /*
         string folderName = "21-11-16--22-08-24";
@@ -178,11 +178,11 @@ public class Optimizer : MonoBehaviour {
 			FirstUpdate = false;
 		}
 
-		//Utility.Log(string.Format("Moving average: {0}, N: {1}", _ea.Statistics._bestFitnessMA.Mean, _ea.Statistics._bestFitnessMA.Length));
-		//Utility.Log ("maxSpecieSize=" + _ea.Statistics._maxSpecieSize + "\nChampion id: " + _ea.CurrentChampGenome.Id);
-		//Debug.Log("Champions specie id: " + _ea.CurrentChampGenome.SpecieIdx);
-
-	}
+        //Utility.Log(string.Format("Moving average: {0}, N: {1}", _ea.Statistics._bestFitnessMA.Mean, _ea.Statistics._bestFitnessMA.Length));
+        //Utility.Log ("maxSpecieSize=" + _ea.Statistics._maxSpecieSize + "\nChampion id: " + _ea.CurrentChampGenome.Id);
+        //Debug.Log("Champions specie id: " + _ea.CurrentChampGenome.SpecieIdx);
+        FitnessMap = new Dictionary<IBlackBox, float>();
+    }
 
 	void PauseUnpause()
 	{
