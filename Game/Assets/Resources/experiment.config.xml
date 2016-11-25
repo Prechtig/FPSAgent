@@ -12,8 +12,8 @@
 	<PopulationSize>100</PopulationSize>
 	<SpecieCount>1</SpecieCount>
 	<Activation>
-    <Scheme>CyclicFixedIters</Scheme>
-    <Iters>5</Iters>
+    	<Scheme>CyclicFixedIters</Scheme>
+    	<Iters>1</Iters>
 	</Activation>
 	<ComplexityRegulationStrategy>Absolute</ComplexityRegulationStrategy>
 	<ComplexityThreshold>999999</ComplexityThreshold>

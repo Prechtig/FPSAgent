@@ -25,6 +25,7 @@ public class NEATController : UnitController {
 
 	private Camera playerCam;
 	private bool useCNN;
+	private bool frameControl;
 	private int cnnFrameRefreshRate;
 	private int frameCounter = 0;
 
@@ -34,8 +35,9 @@ public class NEATController : UnitController {
 	void Start () {
 		playerCam = gameObject.GetComponentInChildren<Camera> ();
 		EmptyDoubleArray = new double [box.InputCount];
+		frameControl = "true".Equals(PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("game.neat.training.frameControl"));
 		useCNN = "true".Equals(PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("game.neat.training.use.cnn"));
-		if(useCNN) {
+		if(frameControl) {
 			cnnFrameRefreshRate = int.Parse (PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("game.neat.training.use.cnn.frameRefreshRate"));
 		}
 	}
@@ -55,8 +57,8 @@ public class NEATController : UnitController {
 		}
 		*/
 
-        if ((IsRunning && !useCNN) ||
-			(IsRunning && useCNN && frameCounter++ % cnnFrameRefreshRate == 0)) {
+		if ((IsRunning && !frameControl) ||
+			(IsRunning && frameControl && frameCounter++ % cnnFrameRefreshRate == 0)) {
 			ISignalArray inputArr = box.InputSignalArray;
 
 			if (useCNN) {
