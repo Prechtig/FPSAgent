@@ -1,9 +1,12 @@
 package org.mma.imagerecognition.executables;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -36,7 +39,8 @@ public class Evaluator {
 		System.out.format("Hit rate: %f%%\n", accuracy*100);
 	}
 	
-	public static double getAccuracy(MultiLayerNetwork network) {
+	public static double getAccuracy(MultiLayerNetwork network) throws IOException {
+		Files.createDirectories(Paths.get("misses"));
 		int firstId = Trainer.lastValidationIndex()+1;
 		int lastId = Trainer.lastTestIndex();
 		
@@ -58,12 +62,25 @@ public class Evaluator {
 				if(ArrayUtils.isEquals(binaryVector, groundTruths)) {
 					hits++;
 				} else {
+					int expectedIdx = getIndex(groundTruths);
+					int actualIdx = getIndex(binaryVector);
+					File file = new File(String.format("misses/id%d-expected%d-actual%d.png", td.getId(), expectedIdx, actualIdx));
+					ImageTool.printColoredPngImage(td.getPixelData(), td.getWidth(), file);
 					misses++;
 				}
 			}
 			System.out.println(String.format("Evaluated %d images", toId-firstId));
 		}
-		
+			
 		return ((double) hits) / ((double) lastId-firstId+1);
+	}
+	
+	private static int getIndex(double[] arr) {
+		for(int idx = 0; idx < arr.length; idx++) {
+			if(1d - arr[idx] < 1E-6) {
+				return idx;
+			}
+		}
+		throw new RuntimeException("Did not found a 1 in the array");
 	}
 }
