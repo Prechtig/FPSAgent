@@ -58,7 +58,7 @@ public class NEATController : UnitController {
 				if (Arena.BotSpawn.Bots.Count == 0) {
 					inputArr.CopyFrom (EmptyDoubleArray, 0);
 				} else {	
-					inputArr.CopyFrom (GroundTruth.CalculateFeatures (playerCam, Arena.BotSpawn.Bots [0]), 0);
+					inputArr.CopyFrom (GroundTruth.CalculateGroundTruthsScaled(playerCam, 1), 0);
 				}
 			}
 
