@@ -232,8 +232,8 @@ public class NEATArena : MonoBehaviour{
 	public float GetFitness(){
 		float fitness = 0f;
 
-		//New fitness function, does not work with the HorizontalBotSpawn
-		/*
+        //New fitness function, does not work with the HorizontalBotSpawn
+        /*
 		float angle = Mathf.PI;
 		float k = 15f;
 		float c = 2f;
@@ -244,9 +244,11 @@ public class NEATArena : MonoBehaviour{
 		}
 		fitness = k / (1 + (angle * c));
 		*/
-
+        /*
 		fitness += RunningFitness / RunningFitnessCount;
 		return fitness + BotSpawn.GetFitness ();
+        */
+        return 0;
 	}
 
 	public void OnDestroy(){
