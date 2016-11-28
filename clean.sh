@@ -10,7 +10,7 @@ sed -E "s/o.d\.o\.l\.ScoreIterationListener - Score at iteration ([0-9]+) is ([0
 awk -v nth=$2 'NR%nth==1' cleaned > nth
 
 # Insert headers
-sed '1s/^/score  iteration\
+sed '1s/^/iteration  score\
 /g' nth > $1.dat
 
 # Remove tmp files
