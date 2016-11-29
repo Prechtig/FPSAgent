@@ -42,10 +42,11 @@ public class NEATController : UnitController {
 		}
 	}
 
-	// Update is called once per frame
-	void FixedUpdate()
-	{
-		/*
+    int count;
+    // Update is called once per frame
+    void FixedUpdate()
+    {
+        /*
 		if (Input.GetKey (KeyCode.Mouse0)) {
 			weapon.FireOneShot ();
 		}
@@ -56,35 +57,42 @@ public class NEATController : UnitController {
 			Cursor.lockState = CursorLockMode.Locked;
 		}
 		*/
+        //count++;
+        if ((IsRunning && !frameControl) ||
+            (IsRunning && frameControl && frameCounter++ % cnnFrameRefreshRate == 0))
+        {
+            ISignalArray inputArr = box.InputSignalArray;
 
-		if ((IsRunning && !frameControl) ||
-			(IsRunning && frameControl && frameCounter++ % cnnFrameRefreshRate == 0)) {
-			ISignalArray inputArr = box.InputSignalArray;
+            if (useCNN)
+            {
+                double[] fromCNN = GroundTruthCNN.CalculateFeatures(playerCam);
+                double[] result = ArrayTool.Binarize(fromCNN);
 
-			if (useCNN) {
-				double[] fromCNN = GroundTruthCNN.CalculateFeatures (playerCam);
-				double[] result = ArrayTool.Binarize (fromCNN);
+                Debug.Log(ArrayTool.ToString(result));
 
-				Debug.Log (ArrayTool.ToString(result));
+                inputArr.CopyFrom(result, 0);
+            }
+            else
+            {
+                if (Arena.BotSpawn.Bots.Count == 0)
+                {
+                    inputArr.CopyFrom(EmptyDoubleArray, 0);
+                }
+                else
+                {
+                    inputArr.CopyFrom(GroundTruth.CalculateFeatures(playerCam, Arena.BotSpawn.Bots[0]), 0);
+                }
+            }
 
-				inputArr.CopyFrom (result, 0);
-			} else {
-				if (Arena.BotSpawn.Bots.Count == 0) {
-					inputArr.CopyFrom (EmptyDoubleArray, 0);
-				} else {	
-					inputArr.CopyFrom (GroundTruth.CalculateFeatures (playerCam, Arena.BotSpawn.Bots [0]), 0);
-				}
-			}
+            //Activate network
+            box.Activate();
+            //Obtain output
+            ISignalArray outputArr = box.OutputSignalArray;
 
-			//Activate network
-			box.Activate ();
-			//Obtain output
-			ISignalArray outputArr = box.OutputSignalArray;
+            double[] output = new double[outputArr.Length];
+            outputArr.CopyTo(output, 0);
 
-			double[] output = new double[outputArr.Length];
-			outputArr.CopyTo (output, 0);
-
-			/*
+            /*
 			output [0] = 0;
 			output [1] = 0;
 			output [2] = 0;
@@ -94,32 +102,34 @@ public class NEATController : UnitController {
 			*/
 
 
-			if (output [4] > shootThreshold) {
-				weapon.FireOneShot ();
-			} else {
+            //Mouse movement
+            mouseX = (float)(output[0] - output[1]);
+            mouseY = (float)(output[2] - output[3]);
 
-				//Mouse movement
-				mouseX = (float)(output [0] - output [1]);
-				mouseY = (float)(output [2] - output [3]);
+            rotationX += -mouseY * sensitivityY * Time.deltaTime;
+            rotationX = Mathf.Clamp(rotationX, -90, 90);
 
-				rotationX += -mouseY * sensitivityY * Time.deltaTime;
-				rotationX = Mathf.Clamp (rotationX, -90, 90);
-
-				rotationY += mouseX * sensitivityX * Time.deltaTime;
-				//rotationY = Mathf.Clamp (rotationY, -90, 90);
-				if (rotationY > 180) {
-					rotationY -= 360;
-				} else if (rotationY < -180) {
-					rotationY += 360;
-				}
-				transform.localEulerAngles = new Vector3 (rotationX, rotationY, transform.localEulerAngles.z);
-
-				if (output [5] > reloadThreshold) {
-					weapon.Reload ();
-				}
-			}
-		}
-	}
+            rotationY += mouseX * sensitivityX * Time.deltaTime;
+            //rotationY = Mathf.Clamp (rotationY, -90, 90);
+            if (rotationY > 180)
+            {
+                rotationY -= 360;
+            }
+            else if (rotationY < -180)
+            {
+                rotationY += 360;
+            }
+            transform.localEulerAngles = new Vector3(rotationX, rotationY, transform.localEulerAngles.z);
+            if (output[4] > shootThreshold)
+            {
+                weapon.FireOneShot();
+            }
+            else if (output[5] > reloadThreshold)
+            {
+                weapon.Reload();
+            }
+        }
+    }
 
 	public override void Stop()
 	{
@@ -134,7 +144,8 @@ public class NEATController : UnitController {
 
 	public override float GetFitness()
 	{
-		//THIS IS NOT USED!
-		return -1;
+        Debug.Log(count);
+        //THIS IS NOT USED!
+        return -1;
 	}
 }
