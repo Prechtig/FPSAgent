@@ -153,13 +153,14 @@ public class Optimizer : MonoBehaviour {
 
         //_ea = experiment.CreateEvolutionAlgorithm("C:\\Users\\Mikkel\\AppData\\LocalLow\\DefaultCompany\\Game\\06-11-16--11-49-55\\303\\FPSAgent.pop"); //Windows?
         /*
-        string folderName = "21-11-16--22-08-24";
-        string generationName = "1";
-        string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.champ.xml";
+        string folderName = "26-11-16--11-50-12";
+        string generationName = "130";
+        //string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.champ.xml";
+        string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.pop.xml";
         _ea = experiment.CreateEvolutionAlgorithm(location);
         */
         _ea = experiment.CreateEvolutionAlgorithm();
-        _ea.UpdateEvent += new EventHandler(ea_UpdateEvent);
+        //_ea.UpdateEvent += new EventHandler(ea_UpdateEvent);
 		var evoSpeed = int.Parse (PropertiesReader.GetPropertyFile(PropertyFile.Project).GetProperty("game.neat.training.evolutionSpeed"));
 		Started = true;
 		Time.timeScale = evoSpeed;
