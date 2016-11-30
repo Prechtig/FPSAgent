@@ -16,6 +16,8 @@ import java.util.stream.DoubleStream;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.mma.imagerecognition.dao.TrainingDbDao;
+import org.mma.imagerecognition.dataobjects.TrainingData;
 
 public class ImageTool {
 	/**
@@ -38,6 +40,24 @@ public class ImageTool {
 		BufferedImage image = new BufferedImage(cm, raster, true, null);
 
 		ImageIO.write(image, "png", file);
+	}
+	
+	public static void printRedColoredPngImage(byte[] flattened, int width, File file) throws IOException {
+		flattened = zeroOutGreenValues(flattened);
+		flattened = zeroOutBlueValues(flattened);
+		printColoredPngImage(flattened, width, file);
+	}
+	
+	public static void printGreenColoredPngImage(byte[] flattened, int width, File file) throws IOException {
+		flattened = zeroOutRedValues(flattened);
+		flattened = zeroOutBlueValues(flattened);
+		printColoredPngImage(flattened, width, file);
+	}
+	
+	public static void printBlueColoredPngImage(byte[] flattened, int width, File file) throws IOException {
+		flattened = zeroOutRedValues(flattened);
+		flattened = zeroOutGreenValues(flattened);
+		printColoredPngImage(flattened, width, file);
 	}
 	
 	public static void printGreyScalePngImage(double[] flattened, int width, File file) throws IOException {
@@ -108,6 +128,28 @@ public class ImageTool {
 		return result;
 	}
 	
+	public static byte[] zeroOutRedValues(byte[] bs) {
+		return zeroOutValues(bs, 0);
+	}
+	
+	public static byte[] zeroOutGreenValues(byte[] bs) {
+		return zeroOutValues(bs, 1);
+	}
+	
+	public static byte[] zeroOutBlueValues(byte[] bs) {
+		return zeroOutValues(bs, 2);
+	}
+	
+	private static byte[] zeroOutValues(byte[] bs, int value) {
+		if(2 < value || value < 0) {
+			throw new RuntimeException("Value has to be either 0, 1 or 2");
+		}
+		for(int idx = value; idx < bs.length; idx += 3) {
+			bs[idx] = 0x0;
+		}
+		return bs;
+	}
+	
 	public static double scale(double d) {
 		return d / (double) 0xFF;
 	}
@@ -118,5 +160,13 @@ public class ImageTool {
 	
 	public static double toDouble(byte b) {
 		return (b & 0xFF);
+	}
+	
+	public static void main(String[] args) throws IOException {
+		TrainingData images = TrainingDbDao.getImages("(15102)").get(0);
+		printColoredPngImage(images.getPixelData(), images.getWidth(), new File("img.png"));
+		printRedColoredPngImage(images.getPixelData().clone(), images.getWidth(), new File("red.png"));
+		printGreenColoredPngImage(images.getPixelData().clone(), images.getWidth(), new File("green.png"));
+		printBlueColoredPngImage(images.getPixelData().clone(), images.getWidth(), new File("blue.png"));
 	}
 }
