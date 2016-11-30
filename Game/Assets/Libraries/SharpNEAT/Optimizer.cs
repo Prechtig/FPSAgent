@@ -54,8 +54,9 @@ public class Optimizer : MonoBehaviour {
 	private bool FirstUpdate = true;
 
     private static string _resultSavePath;
+    public bool BestNetworkIsRunning = false;
 
-	public int Trials
+    public int Trials
 	{
 		get { return trials; }
 	}
@@ -153,14 +154,14 @@ public class Optimizer : MonoBehaviour {
 
         //_ea = experiment.CreateEvolutionAlgorithm("C:\\Users\\Mikkel\\AppData\\LocalLow\\DefaultCompany\\Game\\06-11-16--11-49-55\\303\\FPSAgent.pop"); //Windows?
         /*
-        string folderName = "26-11-16--11-50-12";
-        string generationName = "130";
+        string folderName = "30-11-16--01-35-12";
+        string generationName = "159";
         //string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.champ.xml";
         string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.pop.xml";
         _ea = experiment.CreateEvolutionAlgorithm(location);
         */
         _ea = experiment.CreateEvolutionAlgorithm();
-        //_ea.UpdateEvent += new EventHandler(ea_UpdateEvent);
+        _ea.UpdateEvent += new EventHandler(ea_UpdateEvent);
 		var evoSpeed = int.Parse (PropertiesReader.GetPropertyFile(PropertyFile.Project).GetProperty("game.neat.training.evolutionSpeed"));
 		Started = true;
 		Time.timeScale = evoSpeed;
@@ -255,14 +256,44 @@ public class Optimizer : MonoBehaviour {
 		UnitController ct = ControllerMap[box];
 		NEATArena nt = ArenaMap [box];
 
-		if (!RunBestNetwork) {
-			if (FitnessMap.ContainsKey (box)) {
-				FitnessMap [box] = nt.GetFitness ();
-			} else {
-				FitnessMap.Add (box, nt.GetFitness ());
-			}
-		}
-		ControllerMap.Remove (box);
+        if (BestNetworkIsRunning)
+        {
+            Debug.Log("Best Network fitness: " + nt.GetFitness());
+            RunBestNetwork = false;
+            BestNetworkIsRunning = false;
+        }
+        else
+        {
+            if (FitnessMap.ContainsKey(box))
+            {
+                FitnessMap[box] = nt.GetFitness();
+            }
+            else
+            {
+                FitnessMap.Add(box, nt.GetFitness());
+            }
+        }
+
+
+
+        /*
+        if (!RunBestNetwork)
+        {
+            if (FitnessMap.ContainsKey(box))
+            {
+                FitnessMap[box] = nt.GetFitness();
+            }
+            else
+            {
+                FitnessMap.Add(box, nt.GetFitness());
+            }
+        }
+        else
+        {
+            Debug.Log("Best Network fitness: " + nt.GetFitness());
+        }
+        */
+        ControllerMap.Remove (box);
 		ArenaMap.Remove (box);
 
 		Destroy (ct.gameObject);
