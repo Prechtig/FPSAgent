@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <Config>
-	<inputs>34</inputs>
+	<inputs>26</inputs>
 	<outputs>6</outputs>
 
 	<parallelAgents>10</parallelAgents>
@@ -10,7 +10,7 @@
 	<StoppingFitness>99999</StoppingFitness>
 
 	<PopulationSize>100</PopulationSize>
-	<SpecieCount>5</SpecieCount>
+	<SpecieCount>10</SpecieCount>
 	<Activation>
     	<Scheme>CyclicFixedIters</Scheme>
     	<Iters>1</Iters>
