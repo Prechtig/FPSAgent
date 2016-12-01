@@ -11,20 +11,25 @@ public class RandomBotSpawn : MonoBehaviour, IBotSpawn
 
     private GameObject BotPrefab;
 	public IList<GameObject> Bots;
-	private float SpawnTime;
-	private static int BotsToSpawn = 1;
+	//private float SpawnTime;
+    private static int BotsToSpawn;
 	private int BotsKilled = 0;
 
 	// Use this for initialization
 	void Start ()
 	{
-		
-	}
+        
+    }
 
 	public void StartSpawning(){
-		Bots = new List<GameObject>();
+        BotsToSpawn = int.Parse(PropertiesReader.GetPropertyFile(PropertyFile.Project).GetProperty("game.bots"));
+        Bots = new List<GameObject>();
 		BotPrefab = Resources.Load ("BotPrefab") as GameObject;
-		Spawn ();
+        for (int i = 0; i < BotsToSpawn; i++)
+        {
+            Spawn();
+        }
+
 		//SpawnTime = 3f;
 		//InvokeRepeating ("Spawn", 0, SpawnTime);
 	}
@@ -35,6 +40,12 @@ public class RandomBotSpawn : MonoBehaviour, IBotSpawn
 			Vector3 spawnPosition = GenerateSpawnPoint ();
 			GameObject b = Instantiate (BotPrefab, spawnPosition, new Quaternion(0, 180, 0, 0)) as GameObject;
 			b.GetComponent<BotVitals> ().bs = this;
+            if (bool.Parse(PropertiesReader.GetPropertyFile(PropertyFile.Project).GetProperty("game.enableMovement"))) {
+                BotMovement bm = b.AddComponent<BotMovement>();
+                bm.X = X;
+                bm.zOffset = SpawnPoints[0].position.z;
+                bm.yOffset = SpawnPoints[0].position.y;
+            }
 			Bots.Add (b);
 		}
 	}
@@ -50,7 +61,7 @@ public class RandomBotSpawn : MonoBehaviour, IBotSpawn
 
 	public float GetFitness(){
 		float fitness = 0f;
-		fitness += BotVitals.MAX_HITPOINTS * BotsKilled;
+		fitness += (BotVitals.MAX_HITPOINTS + 25) * BotsKilled + 25;
 		foreach (GameObject b in Bots) {
 			fitness += BotVitals.MAX_HITPOINTS - b.GetComponent<BotVitals>().hitPoints;
 		}
