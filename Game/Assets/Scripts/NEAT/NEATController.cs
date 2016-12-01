@@ -42,7 +42,6 @@ public class NEATController : UnitController {
 		}
 	}
 
-    int count;
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -144,7 +143,6 @@ public class NEATController : UnitController {
 
 	public override float GetFitness()
 	{
-        Debug.Log(count);
         //THIS IS NOT USED!
         return -1;
 	}
