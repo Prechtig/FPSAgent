@@ -61,7 +61,11 @@ public class RandomBotSpawn : MonoBehaviour, IBotSpawn
 
 	public float GetFitness(){
 		float fitness = 0f;
-		fitness += (BotVitals.MAX_HITPOINTS + 25) * BotsKilled + 25;
+		fitness += BotVitals.MAX_HITPOINTS * BotsKilled;
+        if (BotsToSpawn > 1)
+        {
+            fitness += 25 * BotsKilled;
+        }
 		foreach (GameObject b in Bots) {
 			fitness += BotVitals.MAX_HITPOINTS - b.GetComponent<BotVitals>().hitPoints;
 		}
