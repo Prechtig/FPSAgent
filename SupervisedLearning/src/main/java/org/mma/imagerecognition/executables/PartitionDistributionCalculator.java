@@ -14,7 +14,7 @@ import org.mma.imagerecognition.dataobjects.TrainingData;
 public class PartitionDistributionCalculator {
 	
 	public static void main(String[] args) {
-		int samples = 10000;
+		int samples = 130_000;
 		
 		Map<Integer, Long> distribution = IntStream.range(1, samples).boxed()
 			.map(id -> getPartitionId(id))

@@ -51,7 +51,10 @@ public class NEATController : UnitController {
 				double[] fromCNN = GroundTruthCNN.CalculateFeatures (playerCam);
 				double[] result = ArrayTool.Binarize (fromCNN);
 
-				Debug.Log (ArrayTool.ToString(result));
+
+
+				Debug.Log (ArrayTool.ToString(ArrayTool.EraseSmallPercentages(fromCNN, 1E-3)));
+				Debug.Log ("Partition: " + getIdx (result));
 
 				inputArr.CopyFrom (result, 0);
 			} else {
@@ -63,34 +66,34 @@ public class NEATController : UnitController {
 			}
 
 			//Activate network
-			box.Activate ();
-			//Obtain output
-			ISignalArray outputArr = box.OutputSignalArray;
-
-			double[] output = new double[outputArr.Length];
-			outputArr.CopyTo (output, 0);
-
-			//Mouse movement
-			mouseX = (float)(output [0] - output [1]);
-			mouseY = (float)(output [2] - output [3]);
-
-			rotationX += -mouseY * sensitivityY * Time.deltaTime;
-			rotationX = Mathf.Clamp (rotationX, -90, 90);
-
-			rotationY += mouseX * sensitivityX * Time.deltaTime;
-			//rotationY = Mathf.Clamp (rotationY, -90, 90);
-			if (rotationY > 180) {
-				rotationY -= 360;
-			} else if (rotationY < -180) {
-				rotationY += 360;
-			}
-			transform.localEulerAngles = new Vector3(rotationX, rotationY, transform.localEulerAngles.z);
-
-			if (output [4] > shootThreshold) {
-				weapon.FireOneShot ();
-			} else if (output [5] > reloadThreshold) {
-				weapon.Reload ();
-			}
+//			box.Activate ();
+//			//Obtain output
+//			ISignalArray outputArr = box.OutputSignalArray;
+//
+//			double[] output = new double[outputArr.Length];
+//			outputArr.CopyTo (output, 0);
+//
+//			//Mouse movement
+//			mouseX = (float)(output [0] - output [1]);
+//			mouseY = (float)(output [2] - output [3]);
+//
+//			rotationX += -mouseY * sensitivityY * Time.deltaTime;
+//			rotationX = Mathf.Clamp (rotationX, -90, 90);
+//
+//			rotationY += mouseX * sensitivityX * Time.deltaTime;
+//			//rotationY = Mathf.Clamp (rotationY, -90, 90);
+//			if (rotationY > 180) {
+//				rotationY -= 360;
+//			} else if (rotationY < -180) {
+//				rotationY += 360;
+//			}
+//			transform.localEulerAngles = new Vector3(rotationX, rotationY, transform.localEulerAngles.z);
+//
+//			if (output [4] > shootThreshold) {
+//				weapon.FireOneShot ();
+//			} else if (output [5] > reloadThreshold) {
+//				weapon.Reload ();
+//			}
 		}
 	}
 
@@ -108,6 +111,15 @@ public class NEATController : UnitController {
 	public override float GetFitness()
 	{
 		//THIS IS NOT USED!
+		return -1;
+	}
+
+	private int getIdx(double[] arr) {
+		for (int idx = 0; idx < arr.Length; idx++) {
+			if (arr [idx] == 1d) {
+				return idx;
+			}
+		}
 		return -1;
 	}
 }

@@ -22,7 +22,16 @@ namespace AssemblyCSharp
 		}
 
 		public static string ToString(double[] arr) {
-			return "[" + string.Join (", ", arr.Select (p => p.ToString ()).ToArray ()) + "]";
+			return "[" + string.Join (", ", arr.Select (p => p.ToString ("0.000")).ToArray ()) + "]";
+		}
+
+		public static double[] EraseSmallPercentages(double[] arr, double cutoff) {
+			for(int i = 0; i < arr.Length; i++) {
+				if (arr [i] < cutoff) {
+					arr [i] = 0d;
+				}
+			}
+			return arr;
 		}
 	}
 }
