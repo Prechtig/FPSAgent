@@ -63,17 +63,32 @@ public class NEATArena : MonoBehaviour{
 
 	void FixedUpdate () {
 		if (BotSpawn.Bots.Count > 0) {
-			float angle;
+			float angle = float.MaxValue;
 			float k = 75f;
 			float c = 2f;
 
 			RaycastHit hit;
 			Vector3 direction = neatWeapon.gameObject.transform.TransformDirection (0, 0, 1);
-			if (Physics.Raycast (neatWeapon.bulletGo.position, direction, out hit, neatWeapon.range, neatWeapon.hitLayers) && hit.transform.tag == "Bot") {
-				angle = 0;
-			} else {
-				angle = Vector3.Angle (PlayerSpawn.Player.transform.forward, BotSpawn.Bots [0].transform.position - PlayerSpawn.Player.transform.position) * Mathf.Deg2Rad;
-			}
+
+            
+            foreach (GameObject bot in BotSpawn.Bots)
+            {
+                float tempAngle = float.MaxValue;
+                if (Physics.Raycast(neatWeapon.bulletGo.position, direction, out hit, neatWeapon.range, neatWeapon.hitLayers) && hit.transform.tag == "Bot")
+                {
+                    tempAngle = 0;
+                }
+                else
+                {
+                    tempAngle = Vector3.Angle(PlayerSpawn.Player.transform.forward, BotSpawn.Bots[0].transform.position - PlayerSpawn.Player.transform.position) * Mathf.Deg2Rad;
+                }
+
+                if (tempAngle < angle)
+                {
+                    angle = tempAngle;
+                }
+            }
+			
 
 			//RunningFitness += k / (1 + (angle * c));
 			RunningFitness += k / Mathf.Pow((1 + angle), c);
