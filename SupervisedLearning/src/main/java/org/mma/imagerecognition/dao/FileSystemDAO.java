@@ -253,7 +253,7 @@ public class FileSystemDAO {
 	}
 	
 	private static Path getTrainingDataFolder() {
-		return Paths.get(TRAINING_DATA_FOLDER);
+		return Paths.get(TRAINING_DATA_FOLDER, DbConnector.getTableName());
 	}
 	
 	public static Path getSamplesFolder() {
