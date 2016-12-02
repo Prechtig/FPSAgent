@@ -42,4 +42,8 @@ public abstract class DbConnector {
 		
 		return cpds;
 	}
+	
+	public static String getTableName() {
+		return tableName;
+	}
 }
