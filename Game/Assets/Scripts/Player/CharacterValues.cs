@@ -22,7 +22,7 @@ public class CharacterValues : MonoBehaviour
     public Movement m;
     public Weapon wep;
 
-    void Update()
+    void FixedUpdate()
     {
         mouseX = ml.mouseX;
         mouseY = ml.mouseY;

@@ -139,7 +139,7 @@ public class NEATWeapon : MonoBehaviour
 		//shotsLeftText = GameObject.FindWithTag("UIText").GetComponent<Text>() as Text;
 	}
 
-	void Update ()
+	void FixedUpdate ()
 	{
         /*if (hitAlpha > 0)
 			hitAlpha -= Time.deltaTime;
@@ -148,10 +148,10 @@ public class NEATWeapon : MonoBehaviour
 			spread = aimSpread;*/
         spread = Mathf.Clamp(spread, 0, maximumSpread);
         //Debug.Log("First: " + spread);
-        spread = Mathf.Lerp (spread, spreadTemp + cv.velMag * 2, Time.deltaTime * 8);
+        spread = Mathf.Lerp (spread, spreadTemp + cv.velMag * 2, Time.fixedDeltaTime * 8);
         //Debug.Log("Secon: " + spread);
         if (spreadTemp > basicSpread)
-			spreadTemp -= Time.deltaTime * spreadReturnTime;
+			spreadTemp -= Time.fixedDeltaTime * spreadReturnTime;
         if (spreadTemp < 0)
             spreadTemp = 0;
         //Debug.Log("SpreadTemp: " + spread);
@@ -245,9 +245,9 @@ public class NEATWeapon : MonoBehaviour
 			//Vector3 position = new Vector3 (bulletGo.position.x - actualSpread, bulletGo.position.y - actualSpread, bulletGo.position.z);
 
 			//Bullet spread
-			Vector3 direction = gameObject.transform.TransformDirection(new Vector3(Random.Range(-0.01f, 0.01f) * spread, Random.Range(0, 0.01f) * spread * 3, 1));
+			//Vector3 direction = gameObject.transform.TransformDirection(new Vector3(Random.Range(-0.01f, 0.01f) * spread, Random.Range(0, 0.01f) * spread * 3, 1));
 			//Vector3 direction = gameObject.transform.TransformDirection(new Vector3(GetRandomFloat(-0.01d, 0.01d) * spread, GetRandomFloat(0, 0.01d) * spread * 3, 1));
-			//Vector3 direction = gameObject.transform.TransformDirection (0, 0, 1);
+			Vector3 direction = gameObject.transform.TransformDirection (0, 0, 1);
 
 
 			RaycastHit hit2;
@@ -314,7 +314,7 @@ public class NEATWeapon : MonoBehaviour
 		float rate = 1.0f / time;
 		var t = 0.0f;
 		while (t < 1.0f) {
-			t += Time.deltaTime * rate;
+			t += Time.fixedDeltaTime * rate;
 			goTransform.localRotation = Quaternion.Slerp (startRotation, endRotation, t);
 			yield return null;
 		}

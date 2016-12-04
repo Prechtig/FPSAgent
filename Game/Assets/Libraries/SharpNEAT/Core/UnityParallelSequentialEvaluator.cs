@@ -65,16 +65,20 @@ namespace SharpNEAT.Core
 				foreach (TGenome genome in genomeList) {
 					//Run best netowork
 					if (_optimizer.RunBestNetwork && parallel == 0) {
-                        _optimizer.BestNetworkIsRunning = true;
-                     
-						float timeScale = Time.timeScale;
-						IBlackBox bestBlackBox = _optimizer.GetBestPhenome ();
-						if (bestBlackBox != null) {
-							TPhenome bestPhenome = (TPhenome)bestBlackBox;
-							yield return Coroutiner.StartCoroutine (_phenomeEvaluator.Evaluate (bestPhenome));
-							Evaluator.RunCount++;
-							Time.timeScale = timeScale;
-						}
+                        for (int j = 0; j < _optimizer.RunBestCount * 2; j++)
+                        {
+                            _optimizer.BestNetworkIsRunning = true;
+
+                            float timeScale = Time.timeScale;
+                            IBlackBox bestBlackBox = _optimizer.GetBestPhenome();
+                            if (bestBlackBox != null)
+                            {
+                                TPhenome bestPhenome = (TPhenome)bestBlackBox;
+                                yield return Coroutiner.StartCoroutine(_phenomeEvaluator.Evaluate(bestPhenome));
+                                Evaluator.RunCount++;
+                                Time.timeScale = timeScale;
+                            }
+                        }
 					}
 
 					TPhenome phenome = _genomeDecoder.Decode (genome);
