@@ -55,7 +55,7 @@ public class Optimizer : MonoBehaviour {
 
     private static string _resultSavePath;
     public bool BestNetworkIsRunning = false;
-
+    private float _runBestTime = 1;
     public int Trials
 	{
 		get { return trials; }
@@ -132,7 +132,19 @@ public class Optimizer : MonoBehaviour {
 			AutomaticTimeScaleOn = true;
 			print ("Automatic timescale enabled");
 		}
-	}
+        if (Input.GetKeyDown("left"))
+        {
+            if (_runBestTime == 25)
+            {
+                _runBestTime = 1;
+            }
+            else
+            {
+                _runBestTime = 25;
+            }
+            print("_runBestTime = " + _runBestTime);
+        }
+    }
 
 	public void StartEA()
 	{
@@ -153,13 +165,18 @@ public class Optimizer : MonoBehaviour {
 		VisualPartitionClassifier.GetInstance ().InitializeFromProperties ();
 
         /*
-        string folderName = "30-11-16--01-35-12";
-        string generationName = "159";
+        string folderName = "03-12-16--14-39-47"; //update
+        string generationName = "39"; // update
+        
+        */
+        string folderName = "04-12-16--04-43-48";  //fixedUpdate
+        string generationName = "181";  //fixedupdate
+
         //string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.champ.xml";
         string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.pop.xml";
         _ea = experiment.CreateEvolutionAlgorithm(location);
-        */
-        _ea = experiment.CreateEvolutionAlgorithm();
+        
+        //_ea = experiment.CreateEvolutionAlgorithm();
         _ea.UpdateEvent += new EventHandler(ea_UpdateEvent);
 		var evoSpeed = int.Parse (PropertiesReader.GetPropertyFile(PropertyFile.Project).GetProperty("game.neat.training.evolutionSpeed"));
 		Started = true;
@@ -250,14 +267,34 @@ public class Optimizer : MonoBehaviour {
 		controller.Activate(box);
 	}
 
-	public void StopEvaluation(IBlackBox box)
+    public int RunBestCount = 50;
+    private int runs = 0;
+    private float bestFitness = 0;
+    public void StopEvaluation(IBlackBox box)
 	{
 		UnitController ct = ControllerMap[box];
 		NEATArena nt = ArenaMap [box];
 
         if (BestNetworkIsRunning)
         {
-            Debug.Log("Best Network fitness: " + nt.GetFitness());
+            bestFitness += nt.GetFitness();
+            runs++;
+            if (runs == RunBestCount)
+            {
+                Debug.Log("Results for speed: " + _runBestTime);
+                Debug.Log("Best Network fitness: " + bestFitness / RunBestCount);
+                runs = 0;
+                bestFitness = 0;
+                if (_runBestTime == 1)
+                {
+                    _runBestTime = 25;
+                }
+                else
+                {
+                    _runBestTime = 1;
+                }
+                print("Changing _runBestTime = " + _runBestTime);
+            }
             RunBestNetwork = false;
             BestNetworkIsRunning = false;
         }
@@ -299,9 +336,10 @@ public class Optimizer : MonoBehaviour {
 		Destroy (nt);
 	}
 
+
 	public IBlackBox GetBestPhenome(){
 		if (_ea.CurrentGeneration > 1) {
-			Time.timeScale = 1;
+			Time.timeScale = _runBestTime;
 
 			NeatGenome genome = null;
 			string champFileLoadPath = _resultSavePath + string.Format ("{0}/{1}.champ.xml", _ea.CurrentGeneration - 1, "FPSAgent");
@@ -323,7 +361,18 @@ public class Optimizer : MonoBehaviour {
 
 			// Decode the genome into a phenome (neural network).
 			var phenome = genomeDecoder.Decode (genome);
-			return phenome;
+
+            /*
+            if()
+            string s = "";
+            foreach (var item in genome.ConnectionList)
+            {
+                s += item.SourceNodeId + " - " + item.TargetNodeId + " - " + item.Weight + "\n";
+            }
+
+            Debug.Log(s);
+            */
+            return phenome;
 		}
 		print ("Cannot run best network in first generation!");
 		RunBestNetwork = false;
@@ -355,7 +404,11 @@ public class Optimizer : MonoBehaviour {
 			}
 			//Show current generation and max fitness from last generation
 			GUI.Button(new Rect(10, Screen.height - 70, 150, 60), string.Format("Current generation: {0}\nMax fitness: {1:0.00}", _ea.CurrentGeneration, Fitness));
-		} else {
+            if (runs != 0)
+            {
+                GUI.Button(new Rect(300, Screen.height - 70, 150, 60), string.Format("Current run: {0}\nCurrent average fitness: {1}", runs, bestFitness/runs));
+            }
+        } else {
 			if (!Started) {
 				if (GUI.Button (new Rect (10, 10, 100, 40), "Start EA")) {
 					StartEA ();
