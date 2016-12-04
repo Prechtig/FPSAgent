@@ -20,6 +20,7 @@ public class WeaponController : MonoBehaviour
 
     void Update()
     {
+        /*
         if (cv.running)
         {
             anim.Play(run.name);
@@ -40,5 +41,6 @@ public class WeaponController : MonoBehaviour
             transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.Euler(idleRot), Time.deltaTime * 8);
             transform.localPosition = Vector3.Lerp(transform.localPosition, idlePos, Time.deltaTime * 8);
         }
+        */
     }
 }

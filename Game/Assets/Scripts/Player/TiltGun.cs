@@ -10,7 +10,9 @@ public class TiltGun : MonoBehaviour
 
     void Update()
     {
+        /*
         curRot = Quaternion.Euler(0, 0, -cv.hor * tilt);
         transform.localRotation = Quaternion.Lerp(transform.localRotation, curRot, Time.deltaTime * smooth);
+        */
     }
 }

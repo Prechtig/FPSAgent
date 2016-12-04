@@ -15,7 +15,9 @@ public class Breath : MonoBehaviour
 
     void Update()
     {
+        /*
         if (cv.aiming) anim.CrossFade(noBreath.name);
         else anim.CrossFade(breath.name);
+        */
     }
 }
