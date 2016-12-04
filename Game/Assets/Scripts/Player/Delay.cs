@@ -21,6 +21,7 @@ public class Delay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        /*
         factorX = -cv.mouseX * amount;
         factorY = -cv.mouseY * amount;
 
@@ -38,5 +39,6 @@ public class Delay : MonoBehaviour
 
         Vector3 Final = new Vector3(def.x + factorX, def.y + factorY, def.z);
         transform.localPosition = Vector3.Lerp(transform.localPosition, Final, Time.deltaTime * smooth);
+        */
     }
 }

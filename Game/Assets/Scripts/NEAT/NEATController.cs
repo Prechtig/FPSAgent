@@ -105,10 +105,10 @@ public class NEATController : UnitController {
             mouseX = (float)(output[0] - output[1]);
             mouseY = (float)(output[2] - output[3]);
 
-            rotationX += -mouseY * sensitivityY * Time.deltaTime;
+            rotationX += -mouseY * sensitivityY * Time.fixedDeltaTime;
             rotationX = Mathf.Clamp(rotationX, -90, 90);
 
-            rotationY += mouseX * sensitivityX * Time.deltaTime;
+            rotationY += mouseX * sensitivityX * Time.fixedDeltaTime;
             //rotationY = Mathf.Clamp (rotationY, -90, 90);
             if (rotationY > 180)
             {

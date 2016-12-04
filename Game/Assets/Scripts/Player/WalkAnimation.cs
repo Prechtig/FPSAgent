@@ -15,6 +15,7 @@ public class WalkAnimation : MonoBehaviour
 
     void Update()
     {
+        /*
         if (cv.grounded && cv.velMag > 1 && !cv.running && !cv.aiming)
         {
             anim[walk.name].speed = cv.velMag / 6;
@@ -24,5 +25,6 @@ public class WalkAnimation : MonoBehaviour
         {
             anim.CrossFade(idle.name);
         }
+        */
     }
 }
