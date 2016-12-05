@@ -103,6 +103,7 @@ public class NEATController : UnitController {
         {
             ISignalArray inputArr = box.InputSignalArray;
 
+            /*
             if (useCNN)
             {
                 double[] fromCNN = GroundTruthCNN.CalculateFeatures(playerCam);
@@ -114,15 +115,17 @@ public class NEATController : UnitController {
             }
             else
             {
+                */
                 if (Arena.BotSpawn.Bots.Count == 0)
                 {
                     inputArr.CopyFrom(EmptyDoubleArray, 0);
                 }
                 else
                 {
-                    inputArr.CopyFrom(GroundTruth.CalculateFeatures(playerCam, Arena.BotSpawn.Bots[0]), 0);
+                    //inputArr.CopyFrom(GroundTruth.CalculateFeatures(playerCam, Arena.BotSpawn.Bots[0]), 0);
+                    inputArr.CopyFrom(GroundTruth.CalculateGroundTruthsScaled(playerCam, 1), 0);
                 }
-            }
+            //}
 
             //Activate network
             box.Activate();
