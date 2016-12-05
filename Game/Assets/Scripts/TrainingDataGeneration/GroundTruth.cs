@@ -7,9 +7,17 @@ using Assets.Scripts.TrainingDataGeneration;
 public class GroundTruth : MonoBehaviour
 {
 	private static readonly double ANGLE_OFFSET = 90;
-	private static readonly double ANGLE_SCALE_FACTOR = 180;
 	private static readonly double MAX_DISTANCE = 50;
 
+	private static int _fov = -1;
+	private static int Fov{
+		get{
+			if (_fov == -1) {
+				_fov = int.Parse( PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("topology.fov"));
+			}
+			return _fov;
+		}
+	}
 
 	public static float[] CalculateGroundTruths (Camera playerCam, int botsToSave) {
 		IEnumerable<GameObject> closestBots = FindClosestBots (playerCam, botsToSave);
@@ -44,12 +52,12 @@ public class GroundTruth : MonoBehaviour
 	private static IEnumerable<GameObject> FindClosestBots (Camera playerCam, int amountOfBotsToFind) {
 		GameObject[] allBots = GameObject.FindGameObjectsWithTag ("Bot");
 		return allBots.OrderBy (bot => GameObjectHelper.AngleTo (playerCam.transform, bot.transform))
-					.Take (amountOfBotsToFind);
+			.Take (amountOfBotsToFind);
 
 	}
 
 	private static double ScaleAngle(double angle) {
-		return (angle + ANGLE_OFFSET) / ANGLE_SCALE_FACTOR;
+		return angle / (Fov / 2);
 	}
 
 	private static double ScaleDistance(double distance) {
@@ -71,12 +79,12 @@ public class GroundTruth : MonoBehaviour
 		double[] result = new double[numberOfPartitions + 1];
 		// Default to last index
 		int index = numberOfPartitions;
-        PartitionId partitionId = VisualPartitionClassifier.GetInstance().GetVisualPartition(horizontalAngle, verticalAngle);
-        if(partitionId != null)
-        {
-            index = VisualPartitionClassifier.GetInstance().CalculateFeatureIndexFromPartitionId(partitionId);
-        }
-        result[index] = 1d;
-        return result;
+		PartitionId partitionId = VisualPartitionClassifier.GetInstance().GetVisualPartition(horizontalAngle, verticalAngle);
+		if(partitionId != null)
+		{
+			index = VisualPartitionClassifier.GetInstance().CalculateFeatureIndexFromPartitionId(partitionId);
+		}
+		result[index] = 1d;
+		return result;
 	}
 }
