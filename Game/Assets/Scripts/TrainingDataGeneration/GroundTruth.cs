@@ -18,11 +18,11 @@ public class GroundTruth : MonoBehaviour
 		}
 	}
 
-	public static float[] CalculateGroundTruths (Camera playerCam, int botsToSave) {
+	public static double[] CalculateGroundTruths (Camera playerCam, int botsToSave) {
 		IEnumerable<GameObject> closestBots = FindClosestBots (playerCam, botsToSave);
-		float[] inputs = new float[4 * botsToSave];
+        double[] inputs = new double[4 * botsToSave];
 
-		int counter = 0;
+        int counter = 0;
 		foreach (GameObject bot in closestBots) {
 			bool isWithinSight = GameObjectHelper.IsObjectWithinSight (playerCam, bot);
 			inputs[counter++] = !isWithinSight ? 0 : GameObjectHelper.HorizontalAngleTo (playerCam.transform, bot.transform);
