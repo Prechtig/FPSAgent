@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <Config>
-	<inputs>26</inputs>
+	<inputs>4</inputs>
 	<outputs>6</outputs>
 
 	<parallelAgents>10</parallelAgents>
