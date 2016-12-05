@@ -18,9 +18,9 @@ public class GroundTruth : MonoBehaviour
 		}
 	}
 
-	public static double[] CalculateGroundTruths (Camera playerCam, int botsToSave) {
+	public static float[] CalculateGroundTruths (Camera playerCam, int botsToSave) {
 		IEnumerable<GameObject> closestBots = FindClosestBots (playerCam, botsToSave);
-        double[] inputs = new double[4 * botsToSave];
+        float[] inputs = new float[4 * botsToSave];
 
         int counter = 0;
 		foreach (GameObject bot in closestBots) {
@@ -36,7 +36,6 @@ public class GroundTruth : MonoBehaviour
 	public static double[] CalculateGroundTruthsScaled (Camera playerCam, int botsToSave) {
 		IEnumerable<GameObject> closestBots = FindClosestBots (playerCam, botsToSave);
 		double[] inputs = new double[4 * botsToSave];
-
 
 		int counter = 0;
 		foreach (GameObject bot in closestBots) {
