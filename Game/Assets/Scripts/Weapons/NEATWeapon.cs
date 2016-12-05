@@ -246,8 +246,8 @@ public class NEATWeapon : MonoBehaviour
 
 			//Bullet spread
 			//Vector3 direction = gameObject.transform.TransformDirection(new Vector3(Random.Range(-0.01f, 0.01f) * spread, Random.Range(0, 0.01f) * spread * 3, 1));
-			//Vector3 direction = gameObject.transform.TransformDirection(new Vector3(GetRandomFloat(-0.01d, 0.01d) * spread, GetRandomFloat(0, 0.01d) * spread * 3, 1));
-			Vector3 direction = gameObject.transform.TransformDirection (0, 0, 1);
+			Vector3 direction = gameObject.transform.TransformDirection(new Vector3(GetRandomFloat(-0.01d, 0.01d) * spread, GetRandomFloat(0, 0.01d) * spread * 3, 1));
+			//Vector3 direction = gameObject.transform.TransformDirection (0, 0, 1);
 
 
 			RaycastHit hit2;
