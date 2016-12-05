@@ -5,14 +5,14 @@
 	<outputs>6</outputs>
 
 	<parallelAgents>10</parallelAgents>
-	<TrialCount>20</TrialCount>
+	<TrialCount>40</TrialCount>
 	<TrialDuration>15</TrialDuration>
 	<StoppingFitness>99999</StoppingFitness>
 
 	<PopulationSize>100</PopulationSize>
-	<SpecieCount>3</SpecieCount>
+	<SpecieCount>7</SpecieCount>
 	<Activation>
-    	<Scheme>Acyclic</Scheme>
+    	<Scheme>CyclicFixedIters</Scheme>
     	<Iters>1</Iters>
 	</Activation>
 	<ComplexityRegulationStrategy>Absolute</ComplexityRegulationStrategy>
