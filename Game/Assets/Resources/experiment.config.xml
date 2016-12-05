@@ -5,7 +5,7 @@
 	<outputs>6</outputs>
 
 	<parallelAgents>10</parallelAgents>
-	<TrialCount>40</TrialCount>
+	<TrialCount>20</TrialCount>
 	<TrialDuration>15</TrialDuration>
 	<StoppingFitness>99999</StoppingFitness>
 
