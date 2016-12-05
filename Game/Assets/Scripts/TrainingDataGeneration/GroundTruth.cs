@@ -6,7 +6,6 @@ using Assets.Scripts.TrainingDataGeneration;
 
 public class GroundTruth : MonoBehaviour
 {
-	private static readonly double ANGLE_OFFSET = 90;
 	private static readonly double MAX_DISTANCE = 50;
 
 	private static int _fov = -1;
