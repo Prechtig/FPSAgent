@@ -167,16 +167,16 @@ public class Optimizer : MonoBehaviour {
         /*
         string folderName = "03-12-16--14-39-47"; //update
         string generationName = "39"; // update
-        
         */
+        /*
         string folderName = "04-12-16--04-43-48";  //fixedUpdate
         string generationName = "181";  //fixedupdate
 
         //string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.champ.xml";
         string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.pop.xml";
         _ea = experiment.CreateEvolutionAlgorithm(location);
-        
-        //_ea = experiment.CreateEvolutionAlgorithm();
+        */
+        _ea = experiment.CreateEvolutionAlgorithm();
         _ea.UpdateEvent += new EventHandler(ea_UpdateEvent);
 		var evoSpeed = int.Parse (PropertiesReader.GetPropertyFile(PropertyFile.Project).GetProperty("game.neat.training.evolutionSpeed"));
 		Started = true;
@@ -191,9 +191,10 @@ public class Optimizer : MonoBehaviour {
 
 		if (!FirstUpdate) {
 			Utility.Log (string.Format ("gen={0:N0} bestFitness={1:N6}", _ea.CurrentGeneration, Fitness));
-            LocalLogger.Write (string.Format("gen={0:N0} bestFitness={1:N6}", _ea.CurrentGeneration, Fitness));
+            LocalLogger.Write (string.Format("{0:N0}\t{1:N6}", _ea.CurrentGeneration, Fitness));
         } else {
-			FirstUpdate = false;
+            LocalLogger.Write(string.Format("Generation\tFitness"));
+            FirstUpdate = false;
 		}
 
         //Utility.Log(string.Format("Moving average: {0}, N: {1}", _ea.Statistics._bestFitnessMA.Mean, _ea.Statistics._bestFitnessMA.Length));
