@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <Config>
-	<inputs>34</inputs>
+	<inputs>26</inputs>
 	<outputs>6</outputs>
 
-	<parallelAgents>5</parallelAgents>
+	<parallelAgents>10</parallelAgents>
 	<TrialCount>20</TrialCount>
 	<TrialDuration>15</TrialDuration>
 	<StoppingFitness>99999</StoppingFitness>
 
 	<PopulationSize>100</PopulationSize>
-	<SpecieCount>1</SpecieCount>
+	<SpecieCount>10</SpecieCount>
 	<Activation>
-    <Scheme>Acyclic</Scheme>
-    <Iters>5</Iters>
+    	<Scheme>CyclicFixedIters</Scheme>
+    	<Iters>1</Iters>
 	</Activation>
 	<ComplexityRegulationStrategy>Absolute</ComplexityRegulationStrategy>
 	<ComplexityThreshold>999999</ComplexityThreshold>

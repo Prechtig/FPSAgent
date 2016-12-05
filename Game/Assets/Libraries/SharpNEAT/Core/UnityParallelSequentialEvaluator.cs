@@ -65,13 +65,14 @@ namespace SharpNEAT.Core
 				foreach (TGenome genome in genomeList) {
 					//Run best netowork
 					if (_optimizer.RunBestNetwork && parallel == 0) {
+                        _optimizer.BestNetworkIsRunning = true;
+                     
 						float timeScale = Time.timeScale;
 						IBlackBox bestBlackBox = _optimizer.GetBestPhenome ();
 						if (bestBlackBox != null) {
 							TPhenome bestPhenome = (TPhenome)bestBlackBox;
 							yield return Coroutiner.StartCoroutine (_phenomeEvaluator.Evaluate (bestPhenome));
 							Evaluator.RunCount++;
-							_optimizer.RunBestNetwork = false;
 							Time.timeScale = timeScale;
 						}
 					}
@@ -116,23 +117,18 @@ namespace SharpNEAT.Core
 					}
 				}
 			}
-			foreach (TGenome genome in dict.Keys) {
+            foreach (TGenome genome in dict.Keys) {
 				TPhenome phenome = dict [genome];
+
+                
 				if (phenome != null) {
 					double fitness = 0;
 
 					for (int i = 0; i < _optimizer.Trials; i++) {
-
 						fitness += fitnessDict [genome] [i]._fitness;
-
 					}
-					var fit = fitness;
 					fitness /= _optimizer.Trials; // Averaged fitness
 
-					if (fit > _optimizer.StoppingFitness) {
-						//  Utility.Log("Fitness is " + fit + ", stopping now because stopping fitness is " + _optimizer.StoppingFitness);
-						//  _phenomeEvaluator.StopConditionSatisfied = true;
-					}
 					genome.EvaluationInfo.SetFitness (fitness);
 					genome.EvaluationInfo.AuxFitnessArr = fitnessDict [genome] [0]._auxFitnessArr;
 				}

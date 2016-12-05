@@ -47,6 +47,8 @@ public class NEATArena : MonoBehaviour{
 
 		SpawnPlayer ();
 		SpawnEnemies ();
+
+		MoveEnemyWithinSight ();
 	}
 
     private static float GetAndIncrementYOffset(){
@@ -61,17 +63,32 @@ public class NEATArena : MonoBehaviour{
 
 	void FixedUpdate () {
 		if (BotSpawn.Bots.Count > 0) {
-			float angle;
+			float angle = float.MaxValue;
 			float k = 75f;
 			float c = 2f;
 
 			RaycastHit hit;
 			Vector3 direction = neatWeapon.gameObject.transform.TransformDirection (0, 0, 1);
-			if (Physics.Raycast (neatWeapon.bulletGo.position, direction, out hit, neatWeapon.range, neatWeapon.hitLayers) && hit.transform.tag == "Bot") {
-				angle = 0;
-			} else {
-				angle = Vector3.Angle (PlayerSpawn.Player.transform.forward, BotSpawn.Bots [0].transform.position - PlayerSpawn.Player.transform.position) * Mathf.Deg2Rad;
-			}
+
+            
+            foreach (GameObject bot in BotSpawn.Bots)
+            {
+                float tempAngle = float.MaxValue;
+                if (Physics.Raycast(neatWeapon.bulletGo.position, direction, out hit, neatWeapon.range, neatWeapon.hitLayers) && hit.transform.tag == "Bot")
+                {
+                    tempAngle = 0;
+                }
+                else
+                {
+                    tempAngle = Vector3.Angle(PlayerSpawn.Player.transform.forward, BotSpawn.Bots[0].transform.position - PlayerSpawn.Player.transform.position) * Mathf.Deg2Rad;
+                }
+
+                if (tempAngle < angle)
+                {
+                    angle = tempAngle;
+                }
+            }
+			
 
 			//RunningFitness += k / (1 + (angle * c));
 			RunningFitness += k / Mathf.Pow((1 + angle), c);
@@ -225,15 +242,22 @@ public class NEATArena : MonoBehaviour{
         BotSpawn.Player = PlayerSpawn.Player;
 
         BotSpawn.StartSpawning ();
-        PlayerSpawn.Player.transform.LookAt(BotSpawn.Bots[0].transform);
-        PlayerSpawn.Player.transform.eulerAngles = new Vector3(PlayerSpawn.Player.transform.eulerAngles.x + Random.Range(-20, 20), PlayerSpawn.Player.transform.eulerAngles.y + Random.Range(-20, 20));
     }
+
+	private void MoveEnemyWithinSight(){
+		Camera cam = GetPlayer ().GetComponentInChildren<Camera> ();
+		while(!GameObjectHelper.IsObjectWithinSight(cam, BotSpawn.Bots[0])){
+			BotSpawn.Bots [0].transform.position = BotSpawn.GenerateSpawnPoint ();
+		}
+		//GetPlayer ().transform.LookAt (BotSpawn.Bots [0].transform);
+		//GetPlayer ().transform.eulerAngles = new Vector3(PlayerSpawn.Player.transform.eulerAngles.x + 4, PlayerSpawn.Player.transform.eulerAngles.y);
+	}
 
 	public float GetFitness(){
 		float fitness = 0f;
 
-		//New fitness function, does not work with the HorizontalBotSpawn
-		/*
+        //New fitness function, does not work with the HorizontalBotSpawn
+        /*
 		float angle = Mathf.PI;
 		float k = 15f;
 		float c = 2f;
@@ -244,7 +268,7 @@ public class NEATArena : MonoBehaviour{
 		}
 		fitness = k / (1 + (angle * c));
 		*/
-
+        //GetPlayer().GetComponent<NEATController>().GetFitness();
 		fitness += RunningFitness / RunningFitnessCount;
 		return fitness + BotSpawn.GetFitness ();
 	}

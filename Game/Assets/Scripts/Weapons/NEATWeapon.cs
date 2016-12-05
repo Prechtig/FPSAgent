@@ -127,6 +127,7 @@ public class NEATWeapon : MonoBehaviour
 
 
 	public Text ShotsLeftText;
+	private System.Random rng;
 
 	void Start ()
 	{
@@ -213,6 +214,18 @@ public class NEATWeapon : MonoBehaviour
 	}
 	*/
 
+	public float GetRandomFloat(double min, double max){
+		if (spreadTemp == 0) {
+			rng = new System.Random (1337);
+		}
+		/*
+		double mantissa = (rng.NextDouble() * 2.0) - 1.0;
+		double exponent = System.Math.Pow(2.0, rng.Next(-126, 128));
+		return (float)(mantissa * exponent);
+		*/
+		return (float)(min + (rng.NextDouble() * (max - min)));
+	}
+
 	public void FireOneShot ()
 	{
 		if (!reloading && Time.time > timer && canFire && bulletsLeft > 0) {// && Screen.lockCursor)
@@ -233,6 +246,7 @@ public class NEATWeapon : MonoBehaviour
 
 			//Bullet spread
 			Vector3 direction = gameObject.transform.TransformDirection(new Vector3(Random.Range(-0.01f, 0.01f) * spread, Random.Range(0, 0.01f) * spread * 3, 1));
+			//Vector3 direction = gameObject.transform.TransformDirection(new Vector3(GetRandomFloat(-0.01d, 0.01d) * spread, GetRandomFloat(0, 0.01d) * spread * 3, 1));
 			//Vector3 direction = gameObject.transform.TransformDirection (0, 0, 1);
 
 
