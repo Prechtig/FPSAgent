@@ -19,8 +19,11 @@ import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 public class Trainer {
 	
 	private static int testSize, validationSize, trainSize, batchSize;
-	private static boolean checkIntegrity;
 	private static String trainingPersistenceType, trainingType;
+	
+	static {
+		readProperties();
+	}
 
 	public static void main(String[] args) throws IOException {
 		init();
@@ -72,24 +75,28 @@ public class Trainer {
 	}
 	
 	public static void init() throws IOException {
+		init(0, trainSize+validationSize+testSize);
+	}
+	
+	public static void init(int fromId, int toId) throws IOException {
 		configureND4J();
-		
-		testSize = intFromProperty("training.testSize");
-		validationSize = intFromProperty("training.validationSize");
-		trainSize = intFromProperty("training.trainSize");
-		batchSize = intFromProperty("training.persistence.batchSize");
-		
-		checkIntegrity = boolFromProperty("training.persistence.checkIntegrity");
-		
-		trainingPersistenceType = stringFromProperty("training.persistence.type");
-		trainingType = stringFromProperty("training.type");
 		
 		checkProperties();
 		
 		FileSystemDAO.createFolders();
 		if(trainingPersistenceType.equals("filesystem")) {
-			FileSystemDAO.persist(trainSize, validationSize, testSize, batchSize, checkIntegrity);
+			FileSystemDAO.persist(fromId, toId, batchSize);
 		}
+	}
+	
+	private static void readProperties() {
+		testSize = intFromProperty("training.testSize");
+		validationSize = intFromProperty("training.validationSize");
+		trainSize = intFromProperty("training.trainSize");
+		batchSize = intFromProperty("training.persistence.batchSize");
+		
+		trainingPersistenceType = stringFromProperty("training.persistence.type");
+		trainingType = stringFromProperty("training.type");
 	}
 	
 	private static void checkProperties() {
@@ -113,10 +120,6 @@ public class Trainer {
 	
 	private static int intFromProperty(String property) {
 		return Integer.parseInt(PropertiesReader.getProjectProperties().getProperty(property));
-	}
-	
-	private static boolean boolFromProperty(String property) {
-		return "true".equals(PropertiesReader.getProjectProperties().getProperty(property));
 	}
 	
 	private static String stringFromProperty(String property) {

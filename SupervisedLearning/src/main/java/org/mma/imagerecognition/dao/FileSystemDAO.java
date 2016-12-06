@@ -35,7 +35,7 @@ public class FileSystemDAO {
 		RNG.setSeed(Long.parseLong(PropertiesReader.getProjectProperties().getProperty("training.seed")));
 	}
 	
-	public static void persist(int trainSize, int validationSize, int testSize, int batchSize, boolean checkIntegrity) {
+	public static void persist(int trainSize, int validationSize, int testSize, int batchSize) {
 		int maxNumberOfImagesToPersist = trainSize + validationSize + testSize;
 		persistImagesToDisk(batchSize, maxNumberOfImagesToPersist);
 		if(PropertiesReader.getProjectProperties().getProperty("training.persistence.checkIntegrity").equals("true")) {
@@ -43,46 +43,68 @@ public class FileSystemDAO {
 		}
 	}
 	
+	public static void persist(int fromId, int toId, int batchSize) {
+		persistImagesToDisk(batchSize, fromId, toId);
+		if(PropertiesReader.getProjectProperties().getProperty("training.persistence.checkIntegrity").equals("true")) {
+			persistMissingImages(fromId, toId);
+		}
+	}
+	
+	
+	
 	private static void persistImagesToDisk(int batchSize, int maxNumberOfImagesToPersist) {
+		persistImagesToDisk(batchSize, 0, maxNumberOfImagesToPersist);
+	}
+	
+	private static void persistImagesToDisk(int batchSize, int fromId, int toId) {
 		int maxSavedId = FileSystemDAO.findLatestTrainingDataId();
 		int maxDbId = TrainingDbDao.getTotalNumberOfImages();
 		
-		if(maxNumberOfImagesToPersist < maxSavedId) {
-			maxNumberOfImagesToPersist = maxSavedId;
+		// Can't persist more than there is in the db
+		if(toId < maxDbId) {
+			maxDbId = toId;
 		}
 		
-		if(maxDbId > maxNumberOfImagesToPersist) {
-			maxDbId = maxNumberOfImagesToPersist;
+		// Already persisted the images
+		if(toId < maxSavedId) {
+			return;
 		}
 		
 		if(maxSavedId != maxDbId) {
-			System.out.println("Downloading " + (maxDbId - maxSavedId) + " instances of training data");
+			System.out.println("Downloading " + (toId - fromId + 1) + " instances of training data");
 		}
 		
-		for(int i = maxSavedId + 1; i <= maxDbId; i += batchSize) {
-			if((i - maxSavedId - 1)%(10*batchSize) == 0 && i != maxSavedId + 1) {
-				System.out.format("Downloaded %d items \n", i - maxSavedId - 1);
-			}
+		if(fromId < maxSavedId) {
+			fromId = maxSavedId;
+		}
+		
+		int counter = 1;
+		for(int i = fromId; i <= maxDbId; i += batchSize) {
 			List<TrainingData> images = TrainingDbDao.getTrainingData(i, i + batchSize - 1);
 			FileSystemDAO.persist(images);
+			System.out.format("Downloaded %d items \n", counter++ * batchSize);
 		}
 	}
 	
 	private static void persistMissingImages(int maxNumberOfImagesToPersist) {
+		persistMissingImages(1, maxNumberOfImagesToPersist);
+	}
+	
+	private static void persistMissingImages(int fromId, int toId) {
 		int maxSavedId = FileSystemDAO.findLatestTrainingDataId();
 		int maxDbId = TrainingDbDao.getTotalNumberOfImages();
 		
-		if(maxNumberOfImagesToPersist < maxSavedId) {
-			maxNumberOfImagesToPersist = maxSavedId;
+		if(toId < maxSavedId) {
+			toId = maxSavedId;
 		}
 		
-		if(maxDbId > maxNumberOfImagesToPersist) {
-			maxDbId = maxNumberOfImagesToPersist;
+		if(maxDbId > toId) {
+			maxDbId = toId;
 		}
 		
 		System.out.println("Checking integrity of locally stored data");
 		
-		for(int i = 1; i <= maxDbId; i++) {
+		for(int i = fromId; i <= maxDbId; i++) {
 			if(!FileSystemDAO.exists(i)) {
 				List<TrainingData> images = TrainingDbDao.getTrainingData(i, i);
 				FileSystemDAO.persist(images);
