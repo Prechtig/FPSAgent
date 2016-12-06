@@ -268,7 +268,7 @@ public class Optimizer : MonoBehaviour {
 		controller.Activate(box);
 	}
 
-    public int RunBestCount = 50;
+    public int RunBestCount = 1;
     private int runs = 0;
     private float bestFitness = 0;
     public void StopEvaluation(IBlackBox box)
