@@ -32,7 +32,7 @@ public class Optimizer : MonoBehaviour {
 
 	Dictionary<IBlackBox, UnitController> ControllerMap = new Dictionary<IBlackBox, UnitController>();
 	Dictionary<IBlackBox, NEATArena> ArenaMap = new Dictionary<IBlackBox, NEATArena>();
-	Dictionary<IBlackBox, float> FitnessMap = new Dictionary<IBlackBox, float>();
+	Dictionary<IBlackBox, Pair<float, float>> FitnessMap = new Dictionary<IBlackBox, Pair<float, float>>();
 
 	//private DateTime startTime;
 	private float timeLeft;
@@ -169,9 +169,9 @@ public class Optimizer : MonoBehaviour {
         string generationName = "39"; // update
         */
         /*
-        string folderName = "04-12-16--04-43-48";  //fixedUpdate
-        string generationName = "181";  //fixedupdate
-
+        string folderName = "05-12-16--21-32-47";  //fixedUpdate
+        string generationName = "231";  //fixedupdate
+        
         //string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.champ.xml";
         string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.pop.xml";
         _ea = experiment.CreateEvolutionAlgorithm(location);
@@ -191,16 +191,16 @@ public class Optimizer : MonoBehaviour {
 
 		if (!FirstUpdate) {
 			Utility.Log (string.Format ("gen={0:N0} bestFitness={1:N6}", _ea.CurrentGeneration, Fitness));
-            LocalLogger.Write (string.Format("{0:N0}\t{1:N6}", _ea.CurrentGeneration, Fitness));
+            LocalLogger.Write (string.Format("{0:N0}\t{1:N6}\t{2:N6}\t{3:N6}", _ea.CurrentGeneration, Fitness, Fitness - _ea.CurrentChampGenome.EvaluationInfo.AuxFitnessArr[0]._value, _ea.CurrentChampGenome.EvaluationInfo.AuxFitnessArr[0]._value));
         } else {
-            LocalLogger.Write(string.Format("Generation\tFitness"));
+            LocalLogger.Write(string.Format("Generation\tFitness\tShooting fitness\tAiming fitness"));
             FirstUpdate = false;
 		}
 
         //Utility.Log(string.Format("Moving average: {0}, N: {1}", _ea.Statistics._bestFitnessMA.Mean, _ea.Statistics._bestFitnessMA.Length));
         //Utility.Log ("maxSpecieSize=" + _ea.Statistics._maxSpecieSize + "\nChampion id: " + _ea.CurrentChampGenome.Id);
         //Debug.Log("Champions specie id: " + _ea.CurrentChampGenome.SpecieIdx);
-        FitnessMap = new Dictionary<IBlackBox, float>();
+        FitnessMap = new Dictionary<IBlackBox, Pair<float, float>>();
     }
 
 	void PauseUnpause()
@@ -278,7 +278,7 @@ public class Optimizer : MonoBehaviour {
 
         if (BestNetworkIsRunning)
         {
-            bestFitness += nt.GetFitness();
+            bestFitness += nt.GetFitness().First;
             runs++;
             if (runs == RunBestCount)
             {
@@ -380,12 +380,12 @@ public class Optimizer : MonoBehaviour {
 		return null;
 	}
 
-	public float GetFitness(IBlackBox box)
+	public Pair<float, float> GetFitness(IBlackBox box)
 	{
 		if (FitnessMap.ContainsKey (box)) {
 			return FitnessMap [box];
 		}
-		return 0;
+		return null;
 	}
 
 	void OnGUI()

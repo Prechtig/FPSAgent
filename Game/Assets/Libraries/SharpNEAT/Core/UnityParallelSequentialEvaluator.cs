@@ -127,14 +127,20 @@ namespace SharpNEAT.Core
                 
 				if (phenome != null) {
 					double fitness = 0;
+                    double auxFitness = 0;
 
-					for (int i = 0; i < _optimizer.Trials; i++) {
+                    for (int i = 0; i < _optimizer.Trials; i++) {
 						fitness += fitnessDict [genome] [i]._fitness;
-					}
-					fitness /= _optimizer.Trials; // Averaged fitness
+                        auxFitness += fitnessDict[genome][i]._auxFitnessArr[0]._value;
+                    }
+                    fitness /= _optimizer.Trials; // Averaged fitness
+                    auxFitness /= _optimizer.Trials;
 
-					genome.EvaluationInfo.SetFitness (fitness);
-					genome.EvaluationInfo.AuxFitnessArr = fitnessDict [genome] [0]._auxFitnessArr;
+                    AuxFitnessInfo[] aux = new AuxFitnessInfo[1];
+                    aux[0] = new AuxFitnessInfo("Running fitness", auxFitness);
+
+                    genome.EvaluationInfo.SetFitness (fitness);
+					genome.EvaluationInfo.AuxFitnessArr = aux;
 				}
 			}
         }

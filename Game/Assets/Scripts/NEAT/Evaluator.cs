@@ -38,9 +38,10 @@ public class Evaluator : IPhenomeEvaluator<IBlackBox> {
 			optimizer.StopEvaluation (box);
 
 			if (!optimizer.RunBestNetwork) {
-				float fit = optimizer.GetFitness (box);
+				float fit = optimizer.GetFitness (box).First;
+                float auxFit = optimizer.GetFitness(box).Second;
 
-				FitnessInfo fitness = new FitnessInfo (fit, fit);
+                FitnessInfo fitness = new FitnessInfo (fit, auxFit);
 				dict.Add (box, fitness);
 			}
 		} else {
