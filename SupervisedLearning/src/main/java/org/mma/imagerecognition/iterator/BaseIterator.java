@@ -3,11 +3,10 @@ package org.mma.imagerecognition.iterator;
 import java.util.List;
 
 import org.mma.imagerecognition.dataobjects.TrainingData;
-import org.mma.imagerecognition.tools.ImageTool;
+import org.mma.imagerecognition.tools.INDArrayTool;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.DataSetPreProcessor;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
-import org.nd4j.linalg.factory.Nd4j;
 
 public abstract class BaseIterator implements DataSetIterator {
 
@@ -69,15 +68,16 @@ public abstract class BaseIterator implements DataSetIterator {
 	}
 	
 	protected DataSet toDataSet(List<TrainingData> trainingData) {
-		double[][] pixelData			= new double[batch()][];
-		double[][] groundTruthValues	= new double[batch()][];
-		
-		for(int i = 0; i < trainingData.size(); i++) {
-			TrainingData td = trainingData.get(i);
-			pixelData[i] = ImageTool.toScaledDoubles(td.getPixelData());
-			groundTruthValues[i] = td.getFeatures();
-		}
-		return new DataSet(Nd4j.create(pixelData), Nd4j.create(groundTruthValues));
+		return INDArrayTool.toDataSet(trainingData, batch());
+//		double[][] pixelData			= new double[batch()][];
+//		double[][] groundTruthValues	= new double[batch()][];
+//		
+//		for(int i = 0; i < trainingData.size(); i++) {
+//			TrainingData td = trainingData.get(i);
+//			pixelData[i] = ImageTool.toScaledDoubles(td.getPixelData());
+//			groundTruthValues[i] = td.getFeatures();
+//		}
+//		return new DataSet(Nd4j.create(pixelData), Nd4j.create(groundTruthValues));
 	}
 	
 	@Override

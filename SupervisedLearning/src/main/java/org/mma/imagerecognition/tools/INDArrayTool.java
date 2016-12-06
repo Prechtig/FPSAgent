@@ -1,8 +1,11 @@
 package org.mma.imagerecognition.tools;
 
+import java.util.List;
 import java.util.Random;
 
+import org.mma.imagerecognition.dataobjects.TrainingData;
 import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
 
 public class INDArrayTool {
@@ -30,5 +33,17 @@ public class INDArrayTool {
 		}
 		
 		return Nd4j.create(result);
+	}
+	
+	public static DataSet toDataSet(List<TrainingData> trainingData, int batchSize) {
+		double[][] pixelData			= new double[batchSize][];
+		double[][] groundTruthValues	= new double[batchSize][];
+		
+		for(int i = 0; i < trainingData.size(); i++) {
+			TrainingData td = trainingData.get(i);
+			pixelData[i] = ImageTool.toScaledDoubles(td.getPixelData());
+			groundTruthValues[i] = td.getFeatures();
+		}
+		return new DataSet(Nd4j.create(pixelData), Nd4j.create(groundTruthValues));
 	}
 }

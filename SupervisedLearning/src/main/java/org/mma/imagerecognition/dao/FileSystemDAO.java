@@ -58,19 +58,16 @@ public class FileSystemDAO {
 	
 	private static void persistImagesToDisk(int batchSize, int fromId, int toId) {
 		int maxSavedId = FileSystemDAO.findLatestTrainingDataId();
-		int maxDbId = TrainingDbDao.getTotalNumberOfImages();
+//		int maxDbId = TrainingDbDao.getTotalNumberOfImages();
 		
 		// Can't persist more than there is in the db
-		if(toId < maxDbId) {
-			maxDbId = toId;
-		}
 		
 		// Already persisted the images
 		if(toId < maxSavedId) {
 			return;
 		}
 		
-		if(maxSavedId != maxDbId) {
+		if(maxSavedId != toId) {
 			System.out.println("Downloading " + (toId - fromId + 1) + " instances of training data");
 		}
 		
@@ -79,7 +76,7 @@ public class FileSystemDAO {
 		}
 		
 		int counter = 1;
-		for(int i = fromId; i <= maxDbId; i += batchSize) {
+		for(int i = fromId; i <= toId; i += batchSize) {
 			List<TrainingData> images = TrainingDbDao.getTrainingData(i, i + batchSize - 1);
 			FileSystemDAO.persist(images);
 			System.out.format("Downloaded %d items \n", counter++ * batchSize);
