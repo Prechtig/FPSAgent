@@ -278,6 +278,7 @@ public class Optimizer : MonoBehaviour {
 
         if (BestNetworkIsRunning)
         {
+
             bestFitness += nt.GetFitness().First;
             runs++;
             if (runs == RunBestCount)
@@ -298,6 +299,7 @@ public class Optimizer : MonoBehaviour {
             }
             RunBestNetwork = false;
             BestNetworkIsRunning = false;
+            AutomaticTimeScaleOn = prevAutomaticTimeScale;
         }
         else
         {
@@ -337,12 +339,14 @@ public class Optimizer : MonoBehaviour {
 		Destroy (nt);
 	}
 
-
+    private bool prevAutomaticTimeScale;
 	public IBlackBox GetBestPhenome(){
 		if (_ea.CurrentGeneration > 1) {
 			Time.timeScale = _runBestTime;
+            prevAutomaticTimeScale = AutomaticTimeScaleOn;
+            AutomaticTimeScaleOn = false;
 
-			NeatGenome genome = null;
+            NeatGenome genome = null;
 			string champFileLoadPath = _resultSavePath + string.Format ("{0}/{1}.champ.xml", _ea.CurrentGeneration - 1, "FPSAgent");
             //string champFileLoadPath = _resultSavePath + string.Format ("{0}/{1}.champ.xml", 248, "FPSAgent");
 
