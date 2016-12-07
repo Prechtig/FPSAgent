@@ -79,7 +79,8 @@ namespace SharpNEAT.Core
                                 Time.timeScale = timeScale;
                             }
                         }
-					}
+                        _optimizer.RunBestNetwork = false;
+                    }
 
 					TPhenome phenome = _genomeDecoder.Decode (genome);
 					if (null == phenome) {   // Non-viable genome.
