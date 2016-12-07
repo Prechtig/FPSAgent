@@ -297,7 +297,6 @@ public class Optimizer : MonoBehaviour {
                 }
                 print("Changing _runBestTime = " + _runBestTime);
             }
-            RunBestNetwork = false;
             BestNetworkIsRunning = false;
             AutomaticTimeScaleOn = prevAutomaticTimeScale;
         }
