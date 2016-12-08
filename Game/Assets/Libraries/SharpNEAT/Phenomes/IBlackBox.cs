@@ -35,6 +35,8 @@ namespace SharpNeat.Phenomes
     /// </summary>
     public interface IBlackBox
     {
+        uint Id { get; }
+
         /// <summary>
         /// Gets the number of inputs to the blackbox. This is assumed to be fixed for the lifetime of the IBlackBox.
         /// </summary>

@@ -19,6 +19,7 @@
 using System.Collections.Generic;
 using SharpNeat.Network;
 using SharpNeat.Phenomes.NeuralNets;
+using SharpNeat.Genomes.Neat;
 
 namespace SharpNeat.Decoders
 {
@@ -39,22 +40,26 @@ namespace SharpNeat.Decoders
             List<Connection> connectionList;
             InternalDecode(networkDef, out neuronList, out connectionList);
 
+            NeatGenome ng = (NeatGenome)networkDef;
             // Construct neural net.
-            if(activationScheme.RelaxingActivation)
+            if (activationScheme.RelaxingActivation)
             {
                 return new RelaxingCyclicNetwork(neuronList,
                                                  connectionList,
                                                  networkDef.InputNodeCount,
                                                  networkDef.OutputNodeCount,
                                                  activationScheme.MaxTimesteps,
-                                                 activationScheme.SignalDeltaThreshold);
+                                                 activationScheme.SignalDeltaThreshold,
+                                                 ng.Id);
             }
 
             return new CyclicNetwork(neuronList,
                                      connectionList,
                                      networkDef.InputNodeCount,
                                      networkDef.OutputNodeCount,
-                                     activationScheme.TimestepsPerActivation);
+                                     activationScheme.TimestepsPerActivation,
+                                     ng.Id
+                                     );
         }
 
         #endregion

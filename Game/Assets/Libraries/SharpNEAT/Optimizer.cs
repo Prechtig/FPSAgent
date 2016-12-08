@@ -34,8 +34,12 @@ public class Optimizer : MonoBehaviour {
 	Dictionary<IBlackBox, NEATArena> ArenaMap = new Dictionary<IBlackBox, NEATArena>();
 	Dictionary<IBlackBox, Pair<float, float>> FitnessMap = new Dictionary<IBlackBox, Pair<float, float>>();
 
-	//private DateTime startTime;
-	private float timeLeft;
+    Dictionary<uint, int> WrongReloadsMap = new Dictionary<uint, int>();
+    Dictionary<uint, int> ShotsMap = new Dictionary<uint, int>();
+    Dictionary<uint, int> MissedMap = new Dictionary<uint, int>();
+
+    //private DateTime startTime;
+    private float timeLeft;
 	private float accum;
 	private int frames;
 	private float updateInterval = 12;
@@ -190,10 +194,17 @@ public class Optimizer : MonoBehaviour {
 		Fitness = _ea.Statistics._maxFitness;
 
 		if (!FirstUpdate) {
+            uint id = _ea.CurrentChampGenome.Id;
 			Utility.Log (string.Format ("gen={0:N0} bestFitness={1:N6}", _ea.CurrentGeneration, Fitness));
-            LocalLogger.Write (string.Format("{0:N0}\t{1:N6}\t{2:N6}\t{3:N6}", _ea.CurrentGeneration, Fitness, Fitness - _ea.CurrentChampGenome.EvaluationInfo.AuxFitnessArr[0]._value, _ea.CurrentChampGenome.EvaluationInfo.AuxFitnessArr[0]._value));
+            LocalLogger.Write (string.Format("{0:N0}\t{1:N6}\t{2:N6}\t{3:N6}\t{4:N0}\t{5:N0}\t{6:N0}",
+                _ea.CurrentGeneration, Fitness, 
+                Fitness - _ea.CurrentChampGenome.EvaluationInfo.AuxFitnessArr[0]._value, 
+                _ea.CurrentChampGenome.EvaluationInfo.AuxFitnessArr[0]._value,
+                ShotsMap[id],
+                MissedMap[id],
+                WrongReloadsMap[id]));
         } else {
-            LocalLogger.Write(string.Format("Generation\tFitness\tShooting fitness\tAiming fitness"));
+            LocalLogger.Write(string.Format("Generation\tFitness\tShooting fitness\tAiming fitness\tShots\tMisses\tWrong reloads"));
             FirstUpdate = false;
 		}
 
@@ -201,6 +212,9 @@ public class Optimizer : MonoBehaviour {
         //Utility.Log ("maxSpecieSize=" + _ea.Statistics._maxSpecieSize + "\nChampion id: " + _ea.CurrentChampGenome.Id);
         //Debug.Log("Champions specie id: " + _ea.CurrentChampGenome.SpecieIdx);
         FitnessMap = new Dictionary<IBlackBox, Pair<float, float>>();
+        WrongReloadsMap = new Dictionary<uint, int>();
+        ShotsMap = new Dictionary<uint, int>();
+        MissedMap = new Dictionary<uint, int>();
     }
 
 	void PauseUnpause()
@@ -278,7 +292,6 @@ public class Optimizer : MonoBehaviour {
 
         if (BestNetworkIsRunning)
         {
-
             bestFitness += nt.GetFitness().First;
             runs++;
             if (runs == RunBestCount)
@@ -302,6 +315,39 @@ public class Optimizer : MonoBehaviour {
         }
         else
         {
+            //Add statistics
+            NEATWeapon nw = nt.GetPlayer().GetComponentInChildren<NEATWeapon>();
+
+            //Add wrong reloads
+            if (WrongReloadsMap.ContainsKey(box.Id))
+            {
+                WrongReloadsMap[box.Id] += nw.WrongReloads;
+            }
+            else
+            {
+                WrongReloadsMap.Add(box.Id, nw.WrongReloads);
+            }
+            //Add shots
+            if (ShotsMap.ContainsKey(box.Id))
+            {
+                ShotsMap[box.Id] += nw.Shots;
+            }
+            else
+            {
+                ShotsMap.Add(box.Id, nw.Shots);
+            }
+            //Add misses
+            if (MissedMap.ContainsKey(box.Id))
+            {
+                MissedMap[box.Id] += nw.Misses;
+            }
+            else
+            {
+                MissedMap.Add(box.Id, nw.Misses);
+            }
+
+
+            //SharpNeat.Core.TPhenome bestPhenome = (TPhenome)box;
             if (FitnessMap.ContainsKey(box))
             {
                 FitnessMap[box] = nt.GetFitness();
@@ -312,32 +358,13 @@ public class Optimizer : MonoBehaviour {
             }
         }
 
-
-
-        /*
-        if (!RunBestNetwork)
-        {
-            if (FitnessMap.ContainsKey(box))
-            {
-                FitnessMap[box] = nt.GetFitness();
-            }
-            else
-            {
-                FitnessMap.Add(box, nt.GetFitness());
-            }
-        }
-        else
-        {
-            Debug.Log("Best Network fitness: " + nt.GetFitness());
-        }
-        */
         ControllerMap.Remove (box);
 		ArenaMap.Remove (box);
 
 		Destroy (ct.gameObject);
 		Destroy (nt);
 	}
-
+    
     private bool prevAutomaticTimeScale;
 	public IBlackBox GetBestPhenome(){
 		if (_ea.CurrentGeneration > 1) {
