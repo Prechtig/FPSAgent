@@ -3,6 +3,7 @@ using System.Collections;
 using SharpNeat.Phenomes;
 using System.Linq;
 using AssemblyCSharp;
+using System;
 
 public class NEATController : UnitController {
 
@@ -24,22 +25,62 @@ public class NEATController : UnitController {
 	public NEATArena Arena;
 
 	private Camera playerCam;
-	private bool useCNN;
-	private bool frameControl;
-	private int cnnFrameRefreshRate;
-	private int frameCounter = 0;
 
+    private static bool loaded = false;
+    private static bool _useCNN;
+    private static bool _frameControl;
+    private static int _cnnFrameRefreshRate;
+
+    private static bool useCNN
+    {
+        get
+        {
+            if (!loaded)
+            {
+                LoadFromProperty();               
+            }
+            return _useCNN;
+        }
+    }
+
+
+
+    private static bool frameControl
+    {
+        get
+        {
+            if (!loaded)
+            {
+                LoadFromProperty();
+            }
+            return _frameControl;
+        }
+    }
+
+    private static int cnnFrameRefreshRate
+    {
+        get
+        {
+            if (!loaded)
+            {
+                LoadFromProperty();
+            }
+            return _cnnFrameRefreshRate;
+        }
+    }
+
+    private int frameCounter = 0;
 	private double[] EmptyDoubleArray;
 
 	// Use this for initialization
 	void Start () {
 		playerCam = gameObject.GetComponentInChildren<Camera> ();
 		EmptyDoubleArray = new double [box.InputCount];
-		frameControl = "true".Equals(PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("game.neat.training.frameControl"));
-		useCNN = "true".Equals(PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("game.neat.training.use.cnn"));
-		if(frameControl) {
-			cnnFrameRefreshRate = int.Parse (PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("game.neat.training.use.cnn.frameRefreshRate"));
-		}
+		//frameControl = "true".Equals(PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("game.neat.training.frameControl"));
+		//useCNN = "true".Equals(PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("game.neat.training.use.cnn"));
+		//if(frameControl) {
+		//	cnnFrameRefreshRate = int.Parse (PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("game.neat.training.use.cnn.frameRefreshRate"));
+		//}
 	}
 
     // Update is called once per frame
@@ -141,7 +182,15 @@ public class NEATController : UnitController {
 		this.IsRunning = true;
 	}
 
-	public override float GetFitness()
+    private static void LoadFromProperty()
+    {
+        _useCNN = "true".Equals(PropertiesReader.GetPropertyFile(PropertyFile.Project).GetProperty("game.neat.training.use.cnn"));
+        _frameControl = "true".Equals(PropertiesReader.GetPropertyFile(PropertyFile.Project).GetProperty("game.neat.training.frameControl"));
+        _cnnFrameRefreshRate = int.Parse(PropertiesReader.GetPropertyFile(PropertyFile.Project).GetProperty("game.neat.training.use.cnn.frameRefreshRate"));
+        loaded = true;
+    }
+
+    public override float GetFitness()
 	{
         //THIS IS NOT USED!
         return -1;
