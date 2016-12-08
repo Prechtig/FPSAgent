@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using SharpNeat.Network;
 using SharpNeat.Phenomes.NeuralNets;
+using SharpNeat.Genomes.Neat;
 
 namespace SharpNeat.Decoders
 {
@@ -162,9 +163,9 @@ namespace SharpNeat.Decoders
                 layerInfoArr[currDepth]._endNodeIdx = nodeIdx;
                 layerInfoArr[currDepth]._endConnectionIdx = connIdx;
             }
-
+            NeatGenome ng = (NeatGenome)networkDef;
             return new FastAcyclicNetwork(nodeActivationFnArr, nodeAuxArgsArray, fastConnectionArray, layerInfoArr, outputNeuronIdxArr,
-                                          nodeCount, networkDef.InputNodeCount, networkDef.OutputNodeCount);
+                                          nodeCount, networkDef.InputNodeCount, networkDef.OutputNodeCount, ng.Id);
         }
 
         #endregion

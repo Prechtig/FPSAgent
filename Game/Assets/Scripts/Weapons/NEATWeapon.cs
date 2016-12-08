@@ -124,10 +124,14 @@ public class NEATWeapon : MonoBehaviour
 	//public AudioClip hitMarkerSound;
 
 	#endregion
-
-
+    
+    
 	public Text ShotsLeftText;
 	private System.Random rng;
+
+    public int WrongReloads;
+    public int Shots;
+    public int Misses;
 
 	void Start ()
 	{
@@ -280,10 +284,7 @@ public class NEATWeapon : MonoBehaviour
 
 	void OnHit (RaycastHit hit)
 	{
-		if (hit.rigidbody) {
-			//Add force to shot
-			//hit.rigidbody.AddForceAtPosition(2000 * bulletGo.forward, hit.point);
-		}
+        Shots++;
 		if (hit.transform.tag == "Bot") {
 			Instantiate (blood, hit.point, Quaternion.identity);
 			DoHitMark ();
@@ -291,6 +292,7 @@ public class NEATWeapon : MonoBehaviour
 				hit.transform.GetComponent<BotVitals> ().ApplyDamage (Random.Range (damageMin, damageMax), 1);
 			}
 		} else {
+            Misses++;
 			if (hit.transform.tag == "Wood") {
 				GameObject theObj = Instantiate (wood, hit.point + hit.normal * 0.01f, Quaternion.FromToRotation (Vector3.up, hit.normal)) as GameObject;
 				theObj.transform.parent = hit.transform;
@@ -335,19 +337,18 @@ public class NEATWeapon : MonoBehaviour
 		//canReloads [0] = false;
 		anim [reloadAnim.name].speed = 3;
 		anim [reloadEmptyAnim.name].speed = 3;
-		if (bulletsLeft > 0) {
-			//StartCoroutine (ReloadingSound (reloadSounds));
-			anim.Play (reloadAnim.name);
-			yield return new WaitForSeconds (reloadAnim.length / 3);
-			bulletsLeft = bulletsPerMag + 1;
-			magsLeft--;
-		} else {
-			//StartCoroutine (ReloadingSound (reloadSoundsEmpty));
-			anim.Play (reloadEmptyAnim.name);
-			yield return new WaitForSeconds (reloadEmptyAnim.length / 3);
-			bulletsLeft = bulletsPerMag;
-			magsLeft--;
-		}
+
+        if (bulletsLeft == bulletsPerMag)
+        {
+            WrongReloads++;
+        }
+
+		//StartCoroutine (ReloadingSound (reloadSoundsEmpty));
+		anim.Play (reloadEmptyAnim.name);
+		yield return new WaitForSeconds (reloadEmptyAnim.length / 3);
+		bulletsLeft = bulletsPerMag;
+		magsLeft--;
+
 		//canAims [0] = true;
 		//canFires [0] = true;
 		//canReloads [0] = true;

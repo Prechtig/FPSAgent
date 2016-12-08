@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using SharpNeat.Network;
 using SharpNeat.Phenomes.NeuralNets;
+using SharpNeat.Genomes.Neat;
 
 namespace SharpNeat.Decoders
 {
@@ -44,8 +45,9 @@ namespace SharpNeat.Decoders
                            activationScheme.RelaxingActivation ? activationScheme.MaxTimesteps : activationScheme.TimestepsPerActivation,
                            out fastConnectionArray, out activationFnArray, out neuronAuxArgsArray);
 
+            NeatGenome ng = (NeatGenome)networkDef;
             // Construct neural net.
-            if(activationScheme.RelaxingActivation)
+            if (activationScheme.RelaxingActivation)
             {
                 return new FastRelaxingCyclicNetwork(fastConnectionArray,
                                                      activationFnArray, 
@@ -54,16 +56,18 @@ namespace SharpNeat.Decoders
                                                      networkDef.InputNodeCount,
                                                      networkDef.OutputNodeCount,
                                                      activationScheme.MaxTimesteps,
-                                                     activationScheme.SignalDeltaThreshold);
+                                                     activationScheme.SignalDeltaThreshold,
+                                                     ng.Id);
             }
-
+            
             return new FastCyclicNetwork(fastConnectionArray,
                                          activationFnArray,
                                          neuronAuxArgsArray,
                                          networkDef.NodeList.Count,
                                          networkDef.InputNodeCount,
                                          networkDef.OutputNodeCount,
-                                         activationScheme.TimestepsPerActivation);
+                                         activationScheme.TimestepsPerActivation,
+                                         ng.Id);
         }
 
         #endregion

@@ -40,6 +40,15 @@ namespace SharpNeat.Phenomes.NeuralNets
     /// </summary>
     public class CyclicNetwork : IBlackBox
     {
+        readonly uint _id;
+        public uint Id
+        {
+            get
+            {
+                return _id;
+            }
+        }
+
         protected readonly List<Neuron> _neuronList;
         protected readonly List<Connection> _connectionList;
         
@@ -65,8 +74,10 @@ namespace SharpNeat.Phenomes.NeuralNets
                                 List<Connection> connectionList,
                                 int inputNeuronCount,
                                 int outputNeuronCount,
-                                int timestepsPerActivation)
+                                int timestepsPerActivation,
+                                uint id)
         {
+            _id = id;
             _neuronList = neuronList;
             _connectionList = connectionList;
             _inputNeuronCount = inputNeuronCount;
