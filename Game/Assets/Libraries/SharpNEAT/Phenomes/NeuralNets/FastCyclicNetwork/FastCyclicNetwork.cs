@@ -57,6 +57,8 @@ namespace SharpNeat.Phenomes.NeuralNets
     /// </summary>
     public class FastCyclicNetwork : IBlackBox
     {
+        readonly uint _id;
+
         protected readonly FastConnection[] _connectionArray;
         protected readonly IActivationFunction[] _neuronActivationFnArray;
         protected readonly double[][] _neuronAuxArgsArray;
@@ -88,11 +90,15 @@ namespace SharpNeat.Phenomes.NeuralNets
                                  int neuronCount,
                                  int inputNeuronCount,
                                  int outputNeuronCount,
-                                 int timestepsPerActivation)
+                                 int timestepsPerActivation,
+                                 uint id)
         {
+            _id = id;
+
             _connectionArray = connectionArray;
             _neuronActivationFnArray = neuronActivationFnArray;
             _neuronAuxArgsArray = neuronAuxArgsArray;
+            
 
             // Create neuron pre- and post-activation signal arrays.
             _preActivationArray = new double[neuronCount];
@@ -157,6 +163,14 @@ namespace SharpNeat.Phenomes.NeuralNets
         public virtual bool IsStateValid
         {
             get { return true; }
+        }
+
+        public uint Id
+        {
+            get
+            {
+                return _id;
+            }
         }
 
         /// <summary>

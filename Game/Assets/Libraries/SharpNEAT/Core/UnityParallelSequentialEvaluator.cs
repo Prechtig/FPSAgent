@@ -83,6 +83,7 @@ namespace SharpNEAT.Core
                     }
 
 					TPhenome phenome = _genomeDecoder.Decode (genome);
+                    
 					if (null == phenome) {   // Non-viable genome.
 						genome.EvaluationInfo.SetFitness (0.0);
 						genome.EvaluationInfo.AuxFitnessArr = null;
