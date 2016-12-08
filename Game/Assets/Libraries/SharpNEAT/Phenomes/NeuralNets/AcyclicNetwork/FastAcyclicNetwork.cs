@@ -46,7 +46,16 @@ namespace SharpNeat.Phenomes.NeuralNets
     /// </summary>
     public class FastAcyclicNetwork : IBlackBox
     {
-    //=== Fixed data. Network structure and activation functions/data.
+        readonly uint _id;
+        public uint Id
+        {
+            get
+            {
+                return _id;
+            }
+        }
+
+        //=== Fixed data. Network structure and activation functions/data.
         /// <summary>
         /// Array of node activation functions.
         /// </summary>
@@ -105,13 +114,15 @@ namespace SharpNeat.Phenomes.NeuralNets
                                   int[] outputNodeIdxArr,
                                   int nodeCount,
                                   int inputNodeCount,
-                                  int outputNodeCount)
+                                  int outputNodeCount,
+                                  uint id)
         {
             // Store refs to network structrue data.
             _nodeActivationFnArr = nodeActivationFnArr;
             _nodeAuxArgsArr = nodeAuxArgsArr;
             _connectionArr = connectionArr;
             _layerInfoArr = layerInfoArr;
+            _id = id;
 
             // Create working array for node activation signals.
             _activationArr = new double[nodeCount];
