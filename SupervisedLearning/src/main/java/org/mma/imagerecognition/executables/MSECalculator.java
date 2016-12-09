@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.util.ModelSerializer;
+import org.mma.imagerecognition.dao.DbConnector;
 import org.mma.imagerecognition.dao.FileSystemDAO;
 import org.mma.imagerecognition.dataobjects.TrainingData;
 import org.mma.imagerecognition.tools.INDArrayTool;
@@ -26,11 +27,18 @@ public class MSECalculator {
 	 */
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		File networkFile = Paths.get("models", "angular", "nolight", "deep", "model12.bin").toFile();
+		File networkFile = Paths.get("models", "angular", "nolight", "shallow", "model3.bin").toFile();
 		MultiLayerNetwork network = ModelSerializer.restoreMultiLayerNetwork(new FileInputStream(networkFile));
 		
 		int samples = 10000;
 		int fromId = 1;
+		
+		System.out.println(String.format("Evaluating model: %s", networkFile.toString()));
+		System.out.println(String.format("Using db table: %s", DbConnector.getTableName()));
+		calculateMeanErrors(network, fromId, samples);
+	}
+	
+	private static void calculateMeanErrors(MultiLayerNetwork network, int fromId, int samples) throws IOException {
 		int toId = fromId + samples - 1;
 		
 		Trainer.init(fromId, toId);
@@ -38,7 +46,7 @@ public class MSECalculator {
 		List<Double> horizontalErrors = new ArrayList<Double>(samples);
 		List<Double> verticalErrors = new ArrayList<Double>(samples);
 		List<Double> distanceErrors = new ArrayList<Double>(samples);
-		int hits = 0;
+		int hits = 0, counter = 0;
 
 		for(int id = fromId; id <= toId; id++) {
 			TrainingData trainingData = FileSystemDAO.load(id);
@@ -66,6 +74,9 @@ public class MSECalculator {
 			if(	(withinSightNetworkValue < 0.5 && withinSightTruthValue == 0d) ||
 				(withinSightNetworkValue >= 0.5 && withinSightTruthValue == 1d)) {
 				hits++;
+			}
+			if(++counter % 250 == 0) {
+				System.out.println(String.format("Evaluated %d samples", counter));
 			}
 		}
 		System.out.println(String.format("Mean horizontal error is: %f", calculateMeanError(horizontalErrors)));
