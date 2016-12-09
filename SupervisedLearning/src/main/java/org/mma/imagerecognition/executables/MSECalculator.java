@@ -27,7 +27,7 @@ public class MSECalculator {
 	 */
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		File networkFile = Paths.get("models", "angular", "nolight", "shallow", "model3.bin").toFile();
+		File networkFile = Paths.get("models", "angular", "light", "deep", "model3.bin").toFile();
 		MultiLayerNetwork network = ModelSerializer.restoreMultiLayerNetwork(new FileInputStream(networkFile));
 		
 		int samples = 10000;
