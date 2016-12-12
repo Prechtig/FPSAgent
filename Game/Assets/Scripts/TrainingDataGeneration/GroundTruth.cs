@@ -43,24 +43,27 @@ public class GroundTruth : MonoBehaviour
             bool isWithinSight = GameObjectHelper.IsObjectWithinSight(playerCam, bot);
 
             float horizontalAngle = GameObjectHelper.HorizontalAngleTo(playerCam.transform, bot.transform);
-            if(horizontalAngle > 0)
+            if (isWithinSight)
             {
-                inputs[0] = ScaleAngle(horizontalAngle);
-            } else
-            {
-                inputs[1] = -1 * ScaleAngle(horizontalAngle);
-            }
+                if (horizontalAngle > 0)
+                {
+                    inputs[0] = ScaleAngle(horizontalAngle);
+                }
+                else
+                {
+                    inputs[1] = -1 * ScaleAngle(horizontalAngle);
+                }
 
-            float verticalAngle = GameObjectHelper.VerticalAngleTo(playerCam.transform, bot.transform);
-            if (verticalAngle > 0)
-            {
-                inputs[2] = ScaleAngle(verticalAngle);
+                float verticalAngle = GameObjectHelper.VerticalAngleTo(playerCam.transform, bot.transform);
+                if (verticalAngle > 0)
+                {
+                    inputs[2] = ScaleAngle(verticalAngle);
+                }
+                else
+                {
+                    inputs[3] = -1 * ScaleAngle(verticalAngle);
+                }
             }
-            else
-            {
-                inputs[3] = -1 * ScaleAngle(verticalAngle);
-            }
-
             inputs[4] = !isWithinSight ? 0 : ScaleDistance(GameObjectHelper.DistanceTo(playerCam.transform, bot.transform));
             inputs[5] = !isWithinSight ? 0 : 1;
         }
