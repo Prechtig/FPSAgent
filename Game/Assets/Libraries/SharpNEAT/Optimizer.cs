@@ -152,7 +152,10 @@ public class Optimizer : MonoBehaviour {
 
 	public void StartEA()
 	{
-		char dirSepChar = Path.DirectorySeparatorChar;
+        QualitySettings.vSyncCount = 0;  // VSync must be disabled
+        Application.targetFrameRate = 30;
+
+        char dirSepChar = Path.DirectorySeparatorChar;
 		_resultSavePath = Application.persistentDataPath + dirSepChar + DateTime.Now.ToString("dd-MM-yy--HH-mm-ss") + dirSepChar;
         print("Data save path: " + _resultSavePath);
 

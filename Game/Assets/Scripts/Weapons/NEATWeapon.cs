@@ -132,6 +132,9 @@ public class NEATWeapon : MonoBehaviour
     public int WrongReloads;
     public int Shots;
     public int Misses;
+    int count = 0;
+
+    public uint boxId { get; internal set; }
 
     void Start()
     {
@@ -146,6 +149,7 @@ public class NEATWeapon : MonoBehaviour
 
     void FixedUpdate()
     {
+        count++;
         /*if (hitAlpha > 0)
 			hitAlpha -= Time.deltaTime;
 		
@@ -277,6 +281,7 @@ public class NEATWeapon : MonoBehaviour
             {
                 spreadTemp = maximumSpread;
             }
+            count = 0;
             //Debug.Log("Temp: " + spreadTemp);
         }
     }
