@@ -76,6 +76,7 @@ public class NEATController : UnitController {
 	void Start () {
 		playerCam = gameObject.GetComponentInChildren<Camera> ();
 		EmptyDoubleArray = new double [box.InputCount];
+        weapon.boxId = box.Id;
 		//frameControl = "true".Equals(PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("game.neat.training.frameControl"));
 		//useCNN = "true".Equals(PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("game.neat.training.use.cnn"));
 		//if(frameControl) {
