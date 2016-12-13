@@ -34,8 +34,10 @@ public abstract class ContinuousTraining implements Trainable {
             System.out.println(String.format("*** Completed epoch %d ***", i));
             testIterator.reset();
             
-            saveModel(model, i);
-            outputDeadNeurons(model);
+            if(i % 10 == 0) {
+            	saveModel(model, i);
+//            	outputDeadNeurons(model);
+            }
         }
 	}
 	
