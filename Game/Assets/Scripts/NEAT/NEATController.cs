@@ -71,18 +71,20 @@ public class NEATController : UnitController {
 
     private int frameCounter = 0;
 	private double[] EmptyDoubleArray;
+    private double[] output;
 
 	// Use this for initialization
 	void Start () {
 		playerCam = gameObject.GetComponentInChildren<Camera> ();
 		EmptyDoubleArray = new double [box.InputCount];
         weapon.boxId = box.Id;
-		//frameControl = "true".Equals(PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("game.neat.training.frameControl"));
-		//useCNN = "true".Equals(PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("game.neat.training.use.cnn"));
-		//if(frameControl) {
-		//	cnnFrameRefreshRate = int.Parse (PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("game.neat.training.use.cnn.frameRefreshRate"));
-		//}
-	}
+        output = new double[box.OutputSignalArray.Length];
+        //frameControl = "true".Equals(PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("game.neat.training.frameControl"));
+        //useCNN = "true".Equals(PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("game.neat.training.use.cnn"));
+        //if(frameControl) {
+        //	cnnFrameRefreshRate = int.Parse (PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("game.neat.training.use.cnn.frameRefreshRate"));
+        //}
+    }
 
     // Update is called once per frame
     void FixedUpdate()
@@ -99,52 +101,22 @@ public class NEATController : UnitController {
 		}
 		*/
         //count++;
-        if ((IsRunning && !frameControl) ||
-            (IsRunning && frameControl && frameCounter++ % cnnFrameRefreshRate == 0))
+        bool activated = false;
+        if (IsRunning)
         {
-            ISignalArray inputArr = box.InputSignalArray;
-
-            /*
-            if (useCNN)
+            if (frameControl)
             {
-                double[] fromCNN = GroundTruthCNN.CalculateFeatures(playerCam);
-                double[] result = ArrayTool.Binarize(fromCNN);
-
-                Debug.Log(ArrayTool.ToString(result));
-
-                inputArr.CopyFrom(result, 0);
+                if (frameCounter++ % cnnFrameRefreshRate == 0)
+                {
+                    ActivateBox();
+                    activated = true;
+                }
             }
             else
             {
-                */
-                if (Arena.BotSpawn.Bots.Count == 0)
-                {
-                    inputArr.CopyFrom(EmptyDoubleArray, 0);
-                }
-                else
-                {
-                //inputArr.CopyFrom(GroundTruth.CalculateFeatures(playerCam, Arena.BotSpawn.Bots[0]), 0);
-                    inputArr.CopyFrom(GroundTruth.CalculateGroundTruthsScaledAngleSplit(playerCam, 1), 0);
-                }
-            //}
-
-            //Activate network
-            box.Activate();
-            //Obtain output
-            ISignalArray outputArr = box.OutputSignalArray;
-
-            double[] output = new double[outputArr.Length];
-            outputArr.CopyTo(output, 0);
-
-            /*
-			output [0] = 0;
-			output [1] = 0;
-			output [2] = 0;
-			output [3] = 0;
-			output [4] = 1;
-			output [5] = 0;
-			*/
-
+                //No framecrontrol
+                ActivateBox();
+            }
 
             //Mouse movement
             mouseX = (float)(output[0] - output[1]);
@@ -164,15 +136,54 @@ public class NEATController : UnitController {
                 rotationY += 360;
             }
             transform.localEulerAngles = new Vector3(rotationX, rotationY, transform.localEulerAngles.z);
-            if (output[4] > shootThreshold)
+
+            if (activated || !frameControl)
             {
-                weapon.FireOneShot();
-            }
-            else if (output[5] > reloadThreshold)
-            {
-                weapon.Reload();
+                if (output[4] > shootThreshold)
+                {
+                    weapon.FireOneShot();
+                }
+                else if (output[5] > reloadThreshold)
+                {
+                    weapon.Reload();
+                }
             }
         }
+    }
+
+    private void ActivateBox()
+    {
+        
+        ISignalArray inputArr = box.InputSignalArray;
+        //activate
+        /*
+        if (useCNN)
+        {
+            double[] fromCNN = GroundTruthCNN.CalculateFeatures(playerCam);
+            double[] result = ArrayTool.Binarize(fromCNN);
+
+            Debug.Log(ArrayTool.ToString(result));
+
+            inputArr.CopyFrom(result, 0);
+        }
+        */
+        if (Arena.BotSpawn.Bots.Count == 0)
+        {
+            inputArr.CopyFrom(EmptyDoubleArray, 0);
+        }
+        else
+        {
+            inputArr.CopyFrom(GroundTruth.CalculateGroundTruthsScaledAngleSplit(playerCam, 1), 0);
+        }
+        //Activate network
+        box.Activate();
+        //Obtain output
+        ISignalArray outputArr = box.OutputSignalArray;
+        
+
+        //double[] output = new double[outputArr.Length];
+        outputArr.CopyTo(output, 0);
+        //return output;
     }
 
 	public override void Stop()
