@@ -173,7 +173,7 @@ public class NEATController : UnitController {
         }
         else
         {
-            inputArr.CopyFrom(GroundTruth.CalculateGroundTruthsScaledAngleSplit(playerCam, 1), 0);
+            inputArr.CopyFrom(GroundTruth.CalculateFeatures(playerCam, Arena.BotSpawn.Bots[0]), 0);
         }
         //Activate network
         box.Activate();
