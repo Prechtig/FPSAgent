@@ -12,6 +12,7 @@ import org.deeplearning4j.util.ModelSerializer;
 import org.mma.imagerecognition.dao.FileSystemDAO;
 import org.mma.imagerecognition.dataobjects.TrainingData;
 import org.mma.imagerecognition.executables.DeadNeuronDetector;
+import org.mma.imagerecognition.listener.IterationTimeListener;
 import org.mma.imagerecognition.tools.PropertiesReader;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 
@@ -78,6 +79,6 @@ public abstract class ContinuousTraining implements Trainable {
 			model = new MultiLayerNetwork(configuration);
 	        model.init();
 		}
-		model.setListeners(new ScoreIterationListener(1));
+		model.setListeners(new IterationTimeListener(1), new ScoreIterationListener(1));
 	}
 }
