@@ -127,12 +127,11 @@ public class NEATWeapon : MonoBehaviour
 
 
     public Text ShotsLeftText;
-    private System.Random rng;
+    private System.Random rng = new System.Random();
 
     public int WrongReloads;
     public int Shots;
     public int Misses;
-    int count = 0;
 
     public uint boxId { get; internal set; }
 
@@ -147,15 +146,14 @@ public class NEATWeapon : MonoBehaviour
         //shotsLeftText = GameObject.FindWithTag("UIText").GetComponent<Text>() as Text;
     }
 
-    void FixedUpdate()
+    void Update()
     {
-        count++;
         /*if (hitAlpha > 0)
 			hitAlpha -= Time.deltaTime;
 		
 		if (aiming)
-			spread = aimSpread;*/
-        spread = Mathf.Clamp(spread, 0, maximumSpread);
+		spread = aimSpread;*/
+        /*
         //Debug.Log("First: " + spread);
         spread = Mathf.Lerp(spread, spreadTemp + cv.velMag * 2, Time.fixedDeltaTime * 8);
         //Debug.Log("Secon: " + spread);
@@ -163,6 +161,7 @@ public class NEATWeapon : MonoBehaviour
             spreadTemp -= Time.fixedDeltaTime * spreadReturnTime;
         if (spreadTemp < 0)
             spreadTemp = 0;
+            */
         //Debug.Log("SpreadTemp: " + spread);
         /*
 		pivot = new Vector2 (Screen.width / 2, Screen.height / 2);
@@ -225,23 +224,31 @@ public class NEATWeapon : MonoBehaviour
 
     public float GetRandomFloat(double min, double max)
     {
-        if (spreadTemp == 0)
-        {
-            rng = new System.Random(1337);
-        }
-        /*
-		double mantissa = (rng.NextDouble() * 2.0) - 1.0;
-		double exponent = System.Math.Pow(2.0, rng.Next(-126, 128));
-		return (float)(mantissa * exponent);
-		*/
         return (float)(min + (rng.NextDouble() * (max - min)));
+    }
+
+    float recoilViolence = 2.5f;
+    float recoilCoolOffTime = 0.6f;
+    private float SpreadModification(float deltaTime)
+    {
+        if (deltaTime < fireRate)
+        {
+            throw new System.Exception("Too fast fire");
+        }
+        if (deltaTime > recoilCoolOffTime)
+        {
+            return 0;
+        }
+        return (recoilCoolOffTime - deltaTime) * recoilViolence;
     }
 
     public void FireOneShot()
     {
-        if (!reloading && Time.time > timer && canFire && bulletsLeft > 0)
+        if (!reloading && Time.time >= timer && canFire && bulletsLeft > 0)
         {// && Screen.lockCursor)
-         //spreadTemp += spreadAddPerShot;
+            //spreadTemp += spreadAddPerShot;
+            spread = (spread + 1) * SpreadModification(Time.time - (timer - fireRate));
+            spread = Mathf.Clamp(spread, 0, maximumSpread);
             timer = Time.time + fireRate;
             anim.Rewind(fireAnim.name);
             anim.Play(fireAnim.name);
@@ -258,6 +265,7 @@ public class NEATWeapon : MonoBehaviour
 
             //Bullet spread
             //Vector3 direction = gameObject.transform.TransformDirection(new Vector3(Random.Range(-0.01f, 0.01f) * spread, Random.Range(0, 0.01f) * spread * 3, 1));
+            
             Vector3 direction = gameObject.transform.TransformDirection(new Vector3(GetRandomFloat(-0.01d, 0.01d) * spread, GetRandomFloat(0, 0.01d) * spread * 3, 1));
             //Vector3 direction = gameObject.transform.TransformDirection (0, 0, 1);
 
@@ -268,6 +276,7 @@ public class NEATWeapon : MonoBehaviour
                 OnHit(hit2);
             }
             bulletsLeft--;
+            /*
             if (spreadTemp == 0)
             {
                 spreadTemp += spreadAddPerShot;
@@ -281,7 +290,7 @@ public class NEATWeapon : MonoBehaviour
             {
                 spreadTemp = maximumSpread;
             }
-            count = 0;
+            */
             //Debug.Log("Temp: " + spreadTemp);
         }
     }
