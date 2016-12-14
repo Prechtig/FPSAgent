@@ -12,7 +12,7 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 public abstract class DbConnector {
 	
 	protected static final String DbName = "TrainingDB";
-	protected static final String tableName = "trainingDataLightEqualDistribution50PerClass";
+	protected static final String tableName = "trainingData";
 	protected static final String databaseURL = "jdbc:mysql://mydb.itu.dk/" + DbName;
 	
 	protected static DataSource pooledDataSource = setupC3P0();
