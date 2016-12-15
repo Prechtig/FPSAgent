@@ -156,18 +156,14 @@ public class NEATController : UnitController {
         
         ISignalArray inputArr = box.InputSignalArray;
         //activate
-        /*
         if (useCNN)
         {
             double[] fromCNN = GroundTruthCNN.CalculateFeatures(playerCam);
-            double[] result = ArrayTool.Binarize(fromCNN);
+            //double[] result = ArrayTool.Binarize(fromCNN);
 
-            Debug.Log(ArrayTool.ToString(result));
-
-            inputArr.CopyFrom(result, 0);
+            inputArr.CopyFrom(fromCNN, 0);
         }
-        */
-        if (Arena.BotSpawn.Bots.Count == 0)
+        else if (Arena.BotSpawn.Bots.Count == 0)
         {
             inputArr.CopyFrom(EmptyDoubleArray, 0);
         }

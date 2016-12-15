@@ -42,8 +42,61 @@ public class GroundTruthCNN
 		Screenshot screenshot = ScreenSnapper.SnapScreenshot (playerCam);
 		byte[] rgbArray = screenshot.GetRGB ();
 		SendMessage(rgbArray);
-		return ReceiveMessage ();
+        double[] features = ReceiveMessage();
+
+        //Angular input fix
+        if (features[5] < 0.5)
+        {
+            return new double[6];
+        }
+        else
+        {
+            double[] output = new double[6];
+            double cnnHorizontal = features[0];
+            if (cnnHorizontal > 0)
+            {
+                output[0] = Clamp01(Math.Abs(cnnHorizontal));
+            }
+            else
+            {
+                output[1] = Clamp01(Math.Abs(cnnHorizontal));
+            }
+
+            double cnnVertical = features[1];
+            if (cnnVertical > 0)
+            {
+                output[2] = Clamp01(Math.Abs(cnnVertical));
+            }
+            else
+            {
+                output[3] = Clamp01(Math.Abs(cnnVertical));
+            }
+
+            if (features[2] <= 0)
+            {
+                output[4] = 0;
+            }
+            else
+            {
+                output[4] = features[2];
+            }
+            output[5] = 1;
+            return output;
+        }
 	}
+
+    private static double Clamp01(double d)
+    {
+        if (d > 1)
+        {
+            return 1d;
+        }
+        else if (d < 0)
+        {
+            return 0d;
+        }
+        return d;
+    }
 
 	private static void SendMessage(byte[] message) {
 		int toSendLen = message.Length;
