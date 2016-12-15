@@ -181,7 +181,6 @@ public class NEATController : UnitController {
             {
                 fromCNN = GroundTruthCNN.CalculateFeaturesAngular(playerCam);
             }
-
             inputArr.CopyFrom(fromCNN, 0);
         }
         else if (Arena.BotSpawn.Bots.Count == 0)
@@ -194,7 +193,7 @@ public class NEATController : UnitController {
         }
         else
         {
-            inputArr.CopyFrom(GroundTruth.CalculateFeatures(playerCam, Arena.BotSpawn.Bots[0]), 0);
+            inputArr.CopyFrom(GroundTruth.CalculateGroundTruthsScaledAngleSplit(playerCam, 1), 0);
         }
         //Activate network
         box.Activate();

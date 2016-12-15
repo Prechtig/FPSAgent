@@ -278,8 +278,6 @@ public class NEATWeapon : MonoBehaviour
             {
                 direction = gameObject.transform.TransformDirection(0, 0, 1);
             }
-            
-
 
             RaycastHit hit2;
             if (Physics.Raycast(bulletGo.position, direction, out hit2, range, hitLayers))
