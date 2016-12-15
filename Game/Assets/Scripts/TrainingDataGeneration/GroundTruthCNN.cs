@@ -45,7 +45,7 @@ public class GroundTruthCNN
         double[] features = ReceiveMessage();
 
         //Angular input fix
-        if (features[5] < 0.5)
+        if (features[3] < 0.5)
         {
             return new double[6];
         }
