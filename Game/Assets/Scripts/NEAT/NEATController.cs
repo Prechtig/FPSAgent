@@ -158,7 +158,15 @@ public class NEATController : UnitController {
         //activate
         if (useCNN)
         {
-            double[] fromCNN = GroundTruthCNN.CalculateFeatures(playerCam);
+            double[] fromCNN;
+            if (inputArr.Length == 6)
+            {
+                fromCNN = GroundTruthCNN.CalculateFeaturesAngular(playerCam);
+            }
+            else
+            {
+                throw new Exception();
+            }
             //double[] result = ArrayTool.Binarize(fromCNN);
 
             inputArr.CopyFrom(fromCNN, 0);
