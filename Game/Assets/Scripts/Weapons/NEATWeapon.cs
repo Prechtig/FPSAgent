@@ -132,6 +132,7 @@ public class NEATWeapon : MonoBehaviour
     public int WrongReloads;
     public int Shots;
     public int Misses;
+    public static bool recoil;
 
     public uint boxId { get; internal set; }
 
@@ -247,8 +248,11 @@ public class NEATWeapon : MonoBehaviour
         if (!reloading && Time.time >= timer && canFire && bulletsLeft > 0)
         {// && Screen.lockCursor)
             //spreadTemp += spreadAddPerShot;
-            //spread = (spread + 1) * SpreadModification(Time.time - (timer - fireRate));
-            //spread = Mathf.Clamp(spread, 0, maximumSpread);
+            if (recoil)
+            {
+                spread = (spread + 1) * SpreadModification(Time.time - (timer - fireRate));
+                spread = Mathf.Clamp(spread, 0, maximumSpread);
+            }
             timer = Time.time + fireRate;
             anim.Rewind(fireAnim.name);
             anim.Play(fireAnim.name);
@@ -265,9 +269,16 @@ public class NEATWeapon : MonoBehaviour
 
             //Bullet spread
             //Vector3 direction = gameObject.transform.TransformDirection(new Vector3(Random.Range(-0.01f, 0.01f) * spread, Random.Range(0, 0.01f) * spread * 3, 1));
+            Vector3 direction;
+            if (recoil)
+            {
+                direction = gameObject.transform.TransformDirection(new Vector3(GetRandomFloat(-0.01d, 0.01d) * spread, GetRandomFloat(0, 0.01d) * spread * 3, 1));
+            }
+            else
+            {
+                direction = gameObject.transform.TransformDirection(0, 0, 1);
+            }
             
-            //Vector3 direction = gameObject.transform.TransformDirection(new Vector3(GetRandomFloat(-0.01d, 0.01d) * spread, GetRandomFloat(0, 0.01d) * spread * 3, 1));
-            Vector3 direction = gameObject.transform.TransformDirection (0, 0, 1);
 
 
             RaycastHit hit2;
