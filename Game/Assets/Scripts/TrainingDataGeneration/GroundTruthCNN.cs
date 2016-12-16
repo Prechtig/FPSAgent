@@ -38,7 +38,15 @@ public class GroundTruthCNN
 		}
 	}
 
-	public static double[] CalculateFeaturesAngular(Camera playerCam) {
+    public static double[] CalculateFeaturesVPR(Camera playerCam)
+    {
+        Screenshot screenshot = ScreenSnapper.SnapScreenshot(playerCam);
+        byte[] rgbArray = screenshot.GetRGB();
+        SendMessage(rgbArray);
+        return ReceiveMessage();
+    }
+
+    public static double[] CalculateFeaturesAngular(Camera playerCam) {
 		Screenshot screenshot = ScreenSnapper.SnapScreenshot (playerCam);
 		byte[] rgbArray = screenshot.GetRGB ();
 		SendMessage(rgbArray);

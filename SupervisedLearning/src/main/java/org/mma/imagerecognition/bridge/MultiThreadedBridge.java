@@ -6,10 +6,10 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteOrder;
+import java.nio.file.Paths;
 
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.util.ModelSerializer;
-import org.mma.imagerecognition.dao.FileSystemDAO;
 import org.mma.imagerecognition.tools.PropertiesReader;
 
 public class MultiThreadedBridge implements Runnable {
@@ -98,7 +98,7 @@ public class MultiThreadedBridge implements Runnable {
 	}
 	
 	public static void main(String[] args) {
-		MultiThreadedBridge server = new MultiThreadedBridge(FileSystemDAO.getPathOfLatestModelFile().toFile());
+		MultiThreadedBridge server = new MultiThreadedBridge(Paths.get("models", "model3.bin").toFile());
 		new Thread(server).start();
 
 		try {
