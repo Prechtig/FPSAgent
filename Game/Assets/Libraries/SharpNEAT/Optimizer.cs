@@ -186,7 +186,8 @@ public class Optimizer : MonoBehaviour {
         _ea = experiment.CreateEvolutionAlgorithm();
         _ea.UpdateEvent += new EventHandler(ea_UpdateEvent);
 		var evoSpeed = int.Parse (PropertiesReader.GetPropertyFile(PropertyFile.Project).GetProperty("game.neat.training.evolutionSpeed"));
-		Started = true;
+        
+        Started = true;
 		Time.timeScale = evoSpeed;
 		_ea.StartContinue();
 		EARunning = true;
@@ -465,8 +466,20 @@ public class Optimizer : MonoBehaviour {
 		trialDuration = Convert.ToSingle(XmlUtils.GetValueAsDouble (config, "TrialDuration"));
 		stoppingFitness = Convert.ToSingle (XmlUtils.GetValueAsDouble (config, "StoppingFitness"));
 		PersistNGenerations = XmlUtils.GetValueAsInt(config, "PersistNGenerations");
-		NUM_INPUTS = XmlUtils.GetValueAsInt (config, "inputs");
+		//NUM_INPUTS = XmlUtils.GetValueAsInt (config, "inputs");
 		NUM_OUTPUTS = XmlUtils.GetValueAsInt (config, "outputs");
 		MaxParallel = XmlUtils.GetValueAsInt (config, "parallelAgents");
-	}
+
+        NEATWeapon.recoil = "true".Equals(PropertiesReader.GetPropertyFile(PropertyFile.Project).GetProperty("game.neat.training.use.recoil"));
+        bool useVPR = "true".Equals(PropertiesReader.GetPropertyFile(PropertyFile.Project).GetProperty("game.neat.training.use.vpr"));
+        NEATController.UseVPR = useVPR;
+        if (useVPR)
+        {
+            NUM_INPUTS = 26;
+        }
+        else
+        {
+            NUM_INPUTS = 6;
+        }
+    }
 }

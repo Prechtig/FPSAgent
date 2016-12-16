@@ -30,8 +30,9 @@ public class NEATController : UnitController {
     private static bool _useCNN;
     private static bool _frameControl;
     private static int _cnnFrameRefreshRate;
+    private static bool _useVPR;
 
-    private static bool useCNN
+    private static bool UseCNN
     {
         get
         {
@@ -45,7 +46,7 @@ public class NEATController : UnitController {
 
 
 
-    private static bool frameControl
+    private static bool FrameControl
     {
         get
         {
@@ -57,7 +58,7 @@ public class NEATController : UnitController {
         }
     }
 
-    private static int cnnFrameRefreshRate
+    private static int CNNFrameRefreshRate
     {
         get
         {
@@ -66,6 +67,18 @@ public class NEATController : UnitController {
                 LoadFromProperty();
             }
             return _cnnFrameRefreshRate;
+        }
+    }
+
+    public static bool UseVPR
+    {
+        get
+        {
+            return _useVPR;
+        }
+        set
+        {
+            _useVPR = value;
         }
     }
 
@@ -104,9 +117,9 @@ public class NEATController : UnitController {
         bool activated = false;
         if (IsRunning)
         {
-            if (frameControl)
+            if (FrameControl)
             {
-                if (frameCounter++ % cnnFrameRefreshRate == 0)
+                if (frameCounter++ % CNNFrameRefreshRate == 0)
                 {
                     ActivateBox();
                     activated = true;
@@ -137,7 +150,7 @@ public class NEATController : UnitController {
             }
             transform.localEulerAngles = new Vector3(rotationX, rotationY, transform.localEulerAngles.z);
 
-            if (activated || !frameControl)
+            if (activated || !FrameControl)
             {
                 if (output[4] > shootThreshold)
                 {
@@ -156,24 +169,28 @@ public class NEATController : UnitController {
         
         ISignalArray inputArr = box.InputSignalArray;
         //activate
-        if (useCNN)
+        if (UseCNN)
         {
             double[] fromCNN;
-            if (inputArr.Length == 6)
+            if (UseVPR)
             {
-                fromCNN = GroundTruthCNN.CalculateFeaturesAngular(playerCam);
+                throw new Exception("VPR CNN NOT IMPLEMENTED");
+                //double[] result = ArrayTool.Binarize(fromCNN);
             }
             else
             {
-                throw new Exception();
+                fromCNN = GroundTruthCNN.CalculateFeaturesAngular(playerCam);
             }
-            //double[] result = ArrayTool.Binarize(fromCNN);
 
             inputArr.CopyFrom(fromCNN, 0);
         }
         else if (Arena.BotSpawn.Bots.Count == 0)
         {
             inputArr.CopyFrom(EmptyDoubleArray, 0);
+        }
+        else if (UseVPR)
+        {
+            inputArr.CopyFrom(GroundTruth.CalculateFeatures(playerCam, Arena.BotSpawn.Bots[0]), 0);
         }
         else
         {
