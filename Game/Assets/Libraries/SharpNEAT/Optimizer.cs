@@ -171,19 +171,19 @@ public class Optimizer : MonoBehaviour {
 
 		VisualPartitionClassifier.GetInstance ().InitializeFromProperties ();
 
-        
+        /*
         string folderName = "14-12-16--15-13-45"; // angualar no recoil tha bomb
         string generationName = "505";
-        
+        */
         /*
         string folderName = "15-12-16--09-13-16";  //fixedUpdate
         string generationName = "263";  //fixedupdate
-        */
+        
         string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.champ.xml";
         //string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.pop.xml";
         _ea = experiment.CreateEvolutionAlgorithm(location);
-        
-        //_ea = experiment.CreateEvolutionAlgorithm();
+        */
+        _ea = experiment.CreateEvolutionAlgorithm();
         _ea.UpdateEvent += new EventHandler(ea_UpdateEvent);
 		var evoSpeed = int.Parse (PropertiesReader.GetPropertyFile(PropertyFile.Project).GetProperty("game.neat.training.evolutionSpeed"));
         
