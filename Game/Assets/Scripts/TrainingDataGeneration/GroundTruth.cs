@@ -6,7 +6,7 @@ using Assets.Scripts.TrainingDataGeneration;
 
 public class GroundTruth : MonoBehaviour
 {
-	private static readonly double MAX_DISTANCE = 50;
+	private static readonly double MAX_DISTANCE = 20;
 
 	private static int _fov = -1;
 	private static int Fov{
@@ -103,7 +103,7 @@ public class GroundTruth : MonoBehaviour
 
 	public static double[] CalculateFeatures(Camera playerCam, GameObject bot) {
 		//GameObject bot = FindClosestBots (playerCam, 1).First();
-		bool withinSight = GameObjectHelper.IsObjectWithinSight (playerCam, bot);
+		//bool withinSight = GameObjectHelper.IsObjectWithinSight (playerCam, bot);
 		double horizontalAngle = GameObjectHelper.HorizontalAngleTo (playerCam.transform, bot.transform);
 		double verticalAngle = GameObjectHelper.VerticalAngleTo (playerCam.transform, bot.transform);
 		return CalculateFeatures (horizontalAngle, verticalAngle);

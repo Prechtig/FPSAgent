@@ -11,6 +11,9 @@ import java.nio.file.Paths;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.util.ModelSerializer;
 import org.mma.imagerecognition.tools.PropertiesReader;
+import org.nd4j.jita.conf.CudaEnvironment;
+import org.nd4j.linalg.api.buffer.DataBuffer;
+import org.nd4j.linalg.api.buffer.util.DataTypeUtil;
 
 public class MultiThreadedBridge implements Runnable {
 
@@ -98,11 +101,22 @@ public class MultiThreadedBridge implements Runnable {
 	}
 	
 	public static void main(String[] args) {
-		MultiThreadedBridge server = new MultiThreadedBridge(Paths.get("models", "model3.bin").toFile());
+		DataTypeUtil.setDTypeForContext(DataBuffer.Type.FLOAT);
+		final long GIGABYTE = 1024 * 1024 * 1024;
+		CudaEnvironment.getInstance().getConfiguration()
+	    .setMaximumDeviceCacheableLength(GIGABYTE * 1)
+	    .setMaximumDeviceCache			(GIGABYTE * 2)
+	    .setMaximumHostCacheableLength	(GIGABYTE * 1)
+	    .setMaximumHostCache			(GIGABYTE * 6);
+		
+		
+		//MultiThreadedBridge server = new MultiThreadedBridge(Paths.get("models", "model3.bin").toFile());
+		//MultiThreadedBridge server = new MultiThreadedBridge(Paths.get("models", "angular", "light", "deep", "model3.bin").toFile());
+		MultiThreadedBridge server = new MultiThreadedBridge(Paths.get("models", "vpr", "light", "deep", "model2.bin").toFile());
 		new Thread(server).start();
 
 		try {
-		    Thread.sleep(30 * 60 * 1000);
+		    Thread.sleep(3000 * 60 * 1000);
 		} catch (InterruptedException e) {
 		    e.printStackTrace();
 		}

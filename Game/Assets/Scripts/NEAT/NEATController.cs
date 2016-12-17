@@ -188,10 +188,12 @@ public class NEATController : UnitController {
         }
         else if (UseVPR)
         {
+            ArrayTool.Binarize(GroundTruthCNN.CalculateFeaturesVPR(playerCam));
             inputArr.CopyFrom(GroundTruth.CalculateFeatures(playerCam, Arena.BotSpawn.Bots[0]), 0);
         }
         else
         {
+            GroundTruthCNN.CalculateFeaturesAngular(playerCam);
             inputArr.CopyFrom(GroundTruth.CalculateGroundTruthsScaledAngleSplit(playerCam, 1), 0);
         }
         //Activate network

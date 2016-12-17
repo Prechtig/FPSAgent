@@ -7,7 +7,7 @@
 	<name>SupervisedLearning</name>
 
 	<properties>
-		<nd4j.backend>nd4j-native-platform</nd4j.backend>
+		<nd4j.backend>nd4j-cuda-7.5-platform</nd4j.backend>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<shadedClassifier>bin</shadedClassifier>
 		<java.version>1.8</java.version>

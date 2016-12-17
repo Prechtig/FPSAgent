@@ -152,8 +152,8 @@ public class Optimizer : MonoBehaviour {
 
 	public void StartEA()
 	{
-        //QualitySettings.vSyncCount = 0;  // VSync must be disabled
-        //Application.targetFrameRate = 30;
+        QualitySettings.vSyncCount = 0;  // VSync must be disabled
+        Application.targetFrameRate = 30;
 
         char dirSepChar = Path.DirectorySeparatorChar;
 		_resultSavePath = Application.persistentDataPath + dirSepChar + DateTime.Now.ToString("dd-MM-yy--HH-mm-ss") + dirSepChar;
@@ -171,14 +171,20 @@ public class Optimizer : MonoBehaviour {
 
         VisualPartitionClassifier.GetInstance().InitializeFromProperties();
 
-        
-        string folderName = "14-12-16--15-13-45"; // angualar no recoil tha bomb
-        string generationName = "505";
-        
         /*
-        string folderName = "15-12-16--09-13-16";  //fixedUpdate
-        string generationName = "263";  //fixedupdate
+        string folderName = "14-12-16--15-13-45"; // angualar no recoil, 500 fit
+        string generationName = "505";
         */
+
+        /*
+        string folderName = "17-12-16--17-21-06"; // angular no recoil, 10 framecontrol, fixed time scale
+        string generationName = "19";
+        */
+
+        string folderName = "17-12-16--14-09-50";  //vpr no recoil, 10 framecontrol
+        string generationName = "179";
+        
+
 
         string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.champ.xml";
         //string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.pop.xml";
