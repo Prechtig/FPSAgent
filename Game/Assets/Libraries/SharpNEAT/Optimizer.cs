@@ -37,6 +37,7 @@ public class Optimizer : MonoBehaviour {
     Dictionary<uint, int> WrongReloadsMap = new Dictionary<uint, int>();
     Dictionary<uint, int> ShotsMap = new Dictionary<uint, int>();
     Dictionary<uint, int> MissedMap = new Dictionary<uint, int>();
+    Dictionary<uint, double> TPSMap = new Dictionary<uint, double>();
 
     //private DateTime startTime;
     private float timeLeft;
@@ -207,15 +208,17 @@ public class Optimizer : MonoBehaviour {
 		if (!FirstUpdate) {
             uint id = _ea.CurrentChampGenome.Id;
 			Utility.Log (string.Format ("gen={0:N0} bestFitness={1:N6}", _ea.CurrentGeneration, Fitness));
-            LocalLogger.Write (string.Format("{0:N0}\t{1:N6}\t{2:N6}\t{3:N6}\t{4:N0}\t{5:N0}\t{6:N0}",
-                _ea.CurrentGeneration, Fitness, 
-                Fitness - _ea.CurrentChampGenome.EvaluationInfo.AuxFitnessArr[0]._value, 
+            LocalLogger.Write (string.Format("{0:N0}\t{1:N6}\t{2:N6}\t{3:N6}\t{4:N0}\t{5:N0}\t{6:N0}\t{7:N6}",
+                _ea.CurrentGeneration, 
+                Fitness,
+                Fitness - _ea.CurrentChampGenome.EvaluationInfo.AuxFitnessArr[0]._value,
                 _ea.CurrentChampGenome.EvaluationInfo.AuxFitnessArr[0]._value,
                 ShotsMap[id],
                 MissedMap[id],
-                WrongReloadsMap[id]));
+                WrongReloadsMap[id],
+                (TPSMap[id] / 20) / 15));
         } else {
-            LocalLogger.Write(string.Format("Generation\tFitness\tShooting fitness\tAiming fitness\tShots\tMisses\tWrong reloads"));
+            LocalLogger.Write(string.Format("Generation\tFitness\tShooting fitness\tAiming fitness\tShots\tMisses\tWrong reloads\tTPS"));
             FirstUpdate = false;
 		}
 
@@ -226,6 +229,7 @@ public class Optimizer : MonoBehaviour {
         WrongReloadsMap = new Dictionary<uint, int>();
         ShotsMap = new Dictionary<uint, int>();
         MissedMap = new Dictionary<uint, int>();
+        TPSMap = new Dictionary<uint, double>();
     }
 
 	void PauseUnpause()
@@ -355,6 +359,16 @@ public class Optimizer : MonoBehaviour {
             else
             {
                 MissedMap.Add(box.Id, nw.Misses);
+            }
+            //Add TPS
+            NEATController nc = nt.GetPlayer().GetComponent<NEATController>();
+            if (TPSMap.ContainsKey(box.Id))
+            {
+                TPSMap[box.Id] += nc.tpsCount;
+            }
+            else
+            {
+                TPSMap.Add(box.Id, nc.tpsCount);
             }
 
 

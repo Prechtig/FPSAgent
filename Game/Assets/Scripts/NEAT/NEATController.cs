@@ -100,6 +100,7 @@ public class NEATController : UnitController {
     }
 
     // Update is called once per frame
+    public double tpsCount;
     void FixedUpdate()
     {
         /*
@@ -121,6 +122,7 @@ public class NEATController : UnitController {
             {
                 if (frameCounter++ % CNNFrameRefreshRate == 0)
                 {
+                    tpsCount++;
                     ActivateBox();
                     activated = true;
                 }
@@ -150,8 +152,8 @@ public class NEATController : UnitController {
             }
             transform.localEulerAngles = new Vector3(rotationX, rotationY, transform.localEulerAngles.z);
 
-            if (activated || !FrameControl)
-            {
+            //if (activated || !FrameControl)
+            //{
                 if (output[4] > shootThreshold)
                 {
                     weapon.FireOneShot();
@@ -160,7 +162,7 @@ public class NEATController : UnitController {
                 {
                     weapon.Reload();
                 }
-            }
+            //}
         }
     }
 
