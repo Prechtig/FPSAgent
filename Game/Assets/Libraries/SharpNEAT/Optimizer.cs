@@ -177,14 +177,15 @@ public class Optimizer : MonoBehaviour {
         string generationName = "505";
         */
 
-        /*
-        string folderName = "17-12-16--17-21-06"; // angular no recoil, 10 framecontrol, fixed time scale
-        string generationName = "19";
-        */
-
-        string folderName = "17-12-16--14-09-50";  //vpr no recoil, 10 framecontrol
-        string generationName = "179";
         
+        string folderName = "19-12-16--14-25-41"; // angular no recoil, 10 framecontrol, 30 fps limit
+        string generationName = "77";
+
+        
+        /*
+        string folderName = "19-12-16--09-12-46";  //vpr no recoil, 10 framecontrol, 30 fps limit
+        string generationName = "418";
+        */
 
 
         string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.champ.xml";
@@ -216,7 +217,7 @@ public class Optimizer : MonoBehaviour {
                 ShotsMap[id],
                 MissedMap[id],
                 WrongReloadsMap[id],
-                (TPSMap[id] / 20) / 15));
+                (TPSMap[id] / 100) / 15));
         } else {
             LocalLogger.Write(string.Format("Generation\tFitness\tShooting fitness\tAiming fitness\tShots\tMisses\tWrong reloads\tTPS"));
             FirstUpdate = false;

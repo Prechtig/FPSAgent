@@ -60,7 +60,6 @@ public class TrainingDataCapturer : MonoBehaviour
 			playerCam.aspect = 1f;
 			playerCam.nearClipPlane = 0.001f;
 			playerCam.farClipPlane = 1000f;
-
 		}
 	}
 }

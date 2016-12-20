@@ -177,6 +177,17 @@ public class NEATController : UnitController {
             if (UseVPR)
             {
                 fromCNN = ArrayTool.Binarize(GroundTruthCNN.CalculateFeaturesVPR(playerCam));
+                //string s1 = string.Join("  ", fromCNN.Select(p => p.ToString()).ToArray());
+                
+
+                double[] gr = GroundTruth.CalculateFeatures(playerCam, Arena.BotSpawn.Bots[0]);
+                /*string s2 = string.Join("  ", gr.Select(p => p.ToString()).ToArray());
+
+                if (!s1.Equals(s2))
+                {
+                    Debug.Log("FROM CNN: " + s1);
+                    Debug.Log("FROM GRO: " + s2);
+                }*/
             }
             else
             {
