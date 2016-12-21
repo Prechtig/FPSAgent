@@ -3,9 +3,12 @@ package org.mma.imagerecognition.configuration;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Properties;
 
+import org.deeplearning4j.nn.api.Layer;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
+import org.deeplearning4j.nn.layers.convolution.ConvolutionLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.util.ModelSerializer;
@@ -68,7 +71,7 @@ public abstract class ContinuousTraining implements Trainable {
 	}
 	
 	protected void initConfig() {
-		configuration = BuilderFactory.getUltraDeepConvNet(height, width, featureCount).build();
+		configuration = BuilderFactory.getDeepConvNet(height, width, featureCount).build();
 	}
 	
 	protected void initNetwork() throws FileNotFoundException, IOException {
@@ -79,6 +82,21 @@ public abstract class ContinuousTraining implements Trainable {
 			model = new MultiLayerNetwork(configuration);
 	        model.init();
 		}
+		copyWeightsAndBiases();
 		model.setListeners(new IterationTimeListener(1), new ScoreIterationListener(1));
 	}
+	
+	protected void copyWeightsAndBiases() throws IOException {
+		MultiLayerNetwork vprModel = ModelSerializer.restoreMultiLayerNetwork(Paths.get("models", "vpr", "light", "deep", "model2.bin").toFile());
+		Layer[] vprLayers = vprModel.getLayers();
+		for(int i = 0; i < vprLayers.length; i++) {
+			Layer vprLayer = vprLayers[i];
+			if(vprLayer instanceof ConvolutionLayer) {
+				Layer arLayer = model.getLayer(i);
+				arLayer.setParam("W", vprLayer.getParam("W"));
+				arLayer.setParam("b", vprLayer.getParam("b"));
+			}
+		}
+	}
+	
 }
