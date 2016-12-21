@@ -169,31 +169,10 @@ public class NEATController : UnitController {
         
         ISignalArray inputArr = box.InputSignalArray;
         //activate
-        if (UseCNN)
-        {
-            double[] fromCNN;
-            if (UseVPR)
-            {
-                fromCNN = ArrayTool.Binarize(GroundTruthCNN.CalculateFeaturesVPR(playerCam));
-            }
-            else
-            {
-                fromCNN = GroundTruthCNN.CalculateFeaturesAngular(playerCam);
-            }
-            inputArr.CopyFrom(fromCNN, 0);
-        }
-        else if (Arena.BotSpawn.Bots.Count == 0)
-        {
-            inputArr.CopyFrom(EmptyDoubleArray, 0);
-        }
-        else if (UseVPR)
-        {
-            inputArr.CopyFrom(GroundTruth.CalculateFeatures(playerCam, Arena.BotSpawn.Bots[0]), 0);
-        }
-        else
-        {
-            inputArr.CopyFrom(GroundTruth.CalculateGroundTruthsScaledAngleSplit(playerCam, 1), 0);
-        }
+
+        double[] greyscale = ScreenSnapper.SnapScreenshot(playerCam);
+        inputArr.CopyFrom(greyscale, 0);
+
         //Activate network
         box.Activate();
         //Obtain output

@@ -40,14 +40,17 @@ public class GroundTruthCNN
 
     public static double[] CalculateFeaturesVPR(Camera playerCam)
     {
+        /*
         Screenshot screenshot = ScreenSnapper.SnapScreenshot(playerCam);
         byte[] rgbArray = screenshot.GetRGB();
         SendMessage(rgbArray);
         return ReceiveMessage();
+        */
+        return new double[1];
     }
 
     public static double[] CalculateFeaturesAngular(Camera playerCam) {
-		Screenshot screenshot = ScreenSnapper.SnapScreenshot (playerCam);
+        /*Screenshot screenshot = ScreenSnapper.SnapScreenshot (playerCam);
 		byte[] rgbArray = screenshot.GetRGB ();
 		SendMessage(rgbArray);
         double[] features = ReceiveMessage();
@@ -90,7 +93,8 @@ public class GroundTruthCNN
             }
             output[5] = 1;
             return output;
-        }
+        }*/
+        return new double[1];
 	}
 
     private static double Clamp01(double d)

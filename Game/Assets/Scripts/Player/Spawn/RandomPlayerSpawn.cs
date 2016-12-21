@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Linq;
 using UnityEngine.UI;
 
 public class RandomPlayerSpawn : MonoBehaviour, IPlayerSpawn
@@ -56,6 +57,8 @@ public class RandomPlayerSpawn : MonoBehaviour, IPlayerSpawn
         Player.GetComponentInChildren<NEATController> ().Arena = Arena;
 		//HUD.worldCamera = player.GetComponentInChildren<Camera> ();
 		Player.GetComponentInChildren<NEATWeapon> ().ShotsLeftText = ShotsLeftText;
+        Camera c = Player.GetComponentsInChildren<Camera>().First(cam => cam.tag == "MainCamera");
+        c.targetTexture = new RenderTexture(28, 28, 24);
 		//Instantiate (GameObject., spawnPoints.position, spawnPoints.rotation);
 	}
 

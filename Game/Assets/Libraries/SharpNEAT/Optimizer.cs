@@ -175,15 +175,15 @@ public class Optimizer : MonoBehaviour {
         string folderName = "14-12-16--15-13-45"; // angualar no recoil tha bomb
         string generationName = "505";
         */
-        /*
-        string folderName = "15-12-16--09-13-16";  //fixedUpdate
-        string generationName = "263";  //fixedupdate
         
-        string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.champ.xml";
-        //string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.pop.xml";
+        string folderName = "20-12-16--21-06-50";  //fixedUpdate
+        string generationName = "8";  //fixedupdate
+        
+        //string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.champ.xml";
+        string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.pop.xml";
         _ea = experiment.CreateEvolutionAlgorithm(location);
-        */
-        _ea = experiment.CreateEvolutionAlgorithm();
+        
+        //_ea = experiment.CreateEvolutionAlgorithm();
         _ea.UpdateEvent += new EventHandler(ea_UpdateEvent);
 		var evoSpeed = int.Parse (PropertiesReader.GetPropertyFile(PropertyFile.Project).GetProperty("game.neat.training.evolutionSpeed"));
         
@@ -466,20 +466,12 @@ public class Optimizer : MonoBehaviour {
 		trialDuration = Convert.ToSingle(XmlUtils.GetValueAsDouble (config, "TrialDuration"));
 		stoppingFitness = Convert.ToSingle (XmlUtils.GetValueAsDouble (config, "StoppingFitness"));
 		PersistNGenerations = XmlUtils.GetValueAsInt(config, "PersistNGenerations");
-		//NUM_INPUTS = XmlUtils.GetValueAsInt (config, "inputs");
+        NUM_INPUTS = 784;
 		NUM_OUTPUTS = XmlUtils.GetValueAsInt (config, "outputs");
 		MaxParallel = XmlUtils.GetValueAsInt (config, "parallelAgents");
 
         NEATWeapon.recoil = "true".Equals(PropertiesReader.GetPropertyFile(PropertyFile.Project).GetProperty("game.neat.training.use.recoil"));
         bool useVPR = "true".Equals(PropertiesReader.GetPropertyFile(PropertyFile.Project).GetProperty("game.neat.training.use.vpr"));
         NEATController.UseVPR = useVPR;
-        if (useVPR)
-        {
-            NUM_INPUTS = 26;
-        }
-        else
-        {
-            NUM_INPUTS = 6;
-        }
     }
 }

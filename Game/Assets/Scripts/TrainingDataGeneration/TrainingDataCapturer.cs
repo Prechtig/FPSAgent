@@ -41,9 +41,12 @@ public class TrainingDataCapturer : MonoBehaviour
 	}
 
 	public TrainingData CaptureTrainingData() {
-		float[] groundTruths = GroundTruth.CalculateGroundTruths (playerCam, 1);
+        /*
+        float[] groundTruths = GroundTruth.CalculateGroundTruths (playerCam, 1);
 		Screenshot screenshot = ScreenSnapper.SnapScreenshot (playerCam);
 		return new TrainingData (groundTruths, screenshot);
+        */
+        return null;
 	}
 
 	private bool IsCameraInitialized() {

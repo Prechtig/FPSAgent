@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Linq;
 using System;
 
 public class ScreenSnapper {
@@ -9,8 +10,9 @@ public class ScreenSnapper {
 	/// </summary>
 	/// <returns>The screenshot as a flattened array with width and height info</returns>
 	/// <param name="camera">The camera that should be used when capturing the screenshot</param>
-	public static Screenshot SnapScreenshot(Camera camera) {
-		RenderTexture cameraRenderTexture = camera.targetTexture;
+	public static double[] SnapScreenshot(Camera camera) {
+        Resources.UnloadUnusedAssets();
+        RenderTexture cameraRenderTexture = camera.targetTexture;
 		if (cameraRenderTexture == null) {
 			throw new InvalidOperationException ("The camera did not have any target texture. Please assign one to the camera");
 		}
@@ -27,10 +29,9 @@ public class ScreenSnapper {
 		tex.ReadPixels (new Rect (0, 0, width, height), 0, 0);
 		tex.Apply ();
 
-		RenderTexture.active = currentRT;
+        RenderTexture.active = currentRT;
 
-		Color32[] colors = tex.GetPixels32 ();
-		Screenshot screenshot = new Screenshot (colors, width, height);
-		return screenshot;
+        double[] greyscale = tex.GetPixels().Select(c => (double)c.grayscale).ToArray();
+        return greyscale;
 	}
 }
