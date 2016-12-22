@@ -4,6 +4,7 @@ using SharpNeat.Phenomes;
 using System.Linq;
 using AssemblyCSharp;
 using System;
+using Assets.Scripts;
 
 public class NEATController : UnitController {
 
@@ -85,6 +86,7 @@ public class NEATController : UnitController {
     private int frameCounter = 0;
 	private double[] EmptyDoubleArray;
     private double[] output;
+    private HeatMap heatMap;
 
 	// Use this for initialization
 	void Start () {
@@ -92,6 +94,7 @@ public class NEATController : UnitController {
 		EmptyDoubleArray = new double [box.InputCount];
         weapon.boxId = box.Id;
         output = new double[box.OutputSignalArray.Length];
+        heatMap = GameObject.FindWithTag("PlayerHUD").GetComponent<Canvas>().GetComponentInChildren<HeatMap>();
         //frameControl = "true".Equals(PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("game.neat.training.frameControl"));
         //useCNN = "true".Equals(PropertiesReader.GetPropertyFile (PropertyFile.Project).GetProperty ("game.neat.training.use.cnn"));
         //if(frameControl) {
@@ -176,18 +179,10 @@ public class NEATController : UnitController {
             double[] fromCNN;
             if (UseVPR)
             {
-                fromCNN = ArrayTool.Binarize(GroundTruthCNN.CalculateFeaturesVPR(playerCam));
-                //string s1 = string.Join("  ", fromCNN.Select(p => p.ToString()).ToArray());
-                
+                fromCNN = GroundTruthCNN.CalculateFeaturesVPR(playerCam);
+                heatMap.UpdateColors(fromCNN);
 
-                double[] gr = GroundTruth.CalculateFeatures(playerCam, Arena.BotSpawn.Bots[0]);
-                /*string s2 = string.Join("  ", gr.Select(p => p.ToString()).ToArray());
-
-                if (!s1.Equals(s2))
-                {
-                    Debug.Log("FROM CNN: " + s1);
-                    Debug.Log("FROM GRO: " + s2);
-                }*/
+                fromCNN = ArrayTool.Binarize(fromCNN);
             }
             else
             {
@@ -201,8 +196,10 @@ public class NEATController : UnitController {
         }
         else if (UseVPR)
         {
-            ArrayTool.Binarize(GroundTruthCNN.CalculateFeaturesVPR(playerCam));
-            inputArr.CopyFrom(GroundTruth.CalculateFeatures(playerCam, Arena.BotSpawn.Bots[0]), 0);
+            double[] d = GroundTruth.CalculateFeatures(playerCam, Arena.BotSpawn.Bots[0]);
+            //ArrayTool.Binarize(GroundTruthCNN.CalculateFeaturesVPR(playerCam));
+            heatMap.UpdateColors(d);
+            inputArr.CopyFrom(d, 0);
         }
         else
         {

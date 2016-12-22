@@ -111,8 +111,8 @@ public class MultiThreadedBridge implements Runnable {
 		
 		
 		//MultiThreadedBridge server = new MultiThreadedBridge(Paths.get("models", "model3.bin").toFile());
-		MultiThreadedBridge server = new MultiThreadedBridge(Paths.get("models", "angular", "light", "deep", "model3.bin").toFile());
-		//MultiThreadedBridge server = new MultiThreadedBridge(Paths.get("models", "vpr", "light", "deep", "model2.bin").toFile());
+		//MultiThreadedBridge server = new MultiThreadedBridge(Paths.get("models", "angular", "light", "deep", "model3.bin").toFile());
+		MultiThreadedBridge server = new MultiThreadedBridge(Paths.get("models", "vpr", "light", "deep", "model2.bin").toFile());
 		new Thread(server).start();
 
 		try {

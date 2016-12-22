@@ -177,15 +177,15 @@ public class Optimizer : MonoBehaviour {
         string generationName = "505";
         */
 
-        
+        /*
         string folderName = "19-12-16--14-25-41"; // angular no recoil, 10 framecontrol, 30 fps limit
         string generationName = "77";
+        */
 
         
-        /*
         string folderName = "19-12-16--09-12-46";  //vpr no recoil, 10 framecontrol, 30 fps limit
         string generationName = "418";
-        */
+        
 
 
         string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.champ.xml";
@@ -194,10 +194,12 @@ public class Optimizer : MonoBehaviour {
         
         //_ea = experiment.CreateEvolutionAlgorithm();
         _ea.UpdateEvent += new EventHandler(ea_UpdateEvent);
-        var evoSpeed = int.Parse(PropertiesReader.GetPropertyFile(PropertyFile.Project).GetProperty("game.neat.training.evolutionSpeed"));
-        
+
+		var evoSpeed = int.Parse (PropertiesReader.GetPropertyFile(PropertyFile.Project).GetProperty("game.neat.training.evolutionSpeed"));
+
+
         Started = true;
-		Time.timeScale = evoSpeed;
+        Time.timeScale = 0.5f;
 		_ea.StartContinue();
 		EARunning = true;
 	}
@@ -452,6 +454,7 @@ public class Optimizer : MonoBehaviour {
 			{
 				StopEA();
 			}*/
+            /*
 			if (GUI.Button (new Rect (10, 160, 100, 40), "Pause EA")) {
 				PauseUnpause ();
 			}
@@ -465,6 +468,7 @@ public class Optimizer : MonoBehaviour {
             {
                 GUI.Button(new Rect(300, Screen.height - 70, 150, 60), string.Format("Current run: {0}\nCurrent average fitness: {1}", runs, bestFitness/runs));
             }
+            */
         } else {
 			if (!Started) {
 				if (GUI.Button (new Rect (10, 10, 100, 40), "Start EA")) {
