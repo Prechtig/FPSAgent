@@ -82,7 +82,7 @@ public abstract class ContinuousTraining implements Trainable {
 			model = new MultiLayerNetwork(configuration);
 	        model.init();
 		}
-		copyWeightsAndBiases();
+		//copyWeightsAndBiases();
 		model.setListeners(new IterationTimeListener(1), new ScoreIterationListener(1));
 	}
 	
