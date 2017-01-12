@@ -174,8 +174,7 @@ public class NEATController : UnitController {
             double[] fromCNN;
             if (UseVPR)
             {
-                throw new Exception("VPR CNN NOT IMPLEMENTED");
-                //double[] result = ArrayTool.Binarize(fromCNN);
+                fromCNN = ArrayTool.Binarize(GroundTruthCNN.CalculateFeaturesVPR(playerCam));
             }
             else
             {
