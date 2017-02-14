@@ -11,6 +11,8 @@ using System.IO;
 using SharpNeat.Domains;
 using Assets.Scripts.TrainingDataGeneration;
 using Assets.Scripts;
+using System.Linq;
+using System.Text;
 
 public class Optimizer : MonoBehaviour {
 	public GameObject wallPrefab;
@@ -34,10 +36,11 @@ public class Optimizer : MonoBehaviour {
 	Dictionary<IBlackBox, NEATArena> ArenaMap = new Dictionary<IBlackBox, NEATArena>();
 	Dictionary<IBlackBox, Pair<float, float>> FitnessMap = new Dictionary<IBlackBox, Pair<float, float>>();
 
-    Dictionary<uint, int> WrongReloadsMap = new Dictionary<uint, int>();
-    Dictionary<uint, int> ShotsMap = new Dictionary<uint, int>();
-    Dictionary<uint, int> MissedMap = new Dictionary<uint, int>();
-    Dictionary<uint, double> TPSMap = new Dictionary<uint, double>();
+    Dictionary<uint, List<double>> WrongReloadsMap = new Dictionary<uint, List<double>>();
+    Dictionary<uint, List<double>> ShotsMap = new Dictionary<uint, List<double>>();
+    Dictionary<uint, List<double>> MissedMap = new Dictionary<uint, List<double>>();
+    Dictionary<uint, List<double>> TPSMap = new Dictionary<uint, List<double>>();
+    Dictionary<uint, List<double>> FitnessMap2 = new Dictionary<uint, List<double>>();
 
     //private DateTime startTime;
     private float timeLeft;
@@ -89,6 +92,10 @@ public class Optimizer : MonoBehaviour {
 
         //champFileSavePath = Application.persistentDataPath + string.Format("/{0}.champ.xml", "FPSAgent");
         //popFileSavePath = Application.persistentDataPath + string.Format("/{0}.pop.xml", "FPSAgent");
+        foreach (var item in GameObject.FindGameObjectsWithTag("HeatMapTile"))
+        {
+            Destroy(item);
+        }
 	}
 
 	// Update is called once per frame
@@ -177,15 +184,15 @@ public class Optimizer : MonoBehaviour {
         string generationName = "505";
         */
 
-        /*
+        
         string folderName = "19-12-16--14-25-41"; // angular no recoil, 10 framecontrol, 30 fps limit
         string generationName = "77";
-        */
-
         
+
+        /*
         string folderName = "19-12-16--09-12-46";  //vpr no recoil, 10 framecontrol, 30 fps limit
         string generationName = "418";
-        
+        */
 
 
         string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.champ.xml";
@@ -199,7 +206,7 @@ public class Optimizer : MonoBehaviour {
 
 
         Started = true;
-        Time.timeScale = 0.5f;
+        Time.timeScale = 1.0f;
 		_ea.StartContinue();
 		EARunning = true;
 	}
@@ -211,17 +218,30 @@ public class Optimizer : MonoBehaviour {
 		if (!FirstUpdate) {
             uint id = _ea.CurrentChampGenome.Id;
 			Utility.Log (string.Format ("gen={0:N0} bestFitness={1:N6}", _ea.CurrentGeneration, Fitness));
-            LocalLogger.Write (string.Format("{0:N0}\t{1:N6}\t{2:N6}\t{3:N6}\t{4:N0}\t{5:N0}\t{6:N0}\t{7:N6}",
-                _ea.CurrentGeneration, 
+            LocalLogger.Write(string.Format("{0:N0}\t{1:N6}\t{2:N6}\t{3:N6}\t{4:N6}\t{5:N6}\t{6:N6}\t{7:N6}\t{8:N6}\t{9:N6}\t{10:N6}",
+                _ea.CurrentGeneration,
                 Fitness,
                 Fitness - _ea.CurrentChampGenome.EvaluationInfo.AuxFitnessArr[0]._value,
                 _ea.CurrentChampGenome.EvaluationInfo.AuxFitnessArr[0]._value,
-                ShotsMap[id],
-                MissedMap[id],
-                WrongReloadsMap[id],
-                (TPSMap[id] / 100) / 15));
+                ShotsMap[id].Average(),
+                MissedMap[id].Average(),
+                WrongReloadsMap[id].Average(),
+                (TPSMap[id].Sum() / 200) / 15,
+                CalculateStdDev(FitnessMap2[id]),
+                CalculateStdDev(ShotsMap[id]),
+                CalculateStdDev(MissedMap[id])));
+
+
+            //copy all lines
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine();
+            sb.AppendLine("Run\tFitness\tShots\tMisses");
+            for (int i = 0; i < ShotsMap[id].Count; i++){
+                sb.AppendLine(i + "\t" + FitnessMap2[id][i] + "\t" + ShotsMap[id][i] + "\t" + MissedMap[id][i]);
+            }
+            LocalLogger.Write(sb.ToString());
         } else {
-            LocalLogger.Write(string.Format("Generation\tFitness\tShooting fitness\tAiming fitness\tShots\tMisses\tWrong reloads\tTPS"));
+            LocalLogger.Write(string.Format("Generation\tFitness\tShooting_fitness\tAiming_fitness\tShots\tMisses\tWrong_reloads\tTPS\tFitness_StdDev\tShots_StdDev\tMisses_StdDev"));
             FirstUpdate = false;
 		}
 
@@ -229,10 +249,19 @@ public class Optimizer : MonoBehaviour {
         //Utility.Log ("maxSpecieSize=" + _ea.Statistics._maxSpecieSize + "\nChampion id: " + _ea.CurrentChampGenome.Id);
         //Debug.Log("Champions specie id: " + _ea.CurrentChampGenome.SpecieIdx);
         FitnessMap = new Dictionary<IBlackBox, Pair<float, float>>();
-        WrongReloadsMap = new Dictionary<uint, int>();
-        ShotsMap = new Dictionary<uint, int>();
-        MissedMap = new Dictionary<uint, int>();
-        TPSMap = new Dictionary<uint, double>();
+        WrongReloadsMap = new Dictionary<uint, List<double>>();
+        ShotsMap = new Dictionary<uint, List<double>>();
+        MissedMap = new Dictionary<uint, List<double>>();
+        TPSMap = new Dictionary<uint, List<double>>();
+        FitnessMap2 = new Dictionary<uint, List<double>>();
+    }
+
+    private double CalculateStdDev(List<double> doubles)
+    {
+        double average = doubles.Average();
+        double sumOfSquaresOfDifferences = doubles.Select(val => (val - average) * (val - average)).Sum();
+        double sd = Math.Sqrt(sumOfSquaresOfDifferences / doubles.Count);
+        return sd;
     }
 
 	void PauseUnpause()
@@ -339,39 +368,48 @@ public class Optimizer : MonoBehaviour {
             //Add wrong reloads
             if (WrongReloadsMap.ContainsKey(box.Id))
             {
-                WrongReloadsMap[box.Id] += nw.WrongReloads;
+                WrongReloadsMap[box.Id].Add(nw.WrongReloads);
             }
             else
             {
-                WrongReloadsMap.Add(box.Id, nw.WrongReloads);
+                WrongReloadsMap.Add(box.Id, new List<double>() { nw.WrongReloads });
             }
             //Add shots
             if (ShotsMap.ContainsKey(box.Id))
             {
-                ShotsMap[box.Id] += nw.Shots;
+                ShotsMap[box.Id].Add(nw.Shots);
             }
             else
             {
-                ShotsMap.Add(box.Id, nw.Shots);
+                ShotsMap.Add(box.Id, new List<double>() { nw.Shots });
             }
             //Add misses
             if (MissedMap.ContainsKey(box.Id))
             {
-                MissedMap[box.Id] += nw.Misses;
+                MissedMap[box.Id].Add(nw.Misses);
             }
             else
             {
-                MissedMap.Add(box.Id, nw.Misses);
+                MissedMap.Add(box.Id, new List<double>() { nw.Misses });
             }
             //Add TPS
             NEATController nc = nt.GetPlayer().GetComponent<NEATController>();
             if (TPSMap.ContainsKey(box.Id))
             {
-                TPSMap[box.Id] += nc.tpsCount;
+                TPSMap[box.Id].Add(nc.tpsCount);
             }
             else
             {
-                TPSMap.Add(box.Id, nc.tpsCount);
+                TPSMap.Add(box.Id, new List<double>() { nc.tpsCount });
+            }
+
+            if (FitnessMap2.ContainsKey(box.Id))
+            {
+                FitnessMap2[box.Id].Add(nt.GetFitness().First);
+            }
+            else
+            {
+                FitnessMap2.Add(box.Id, new List<double>() { nt.GetFitness().First });
             }
 
 

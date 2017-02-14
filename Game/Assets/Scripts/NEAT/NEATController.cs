@@ -180,7 +180,7 @@ public class NEATController : UnitController {
             if (UseVPR)
             {
                 fromCNN = GroundTruthCNN.CalculateFeaturesVPR(playerCam);
-                heatMap.UpdateColors(fromCNN);
+                //heatMap.UpdateColors(fromCNN);
 
                 fromCNN = ArrayTool.Binarize(fromCNN);
             }
@@ -198,7 +198,7 @@ public class NEATController : UnitController {
         {
             double[] d = GroundTruth.CalculateFeatures(playerCam, Arena.BotSpawn.Bots[0]);
             //ArrayTool.Binarize(GroundTruthCNN.CalculateFeaturesVPR(playerCam));
-            heatMap.UpdateColors(d);
+            //heatMap.UpdateColors(d);
             inputArr.CopyFrom(d, 0);
         }
         else
