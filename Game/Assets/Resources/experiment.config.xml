@@ -4,13 +4,13 @@
 	<!--<inputs>6</inputs>-->
 	<outputs>6</outputs>
 
-	<parallelAgents>1</parallelAgents>
-	<TrialCount>200</TrialCount>
+	<parallelAgents>10</parallelAgents>
+	<TrialCount>20</TrialCount>
 	<TrialDuration>15</TrialDuration>
 	<StoppingFitness>99999</StoppingFitness>
 
-	<PopulationSize>1</PopulationSize>
-	<SpecieCount>1</SpecieCount>
+	<PopulationSize>100</PopulationSize>
+	<SpecieCount>10</SpecieCount>
 	<Activation>
     	<Scheme>CyclicFixedIters</Scheme>
     	<Iters>1</Iters>

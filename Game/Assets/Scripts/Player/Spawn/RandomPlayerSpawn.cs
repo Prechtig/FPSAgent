@@ -45,11 +45,11 @@ public class RandomPlayerSpawn : MonoBehaviour, IPlayerSpawn
 		*/
 		//Object[] obs = Resources.FindObjectsOfTypeAll(typeof(UnityEngine.Object));
 		Object a;
-		//if (useCNN) {
+		if (useCNN) {
 			a = Resources.Load ("CNNPlayer");
-		//} else {
-	    //	a = Resources.Load ("Player");
-		//}
+		} else {
+	    	a = Resources.Load ("Player");
+		}
 
 		Vector3 spawnPosition = GenerateSpawnPoint ();
         Player = (GameObject)Instantiate(a, spawnPosition, SpawnPoints[0].rotation);

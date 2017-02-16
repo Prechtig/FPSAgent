@@ -92,10 +92,10 @@ public class Optimizer : MonoBehaviour {
 
         //champFileSavePath = Application.persistentDataPath + string.Format("/{0}.champ.xml", "FPSAgent");
         //popFileSavePath = Application.persistentDataPath + string.Format("/{0}.pop.xml", "FPSAgent");
-        foreach (var item in GameObject.FindGameObjectsWithTag("HeatMapTile"))
+        /*foreach (var item in GameObject.FindGameObjectsWithTag("HeatMapTile"))
         {
             Destroy(item);
-        }
+        }*/
 	}
 
 	// Update is called once per frame
@@ -184,10 +184,10 @@ public class Optimizer : MonoBehaviour {
         string generationName = "505";
         */
 
-        
+        /*
         string folderName = "19-12-16--14-25-41"; // angular no recoil, 10 framecontrol, 30 fps limit
         string generationName = "77";
-        
+        */
 
         /*
         string folderName = "19-12-16--09-12-46";  //vpr no recoil, 10 framecontrol, 30 fps limit
@@ -195,18 +195,18 @@ public class Optimizer : MonoBehaviour {
         */
 
 
-        string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.champ.xml";
+        //string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.champ.xml";
         //string location = Application.persistentDataPath + dirSepChar + folderName + dirSepChar + generationName + dirSepChar + "FPSAgent.pop.xml";
-        _ea = experiment.CreateEvolutionAlgorithm(location);
+        //_ea = experiment.CreateEvolutionAlgorithm(location);
         
-        //_ea = experiment.CreateEvolutionAlgorithm();
+        _ea = experiment.CreateEvolutionAlgorithm();
         _ea.UpdateEvent += new EventHandler(ea_UpdateEvent);
 
 		var evoSpeed = int.Parse (PropertiesReader.GetPropertyFile(PropertyFile.Project).GetProperty("game.neat.training.evolutionSpeed"));
 
 
         Started = true;
-        Time.timeScale = 1.0f;
+        Time.timeScale = evoSpeed;
 		_ea.StartContinue();
 		EARunning = true;
 	}
@@ -233,6 +233,7 @@ public class Optimizer : MonoBehaviour {
 
 
             //copy all lines
+            /*
             StringBuilder sb = new StringBuilder();
             sb.AppendLine();
             sb.AppendLine("Run\tFitness\tShots\tMisses");
@@ -240,6 +241,7 @@ public class Optimizer : MonoBehaviour {
                 sb.AppendLine(i + "\t" + FitnessMap2[id][i] + "\t" + ShotsMap[id][i] + "\t" + MissedMap[id][i]);
             }
             LocalLogger.Write(sb.ToString());
+            */
         } else {
             LocalLogger.Write(string.Format("Generation\tFitness\tShooting_fitness\tAiming_fitness\tShots\tMisses\tWrong_reloads\tTPS\tFitness_StdDev\tShots_StdDev\tMisses_StdDev"));
             FirstUpdate = false;
@@ -492,7 +494,7 @@ public class Optimizer : MonoBehaviour {
 			{
 				StopEA();
 			}*/
-            /*
+            
 			if (GUI.Button (new Rect (10, 160, 100, 40), "Pause EA")) {
 				PauseUnpause ();
 			}
@@ -506,7 +508,7 @@ public class Optimizer : MonoBehaviour {
             {
                 GUI.Button(new Rect(300, Screen.height - 70, 150, 60), string.Format("Current run: {0}\nCurrent average fitness: {1}", runs, bestFitness/runs));
             }
-            */
+            
         } else {
 			if (!Started) {
 				if (GUI.Button (new Rect (10, 10, 100, 40), "Start EA")) {
